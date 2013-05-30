@@ -1,0 +1,19 @@
+^doxygen-luxmark.conf
+^doxygen/luxmark.template
+^bin/*
+^doc/*
+^src/(Debug|Release)/
+^(Debug|Release|x64)/
+^nbproject/*
+syntax: glob
+*~
+*CMakeFiles
+*CMakeCache.txt
+*Makefile
+*cmake_install.cmake
+moc_*.cxx
+ui_*.h
+qrc_*.cxx
+*.sdf
+*.vcxproj*
+
