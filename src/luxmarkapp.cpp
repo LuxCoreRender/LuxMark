@@ -49,13 +49,22 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	FreeImage_Initialise(TRUE);
 	FreeImage_SetOutputMessage(FreeImageErrorHandler);
 
+	// Initialize rand() number generator
+	srand(time(NULL));
+
+	// Initialize LuxRender API
+	luxInit();
+
+	// Set LuxRender log level
+	lux::luxLogFilter = LUX_DEBUG;
+
 	singleRun = false;
 
 	mainWin = NULL;
 	engineInitThread = NULL;
 	engineInitDone = false;
 	renderingStartTime = 0.0;
-	renderSession = NULL;
+	luxSession = NULL;
 	renderRefreshTimer = NULL;
 	hardwareTreeModel = NULL;
 }
@@ -66,7 +75,7 @@ LuxMarkApp::~LuxMarkApp() {
 		engineInitThread->join();
 		delete engineInitThread;
 	}
-	delete renderSession;
+	delete luxSession;
 	delete mainWin;
 	delete hardwareTreeModel;
 }
@@ -80,7 +89,7 @@ void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName, const bool singl
 	singleRun = single;
 
 	LM_LOG("<FONT COLOR=\"#0000ff\">LuxMark v" << LUXMARK_VERSION_MAJOR << "." << LUXMARK_VERSION_MINOR << "</FONT>");
-	LM_LOG("Based on <FONT COLOR=\"#0000ff\">" << SLG_LABEL << "</FONT>");
+	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxRender v" << luxVersion() << "</FONT>");
 
 	InitRendering(mode, scnName);
 }
@@ -106,8 +115,8 @@ void LuxMarkApp::Stop() {
 	engineInitDone = false;
 
 	// Free the scene if required
-	delete renderSession;
-	renderSession = NULL;
+	delete luxSession;
+	luxSession = NULL;
 }
 
 void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
@@ -171,56 +180,58 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 	try {
 		// Initialize the new mode
 		string sname(app->sceneName); 
-		RenderConfig *renderConfig = new RenderConfig(&sname, NULL);
-
-		// Overwrite properties according the current mode
-		Properties prop;
-		prop.SetString("renderengine.type", "4");
-		prop.SetString("opencl.kernelcache", "NONE");
-		if (app->mode == BENCHMARK_OCL_GPU) {
-			prop.SetString("opencl.cpu.use", "0");
-			prop.SetString("opencl.gpu.use", "1");
-			prop.SetString("screen.refresh.interval", "1000");
-		} else if (app->mode == BENCHMARK_OCL_CPUGPU) {
-			prop.SetString("opencl.cpu.use", "1");
-			prop.SetString("opencl.gpu.use", "1");
-			prop.SetString("screen.refresh.interval", "1000");
-		} else if (app->mode == BENCHMARK_OCL_CPU) {
-			prop.SetString("opencl.cpu.use", "1");
-			prop.SetString("opencl.gpu.use", "0");
-			prop.SetString("screen.refresh.interval", "1000");
-		} else if (app->mode == BENCHMARK_OCL_CUSTOM) {
-			// At the first run, hardwareTreeModel is NULL
-			const string deviceSelection = (app->hardwareTreeModel) ? (app->hardwareTreeModel->getDeviceSelectionString()) : "";
-			if (deviceSelection == "") {
-				prop.SetString("opencl.cpu.use", "0");
-				prop.SetString("opencl.gpu.use", "1");
-			} else
-				prop.SetString("opencl.devices.select", deviceSelection);
-			prop.SetString("screen.refresh.interval", "1000");
-		} else if (app->mode == INTERACTIVE) {
-			prop.SetString("opencl.cpu.use", "0");
-			prop.SetString("opencl.gpu.use", "1");
-			prop.SetString("screen.refresh.interval", "100");
-		} else
-			assert (false);
-
-		renderConfig->cfg.Load(prop);
-		app->renderSession = new RenderSession(renderConfig);
+		app->luxSession = new LuxRenderSession(sname);
+		
+//		RenderConfig *renderConfig = new RenderConfig(&sname, NULL);
+//
+//		// Overwrite properties according the current mode
+//		Properties prop;
+//		prop.SetString("renderengine.type", "4");
+//		prop.SetString("opencl.kernelcache", "NONE");
+//		if (app->mode == BENCHMARK_OCL_GPU) {
+//			prop.SetString("opencl.cpu.use", "0");
+//			prop.SetString("opencl.gpu.use", "1");
+//			prop.SetString("screen.refresh.interval", "1000");
+//		} else if (app->mode == BENCHMARK_OCL_CPUGPU) {
+//			prop.SetString("opencl.cpu.use", "1");
+//			prop.SetString("opencl.gpu.use", "1");
+//			prop.SetString("screen.refresh.interval", "1000");
+//		} else if (app->mode == BENCHMARK_OCL_CPU) {
+//			prop.SetString("opencl.cpu.use", "1");
+//			prop.SetString("opencl.gpu.use", "0");
+//			prop.SetString("screen.refresh.interval", "1000");
+//		} else if (app->mode == BENCHMARK_OCL_CUSTOM) {
+//			// At the first run, hardwareTreeModel is NULL
+//			const string deviceSelection = (app->hardwareTreeModel) ? (app->hardwareTreeModel->getDeviceSelectionString()) : "";
+//			if (deviceSelection == "") {
+//				prop.SetString("opencl.cpu.use", "0");
+//				prop.SetString("opencl.gpu.use", "1");
+//			} else
+//				prop.SetString("opencl.devices.select", deviceSelection);
+//			prop.SetString("screen.refresh.interval", "1000");
+//		} else if (app->mode == INTERACTIVE) {
+//			prop.SetString("opencl.cpu.use", "0");
+//			prop.SetString("opencl.gpu.use", "1");
+//			prop.SetString("screen.refresh.interval", "100");
+//		} else
+//			assert (false);
+//
+//		renderConfig->cfg.Load(prop);
+//		app->renderSession = new RenderSession(renderConfig);
 
 		// Initialize hardware information
-		if (!app->hardwareTreeModel) {
-			if (app->renderSession->renderEngine->GetEngineType() == PATHOCL)
-				app->hardwareTreeModel = new HardwareTreeModel(app->mainWin,
-						app->renderSession->renderEngine->GetAvailableDeviceDescriptions());
-			else {
+//		if (!app->hardwareTreeModel) {
+//			if (app->renderSession->renderEngine->GetEngineType() == PATHOCL)
+//				app->hardwareTreeModel = new HardwareTreeModel(app->mainWin,
+//						app->renderSession->renderEngine->GetAvailableDeviceDescriptions());
+//			else {
 				const vector<DeviceDescription *> devDescs;
 				app->hardwareTreeModel = new HardwareTreeModel(app->mainWin, devDescs);
-			}
-		}
+//			}
+//		}
 
 		// Start the rendering
-		app->renderSession->Start();
+		app->luxSession->Start();
 
 		// Done
 		app->renderingStartTime = luxrays::WallClockTime();
@@ -240,47 +251,35 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	mainWin->SetHardwareTreeModel(hardwareTreeModel);
 
-	RenderConfig *renderConfig = renderSession->renderConfig;
-	RenderEngine *renderEngine = renderSession->renderEngine;
-	renderEngine->UpdateFilm();
+	if (luxStatistics("sceneIsReady") || luxStatistics("filmIsReady")) {
+		// Get the rendered image
+		luxUpdateFramebuffer();
+		const unsigned char *pixels = luxFramebuffer();
 
-	// Get the rendered image
-	Film *film = renderSession->film;
-	film->UpdateScreenBuffer();
-	const float *pixels = film->GetScreenBuffer();
-
-	// Update the window
-	mainWin->ShowFrameBuffer(pixels, film->GetWidth(), film->GetHeight());
-
-	// Update the statistics
-	const vector<IntersectionDevice *> &intersectionDevices =
-		renderEngine->GetIntersectionDevices();
-
-	double raysSec = 0.0;
-	vector<double> raysSecs(intersectionDevices.size(), 0.0);
-	for (size_t i = 0; i < intersectionDevices.size(); ++i) {
-		raysSecs[i] = intersectionDevices[i]->GetTotalPerformance();
-		raysSec += raysSecs[i];
+		// Update the window
+		int width = luxGetIntAttribute("film", "xResolution");
+		int height = luxGetIntAttribute("film", "yResolution");
+		mainWin->ShowFrameBuffer(pixels, width, height);
 	}
 
-	double sampleSec = renderEngine->GetTotalSamplesSec();
-	int renderingTime = int(renderEngine->GetRenderingTime());
+	// Update the statistics
+	const double raysSec = 0.0;
+	const u_int triangleCount = 0;
+	const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
+	const int renderingTime = luxGetDoubleAttribute("renderer_statistics", "elapsedTime"); 
+	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
 	// After 120secs of benchmark, show the result dialog
-	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
+	bool benchmarkDone = (renderingTime > 10) && (mode != INTERACTIVE);
 
 	char buf[512];
 	stringstream ss("");
 
 	char validBuf[128];
-	if (mode == INTERACTIVE)
-		strcpy(validBuf, "");
-	else {
-		if (benchmarkDone)
-			strcpy(validBuf, " (OK)");
-		else
-			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
-	}	
+	if (benchmarkDone)
+		strcpy(validBuf, " (OK)");
+	else
+		sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 
 	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Rays/sec % 6dK on %.1fK tris]",
 			(mode == BENCHMARK_OCL_GPU) ? "OpenCL GPUs" :
@@ -288,35 +287,8 @@ void LuxMarkApp::RenderRefreshTimeout() {
 					((mode == BENCHMARK_OCL_CPU) ? "OpenCL CPUs" :
 						((mode == BENCHMARK_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))),
 			renderingTime, validBuf, int(sampleSec / 1000.0),
-			int(raysSec / 1000.0), renderConfig->scene->dataSet->GetTotalTriangleCount() / 1000.0);
+			int(raysSec / 1000.0), triangleCount / 1000.0);
 	ss << buf;
-
-	if ((mode == BENCHMARK_OCL_GPU) || (mode == BENCHMARK_OCL_CPUGPU) ||
-			(mode == BENCHMARK_OCL_CPU) || (mode == BENCHMARK_OCL_CUSTOM)) {
-		ss << "\n\nOpenCL rendering devices:";
-		double minPerf = raysSecs[0];
-		double totalPerf = raysSecs[0];
-		for (size_t i = 1; i < intersectionDevices.size(); ++i) {
-			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
-				minPerf = min(minPerf, raysSecs[i]);
-				totalPerf += raysSecs[i];
-			}
-		}
-
-		for (size_t i = 0; i < intersectionDevices.size(); ++i) {
-			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
-				const OpenCLDeviceDescription *desc = ((OpenCLIntersectionDevice *)intersectionDevices[i])->GetDeviceDesc();
-				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %dM/%dM]",
-						desc->GetName().c_str(),
-						int(raysSecs[i] / 1000.0),
-						raysSecs[i] / minPerf,
-						100.0 * raysSecs[i] / totalPerf,
-						int(intersectionDevices[i]->GetUsedMemory() / (1024 * 1024)),
-						int(desc->GetMaxMemory() / (1024 * 1024)));
-				ss << buf;
-			}
-		}
-	}
 
 	mainWin->UpdateScreenLabel(ss.str().c_str(), benchmarkDone);
 
@@ -327,9 +299,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 			exit(EXIT_SUCCESS);
 		} else {
-			const vector<OpenCLIntersectionDevice *> &devices =
-				((const vector<OpenCLIntersectionDevice *> &)renderEngine->GetIntersectionDevices());
-			vector<BenchmarkDeviceDescription> descs = BuildDeviceDescriptions(devices);
+			const vector<BenchmarkDeviceDescription> descs;
 
 			Stop();
 
@@ -341,74 +311,164 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			InitRendering(PAUSE, sceneName);
 		}
 	}
+
+//	// Update the statistics
+//	const vector<IntersectionDevice *> &intersectionDevices =
+//		renderEngine->GetIntersectionDevices();
+//
+//	double raysSec = 0.0;
+//	vector<double> raysSecs(intersectionDevices.size(), 0.0);
+//	for (size_t i = 0; i < intersectionDevices.size(); ++i) {
+//		raysSecs[i] = intersectionDevices[i]->GetTotalPerformance();
+//		raysSec += raysSecs[i];
+//	}
+//
+//	double sampleSec = renderEngine->GetTotalSamplesSec();
+//	int renderingTime = int(renderEngine->GetRenderingTime());
+//
+//	// After 120secs of benchmark, show the result dialog
+//	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
+//
+//	char buf[512];
+//	stringstream ss("");
+//
+//	char validBuf[128];
+//	if (mode == INTERACTIVE)
+//		strcpy(validBuf, "");
+//	else {
+//		if (benchmarkDone)
+//			strcpy(validBuf, " (OK)");
+//		else
+//			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
+//	}	
+//
+//	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Rays/sec % 6dK on %.1fK tris]",
+//			(mode == BENCHMARK_OCL_GPU) ? "OpenCL GPUs" :
+//				((mode == BENCHMARK_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
+//					((mode == BENCHMARK_OCL_CPU) ? "OpenCL CPUs" :
+//						((mode == BENCHMARK_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))),
+//			renderingTime, validBuf, int(sampleSec / 1000.0),
+//			int(raysSec / 1000.0), renderConfig->scene->dataSet->GetTotalTriangleCount() / 1000.0);
+//	ss << buf;
+//
+//	if ((mode == BENCHMARK_OCL_GPU) || (mode == BENCHMARK_OCL_CPUGPU) ||
+//			(mode == BENCHMARK_OCL_CPU) || (mode == BENCHMARK_OCL_CUSTOM)) {
+//		ss << "\n\nOpenCL rendering devices:";
+//		double minPerf = raysSecs[0];
+//		double totalPerf = raysSecs[0];
+//		for (size_t i = 1; i < intersectionDevices.size(); ++i) {
+//			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
+//				minPerf = min(minPerf, raysSecs[i]);
+//				totalPerf += raysSecs[i];
+//			}
+//		}
+//
+//		for (size_t i = 0; i < intersectionDevices.size(); ++i) {
+//			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
+//				const OpenCLDeviceDescription *desc = ((OpenCLIntersectionDevice *)intersectionDevices[i])->GetDeviceDesc();
+//				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %dM/%dM]",
+//						desc->GetName().c_str(),
+//						int(raysSecs[i] / 1000.0),
+//						raysSecs[i] / minPerf,
+//						100.0 * raysSecs[i] / totalPerf,
+//						int(intersectionDevices[i]->GetUsedMemory() / (1024 * 1024)),
+//						int(desc->GetMaxMemory() / (1024 * 1024)));
+//				ss << buf;
+//			}
+//		}
+//	}
+//
+//	mainWin->UpdateScreenLabel(ss.str().c_str(), benchmarkDone);
+//
+//	if (benchmarkDone) {
+//		// Check if I'm in single run mode
+//		if (singleRun) {
+//			cout << "Score: " << int(sampleSec / 1000.0) << endl;
+//
+//			exit(EXIT_SUCCESS);
+//		} else {
+//			const vector<OpenCLIntersectionDevice *> &devices =
+//				((const vector<OpenCLIntersectionDevice *> &)renderEngine->GetIntersectionDevices());
+//			vector<BenchmarkDeviceDescription> descs = BuildDeviceDescriptions(devices);
+//
+//			Stop();
+//
+//			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec, descs);
+//			dialog->exec();
+//			delete dialog;
+//
+//			// Go in PAUSE mode
+//			InitRendering(PAUSE, sceneName);
+//		}
+//	}
 }
 
 #define MOVE_STEP 0.5f
 #define ROTATE_STEP 4.f
 void LuxMarkApp::HandleMouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-	const double minInterval = 0.5;
-
-	if (mode == INTERACTIVE) {
-		if (mouseButton0) {
-			// Check elapsed time since last update
-			if (WallClockTime() - lastMouseUpdate > minInterval) {
-				const qreal distX = event->lastPos().x() - mouseGrabLastX;
-				const qreal distY = event->lastPos().y() - mouseGrabLastY;
-
-				RenderConfig *renderConfig = renderSession->renderConfig;
-				renderSession->BeginEdit();
-				renderConfig->scene->camera->RotateDown(0.04f * distY * ROTATE_STEP);
-				renderConfig->scene->camera->RotateRight(0.04f * distX * ROTATE_STEP);
-				renderConfig->scene->camera->Update(
-					renderSession->film->GetWidth(), renderSession->film->GetHeight());
-				renderSession->editActions.AddAction(CAMERA_EDIT);
-				renderSession->EndEdit();
-
-				mouseGrabLastX = event->lastPos().x();
-				mouseGrabLastY = event->lastPos().y();
-				lastMouseUpdate = WallClockTime();
-			}
-		} else if (mouseButton2) {
-			// Check elapsed time since last update
-			if (WallClockTime() - lastMouseUpdate > minInterval) {
-				const qreal distX = event->lastPos().x() - mouseGrabLastX;
-				const qreal distY = event->lastPos().y() - mouseGrabLastY;
-
-				RenderConfig *renderConfig = renderSession->renderConfig;
-				renderSession->BeginEdit();
-				renderConfig->scene->camera->TranslateRight(0.04f * distX * MOVE_STEP);
-				renderConfig->scene->camera->TranslateBackward(0.04f * distY * MOVE_STEP);
-				renderConfig->scene->camera->Update(
-					renderSession->film->GetWidth(), renderSession->film->GetHeight());
-				renderSession->editActions.AddAction(CAMERA_EDIT);
-				renderSession->EndEdit();
-
-				mouseGrabLastX = event->lastPos().x();
-				mouseGrabLastY = event->lastPos().y();
-				lastMouseUpdate = WallClockTime();
-			}
-		}
-	}
+//	const double minInterval = 0.5;
+//
+//	if (mode == INTERACTIVE) {
+//		if (mouseButton0) {
+//			// Check elapsed time since last update
+//			if (WallClockTime() - lastMouseUpdate > minInterval) {
+//				const qreal distX = event->lastPos().x() - mouseGrabLastX;
+//				const qreal distY = event->lastPos().y() - mouseGrabLastY;
+//
+//				RenderConfig *renderConfig = renderSession->renderConfig;
+//				renderSession->BeginEdit();
+//				renderConfig->scene->camera->RotateDown(0.04f * distY * ROTATE_STEP);
+//				renderConfig->scene->camera->RotateRight(0.04f * distX * ROTATE_STEP);
+//				renderConfig->scene->camera->Update(
+//					renderSession->film->GetWidth(), renderSession->film->GetHeight());
+//				renderSession->editActions.AddAction(CAMERA_EDIT);
+//				renderSession->EndEdit();
+//
+//				mouseGrabLastX = event->lastPos().x();
+//				mouseGrabLastY = event->lastPos().y();
+//				lastMouseUpdate = WallClockTime();
+//			}
+//		} else if (mouseButton2) {
+//			// Check elapsed time since last update
+//			if (WallClockTime() - lastMouseUpdate > minInterval) {
+//				const qreal distX = event->lastPos().x() - mouseGrabLastX;
+//				const qreal distY = event->lastPos().y() - mouseGrabLastY;
+//
+//				RenderConfig *renderConfig = renderSession->renderConfig;
+//				renderSession->BeginEdit();
+//				renderConfig->scene->camera->TranslateRight(0.04f * distX * MOVE_STEP);
+//				renderConfig->scene->camera->TranslateBackward(0.04f * distY * MOVE_STEP);
+//				renderConfig->scene->camera->Update(
+//					renderSession->film->GetWidth(), renderSession->film->GetHeight());
+//				renderSession->editActions.AddAction(CAMERA_EDIT);
+//				renderSession->EndEdit();
+//
+//				mouseGrabLastX = event->lastPos().x();
+//				mouseGrabLastY = event->lastPos().y();
+//				lastMouseUpdate = WallClockTime();
+//			}
+//		}
+//	}
 }
 
 void LuxMarkApp::HandleMousePressEvent(QGraphicsSceneMouseEvent *event) {
-	if (mode == INTERACTIVE) {
-		if ((event->button() == Qt::LeftButton) || (event->button() == Qt::RightButton)) {
-			if (event->button() == Qt::LeftButton) {
-				mouseButton0 = true;
-				mouseButton2 = false;
-			} else if (event->button() == Qt::RightButton) {
-				mouseButton0 = false;
-				mouseButton2 = true;
-			} else {
-				mouseButton0 = false;
-				mouseButton2 = false;
-			}
-
-			// Record start position
-			mouseGrabLastX = event->lastPos().x();
-			mouseGrabLastY = event->lastPos().y();
-			lastMouseUpdate = WallClockTime();
-		}
-	}
+//	if (mode == INTERACTIVE) {
+//		if ((event->button() == Qt::LeftButton) || (event->button() == Qt::RightButton)) {
+//			if (event->button() == Qt::LeftButton) {
+//				mouseButton0 = true;
+//				mouseButton2 = false;
+//			} else if (event->button() == Qt::RightButton) {
+//				mouseButton0 = false;
+//				mouseButton2 = true;
+//			} else {
+//				mouseButton0 = false;
+//				mouseButton2 = false;
+//			}
+//
+//			// Record start position
+//			mouseGrabLastX = event->lastPos().x();
+//			mouseGrabLastY = event->lastPos().y();
+//			lastMouseUpdate = WallClockTime();
+//		}
+//	}
 }

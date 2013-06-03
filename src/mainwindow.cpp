@@ -47,16 +47,21 @@ LuxErrorEvent::LuxErrorEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_ERR_MES
 	setAccepted(false);
 }
 
-void LuxRaysDebugHandler(const char *msg) {
-	LM_LOG_LUXRAYS(msg);
-}
-
-void SLGDebugHandler(const char *msg) {
-	LM_LOG_SLG(msg);
-}
-
-void SDLDebugHandler(const char *msg) {
-	LM_LOG_SDL(msg);
+void LuxRenderErrorHandler(int code, int severity, const char *msg) {
+	switch (severity) {
+		case LUX_ERROR:
+		case LUX_SEVERE:
+			LM_LOG_LUX_ERROR(msg);
+			break;
+		case LUX_WARNING:
+			LM_LOG_LUX_WARNING(msg);
+			break;
+		default:
+		case LUX_DEBUG:
+		case LUX_INFO:
+			LM_LOG_LUX(msg);
+			break;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -121,9 +126,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 
 	ShowLogo();
 
-	LuxRays_DebugHandler = ::LuxRaysDebugHandler;
-	SLG_DebugHandler = ::SLGDebugHandler;
-	SLG_SDLDebugHandler = ::SDLDebugHandler;
+	luxErrorHandler(&::LuxRenderErrorHandler);
 }
 
 MainWindow::~MainWindow() {
@@ -336,7 +339,7 @@ bool MainWindow::IsShowingLogo() const {
 	return luxLogo->isVisible();
 }
 
-void MainWindow::ShowFrameBuffer(const float *frameBufferFloat,
+void MainWindow::ShowFrameBuffer(const unsigned char *frameBufferSrc,
 		const unsigned  int width, const unsigned  int height) {
 	if (luxLogo->isVisible())
 		luxLogo->hide();
@@ -349,20 +352,7 @@ void MainWindow::ShowFrameBuffer(const float *frameBufferFloat,
 		frameBuffer = new unsigned char[fbWidth * fbHeight * 3];
 	}
 
-	// Convert the frame buffer from float to unsigned char format and
-	// flip along the height
-	for (size_t y = 0; y < fbHeight; ++y) {
-		size_t lineIndexSrc = y * fbWidth * 3;
-		size_t lineIndexDst = (fbHeight - y - 1) * fbWidth * 3;
-		for (size_t x = 0; x < fbWidth; ++x) {
-			frameBuffer[lineIndexDst + x * 3] =
-					(unsigned char)(frameBufferFloat[lineIndexSrc + x * 3] * 255.f + .5f);
-			frameBuffer[lineIndexDst + x * 3 + 1] =
-					(unsigned char)(frameBufferFloat[lineIndexSrc + x * 3 + 1] * 255.f + .5f);
-			frameBuffer[lineIndexDst + x * 3 + 2] =
-					(unsigned char)(frameBufferFloat[lineIndexSrc + x * 3 + 2] * 255.f + .5f);
-		}
-	}
+	memcpy(frameBuffer, frameBufferSrc, width * height * 3);
 
 	luxFrameBuffer->setPixmap(QPixmap::fromImage(QImage(
 		frameBuffer, fbWidth, fbHeight, width * 3, QImage::Format_RGB888)));

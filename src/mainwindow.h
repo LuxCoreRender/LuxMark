@@ -56,7 +56,7 @@ public:
 
 	void ShowLogo();
 	bool IsShowingLogo() const;
-	void ShowFrameBuffer(const float *frameBuffer,
+	void ShowFrameBuffer(const unsigned char *frameBuffer,
 		const unsigned int width, const unsigned int height);
 
 	void SetModeCheck(const int index);

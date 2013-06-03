@@ -79,6 +79,9 @@ private:
 #define LM_LOG_LUXRAYS(a) { LM_LOG("<FONT COLOR=\"#002200\"><B>[LuxRays]</B></FONT> " << a); }
 #define LM_LOG_SLG(a) { LM_LOG("<FONT COLOR=\"#009900\"><B>[SLG]</B></FONT> " << a); }
 #define LM_LOG_SDL(a) { LM_LOG("<FONT COLOR=\"#004400\"><B>[SDL]</B></FONT> " << a); }
+#define LM_LOG_LUX_ERROR(a) { LM_LOG("<FONT COLOR=\"#990000\"><B>[LuxRender]</B></FONT> " << a); }
+#define LM_LOG_LUX_WARNING(a) { LM_LOG("<FONT COLOR=\"#999900\"><B>[LuxRender]</B></FONT> " << a); }
+#define LM_LOG_LUX(a) { LM_LOG("<FONT COLOR=\"#449944\"><B>[LuxRender]</B></FONT> " << a); }
 
 #define LM_ERROR(a) { if (LogWindow) { std::stringstream _LM_ERR_LOCAL_SS; _LM_ERR_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxErrorEvent(QString(_LM_ERR_LOCAL_SS.str().c_str()))); }}
 

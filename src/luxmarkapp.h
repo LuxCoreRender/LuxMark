@@ -30,6 +30,7 @@
 #include "slgdefs.h"
 #include "mainwindow.h"
 #include "hardwaretree.h"
+#include "luxrendersession.h"
 
 //------------------------------------------------------------------------------
 // LuxMark Qt application
@@ -38,7 +39,7 @@
 // List of supported scenes
 #define SCENE_ROOM "scenes/room/render.cfg"
 #define SCENE_SALA "scenes/sala/render.cfg"
-#define SCENE_LUXBALL_HDR "scenes/luxball/render-hdr.cfg"
+#define SCENE_LUXBALL_HDR "scenes/luxball/luxball.Scene.00001.lxs"
 #define SCENE_LUXBALL "scenes/luxball/render.cfg"
 #define SCENE_LUXBALL_SKY "scenes/luxball/render-sunset.cfg"
 
@@ -76,7 +77,7 @@ private:
 	boost::thread *engineInitThread;
 	double renderingStartTime;
 	bool engineInitDone;
-	RenderSession *renderSession;
+	LuxRenderSession *luxSession;
 
 	QTimer *renderRefreshTimer;
 

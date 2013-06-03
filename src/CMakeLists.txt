@@ -101,6 +101,7 @@ set(LUXMARK_SRCS
 	mainwindow.cpp
     resultdialog.cpp
 	submitdialog.cpp
+	luxrendersession.cpp
 	)
 set(LUXMARK_MOC
 	aboutdialog.h

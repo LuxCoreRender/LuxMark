@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 	QRegExp argSingleRun("--single-run");
 
 	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
-	// Remeber to change the default lable in mainwindow.cpp too
+	// Remember to change the default label in mainwindow.cpp too
 	const char *scnName = SCENE_LUXBALL_HDR;
     for (int i = 1; i < argsList.size(); ++i) {
         if (argHelp.indexIn(argsList.at(i)) != -1 ) {   
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
 		app.Init(mode, scnName, singleRun);
 
 		// Force C locale
-		setlocale(LC_NUMERIC,"C");
+		setlocale(LC_NUMERIC, "C");
 
 		if (app.mainWin != NULL)
 			return app.exec();
