@@ -74,4 +74,7 @@ void LuxRenderSession::Stop() {
 	parseThread->join();
 	delete parseThread;
 	parseThread = NULL;
+
+	luxWait();
+	luxCleanup();
 }
