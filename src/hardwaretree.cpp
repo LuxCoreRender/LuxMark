@@ -91,8 +91,16 @@ int HardwareTreeItem::row() const {
 // HardwareTreeModel
 //------------------------------------------------------------------------------
 
-HardwareTreeModel::HardwareTreeModel(MainWindow *w,
-		const vector<DeviceDescription *> &devDescs) : QAbstractItemModel() {
+static void LuxRaysErrorHandler(const char *msg) {
+	LM_LOG_LUXRAYS(msg);
+}
+
+HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
+	// Retrieve the hardware information with LuxRays
+	Context *ctx = new Context(LuxRaysErrorHandler);
+	const vector<DeviceDescription *> devDescs = ctx->GetAvailableDeviceDescriptions();
+
+	// Build the gui
 	win = w;
 
 	rootItem = new HardwareTreeItem("Hardware");
@@ -151,6 +159,10 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w,
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
+			ss << "Preferred vector width: " << odevDesc->GetNativeVectorWidthFloat();
+			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+
+			ss.str("");
 			ss << "Max. Global Memory: " << (odevDesc->GetMaxMemory() / 1024) << " Kbytes";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
@@ -174,6 +186,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w,
 			deviceSelection.push_back(!isCPU);
 		}
 	}
+
+	delete ctx;
 }
 
 HardwareTreeModel::~HardwareTreeModel() {

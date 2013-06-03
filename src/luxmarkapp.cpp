@@ -56,7 +56,8 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	luxInit();
 
 	// Set LuxRender log level
-	lux::luxLogFilter = LUX_DEBUG;
+	//lux::luxLogFilter = LUX_DEBUG;
+	lux::luxLogFilter = LUX_INFO;
 
 	singleRun = false;
 
@@ -90,6 +91,10 @@ void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName, const bool singl
 
 	LM_LOG("<FONT COLOR=\"#0000ff\">LuxMark v" << LUXMARK_VERSION_MAJOR << "." << LUXMARK_VERSION_MINOR << "</FONT>");
 	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxRender v" << luxVersion() << "</FONT>");
+
+	// Initialize hardware information
+	hardwareTreeModel = new HardwareTreeModel(mainWin);
+	mainWin->SetHardwareTreeModel(hardwareTreeModel);
 
 	InitRendering(mode, scnName);
 }
@@ -219,17 +224,6 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 //		renderConfig->cfg.Load(prop);
 //		app->renderSession = new RenderSession(renderConfig);
 
-		// Initialize hardware information
-//		if (!app->hardwareTreeModel) {
-//			if (app->renderSession->renderEngine->GetEngineType() == PATHOCL)
-//				app->hardwareTreeModel = new HardwareTreeModel(app->mainWin,
-//						app->renderSession->renderEngine->GetAvailableDeviceDescriptions());
-//			else {
-				const vector<DeviceDescription *> devDescs;
-				app->hardwareTreeModel = new HardwareTreeModel(app->mainWin, devDescs);
-//			}
-//		}
-
 		// Start the rendering
 		app->luxSession->Start();
 
@@ -248,8 +242,6 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 void LuxMarkApp::RenderRefreshTimeout() {
 	if (!engineInitDone)
 		return;
-
-	mainWin->SetHardwareTreeModel(hardwareTreeModel);
 
 	if (luxStatistics("sceneIsReady") || luxStatistics("filmIsReady")) {
 		// Get the rendered image
@@ -270,7 +262,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
 	// After 120secs of benchmark, show the result dialog
-	bool benchmarkDone = (renderingTime > 10) && (mode != INTERACTIVE);
+	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
 
 	char buf[512];
 	stringstream ss("");

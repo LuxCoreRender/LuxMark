@@ -80,7 +80,7 @@ class HardwareTreeModel : public QAbstractItemModel {
 	Q_OBJECT
 
 public:
-	HardwareTreeModel(MainWindow *win, const vector<DeviceDescription *> &devDescs);
+	HardwareTreeModel(MainWindow *win);
 	~HardwareTreeModel();
 
 	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);

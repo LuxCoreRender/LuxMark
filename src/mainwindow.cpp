@@ -47,7 +47,7 @@ LuxErrorEvent::LuxErrorEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_ERR_MES
 	setAccepted(false);
 }
 
-void LuxRenderErrorHandler(int code, int severity, const char *msg) {
+static void LuxRenderErrorHandler(int code, int severity, const char *msg) {
 	switch (severity) {
 		case LUX_ERROR:
 		case LUX_SEVERE:
