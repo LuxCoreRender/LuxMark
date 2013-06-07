@@ -24,11 +24,14 @@
 
 #include "luxrendersession.h"
 
-LuxRenderSession::LuxRenderSession(const std::string &fileName) {
+LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
+		const string devSelection) {
 	// Save the current directory
 	originalCurrentDirectory = boost::filesystem::current_path();
 
 	sceneFileName = boost::filesystem::system_complete(fileName).string();
+	renderMode = mode;
+	deviceSelection = devSelection;
 
 	parseThread = NULL;
 	started = false;
@@ -44,8 +47,37 @@ LuxRenderSession::~LuxRenderSession() {
 }
 
 void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
+	// Disable the start of the rendering at WorldEnd so I can
+	// overwrite Renderer settings
+	luxStartRenderingAfterParse(false);
+
+	// Parse the scene
 	luxParse(session->sceneFileName.c_str());
-    if (luxStatistics("sceneIsReady") == 0.)
+
+	// Overwrite the Renderer settings
+	if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_GPU)
+		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU)
+		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CPU)
+		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 0\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM) {
+		// At the first run, hardwareTreeModel is NULL
+		if (session->deviceSelection == "")
+			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+		else {
+			const string opts = "[\"screen.refresh.interval = 1000\" \"opencl.devices.select = " + session->deviceSelection + "\"]";
+			luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
+		}
+	} else {
+		LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxRenderSession::RenderthreadImpl(): " << session->renderMode << "</FONT>");
+	}
+
+
+	// Close the parsing phase
+	luxParseEnd();
+
+	if (luxStatistics("sceneIsReady") == 0.)
         session->parseError = true;
 }
 

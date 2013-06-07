@@ -27,7 +27,7 @@
 
 #include <boost/thread.hpp>
 
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 #include "mainwindow.h"
 #include "hardwaretree.h"
 #include "luxrendersession.h"

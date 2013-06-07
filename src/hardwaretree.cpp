@@ -26,7 +26,7 @@
 
 #include "luxrays/core/virtualdevice.h"
 
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 #include "hardwaretree.h"
 #include "mainwindow.h"
 

@@ -30,9 +30,9 @@
 
 #include "mainwindow.h"
 #include "aboutdialog.h"
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 #include "luxmarkapp.h"
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 
 MainWindow *LogWindow = NULL;
 
@@ -197,22 +197,22 @@ void MainWindow::setSalaScene() {
 
 void MainWindow::setBenchmarkGPUsMode() {
 	LM_LOG("Set Benchmark GPUs mode");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_GPU);
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_GPU);
 }
 
 void MainWindow::setBenchmarkCPUsGPUsMode() {
 	LM_LOG("Set Benchmark CPUs+GPUs mode");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPUGPU);
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
 }
 
 void MainWindow::setBenchmarkCPUsMode() {
 	LM_LOG("Set Benchmark CPUs mode");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPU);
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPU);
 }
 
 void MainWindow::setBenchmarkCustomMode() {
 	LM_LOG("Set Benchmark Custom mode");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CUSTOM);
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
 }
 
 void MainWindow::setInteractiveMode() {

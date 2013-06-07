@@ -28,7 +28,7 @@
 #include "luxmarkcfg.h"
 #include "luxmarkapp.h"
 #include "resultdialog.h"
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 
 void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
 	printf("\n*** ");
@@ -56,8 +56,8 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	luxInit();
 
 	// Set LuxRender log level
-	//lux::luxLogFilter = LUX_DEBUG;
-	lux::luxLogFilter = LUX_INFO;
+	lux::luxLogFilter = LUX_DEBUG;
+	//lux::luxLogFilter = LUX_INFO;
 
 	singleRun = false;
 
@@ -142,13 +142,13 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		mainWin->SetSceneCheck(4);
 
 	// Initialize the new mode
-	if ((mode == BENCHMARK_OCL_GPU) || (mode == BENCHMARK_OCL_CPUGPU) ||
-			(mode == BENCHMARK_OCL_CPU) || (mode == BENCHMARK_OCL_CUSTOM)) {
-		if (mode == BENCHMARK_OCL_GPU)
+	if ((mode == BENCHMARK_NOSPECTRAL_OCL_GPU) || (mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU) ||
+			(mode == BENCHMARK_NOSPECTRAL_OCL_CPU) || (mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM)) {
+		if (mode == BENCHMARK_NOSPECTRAL_OCL_GPU)
 			mainWin->SetModeCheck(0);
-		else if (mode == BENCHMARK_OCL_CPUGPU)
+		else if (mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU)
 			mainWin->SetModeCheck(1);
-		else if (mode == BENCHMARK_OCL_CPU)
+		else if (mode == BENCHMARK_NOSPECTRAL_OCL_CPU)
 			mainWin->SetModeCheck(2);
 		else
 			mainWin->SetModeCheck(3);
@@ -185,44 +185,9 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 	try {
 		// Initialize the new mode
 		string sname(app->sceneName); 
-		app->luxSession = new LuxRenderSession(sname);
-		
-//		RenderConfig *renderConfig = new RenderConfig(&sname, NULL);
-//
-//		// Overwrite properties according the current mode
-//		Properties prop;
-//		prop.SetString("renderengine.type", "4");
-//		prop.SetString("opencl.kernelcache", "NONE");
-//		if (app->mode == BENCHMARK_OCL_GPU) {
-//			prop.SetString("opencl.cpu.use", "0");
-//			prop.SetString("opencl.gpu.use", "1");
-//			prop.SetString("screen.refresh.interval", "1000");
-//		} else if (app->mode == BENCHMARK_OCL_CPUGPU) {
-//			prop.SetString("opencl.cpu.use", "1");
-//			prop.SetString("opencl.gpu.use", "1");
-//			prop.SetString("screen.refresh.interval", "1000");
-//		} else if (app->mode == BENCHMARK_OCL_CPU) {
-//			prop.SetString("opencl.cpu.use", "1");
-//			prop.SetString("opencl.gpu.use", "0");
-//			prop.SetString("screen.refresh.interval", "1000");
-//		} else if (app->mode == BENCHMARK_OCL_CUSTOM) {
-//			// At the first run, hardwareTreeModel is NULL
-//			const string deviceSelection = (app->hardwareTreeModel) ? (app->hardwareTreeModel->getDeviceSelectionString()) : "";
-//			if (deviceSelection == "") {
-//				prop.SetString("opencl.cpu.use", "0");
-//				prop.SetString("opencl.gpu.use", "1");
-//			} else
-//				prop.SetString("opencl.devices.select", deviceSelection);
-//			prop.SetString("screen.refresh.interval", "1000");
-//		} else if (app->mode == INTERACTIVE) {
-//			prop.SetString("opencl.cpu.use", "0");
-//			prop.SetString("opencl.gpu.use", "1");
-//			prop.SetString("screen.refresh.interval", "100");
-//		} else
-//			assert (false);
-//
-//		renderConfig->cfg.Load(prop);
-//		app->renderSession = new RenderSession(renderConfig);
+		// At the first run, hardwareTreeModel is NULL
+		const string deviceSelection = (app->hardwareTreeModel) ? (app->hardwareTreeModel->getDeviceSelectionString()) : "";
+		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection);
 
 		// Start the rendering
 		app->luxSession->Start();
@@ -274,10 +239,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 
 	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Rays/sec % 6dK on %.1fK tris]",
-			(mode == BENCHMARK_OCL_GPU) ? "OpenCL GPUs" :
-				((mode == BENCHMARK_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
-					((mode == BENCHMARK_OCL_CPU) ? "OpenCL CPUs" :
-						((mode == BENCHMARK_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))),
+			(mode == BENCHMARK_NOSPECTRAL_OCL_GPU) ? "OpenCL GPUs" :
+				((mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
+					((mode == BENCHMARK_NOSPECTRAL_OCL_CPU) ? "OpenCL CPUs" :
+						((mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))),
 			renderingTime, validBuf, int(sampleSec / 1000.0),
 			int(raysSec / 1000.0), triangleCount / 1000.0);
 	ss << buf;

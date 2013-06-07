@@ -35,10 +35,10 @@ ResultDialog::ResultDialog(LuxMarkAppMode mode,
 	ui->setupUi(this);
 
 	this->setWindowTitle("LuxMark v" LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
-	ui->modeLabel->setText((mode == BENCHMARK_OCL_GPU) ? "OpenCL GPUs" :
-				((mode == BENCHMARK_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
-					((mode == BENCHMARK_OCL_CPU) ? "OpenCL CPUs" :
-						((mode == BENCHMARK_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))));
+	ui->modeLabel->setText((mode == BENCHMARK_NOSPECTRAL_OCL_GPU) ? "OpenCL GPUs" :
+				((mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
+					((mode == BENCHMARK_NOSPECTRAL_OCL_CPU) ? "OpenCL CPUs" :
+						((mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))));
 	ui->sceneLabel->setText(sceneName);
 
 	deviceListModel = new DeviceListModel(descs);

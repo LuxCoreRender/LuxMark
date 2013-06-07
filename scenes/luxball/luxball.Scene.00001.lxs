@@ -1,7 +1,7 @@
 # Main Scene File
 
 Renderer "slg"
-	"string config" ["opencl.gpu.use = 1" "opencl.cpu.use = 1" "opencl.gpu.workgroup.size = 64" "opencl.devices.select = 10000" "opencl.kernelcache = NONE"]
+	"string config" ["opencl.gpu.use = 1" "opencl.cpu.use = 1" "opencl.kernelcache = NONE"]
 
 Sampler "random"
 	"integer pixelsamples" [2]

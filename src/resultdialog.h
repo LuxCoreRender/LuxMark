@@ -24,7 +24,7 @@
 
 #include <cstddef>
 
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 #include "hardwaretree.h"
 
 #include "ui_resultdialog.h"

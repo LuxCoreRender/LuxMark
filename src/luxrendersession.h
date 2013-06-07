@@ -28,9 +28,12 @@
 #include "error.h"
 #include "server/renderserver.h"
 
+#include "luxmarkdefs.h"
+
 class LuxRenderSession {
 public:
-	LuxRenderSession(const std::string &sceneFileName);
+	LuxRenderSession(const std::string &sceneFileName, const LuxMarkAppMode mode,
+			const string devSelection = "");
 	~LuxRenderSession();
 
 	void Start();
@@ -42,6 +45,9 @@ private:
 	boost::filesystem::path originalCurrentDirectory;
 
 	std::string sceneFileName;
+	LuxMarkAppMode renderMode;
+	string deviceSelection;
+
 	boost::thread *parseThread;
 
 	bool started, parseError;

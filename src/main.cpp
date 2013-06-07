@@ -22,7 +22,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "slgdefs.h"
+#include "luxmarkdefs.h"
 #include "mainwindow.h"
 #include "luxmarkapp.h"
 
@@ -44,10 +44,13 @@ int main(int argc, char **argv) {
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
 	QRegExp argScene("--scene=(LUXBALL_HDR|SALA|ROOM)");
-	QRegExp argMode("--mode=(BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|INTERACTIVE|PAUSE)");
+	QRegExp argMode("--mode=("
+		"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
+		"INTERACTIVE|PAUSE"
+		")");
 	QRegExp argSingleRun("--single-run");
 
-	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
+	LuxMarkAppMode mode = BENCHMARK_NOSPECTRAL_OCL_GPU;
 	// Remember to change the default label in mainwindow.cpp too
 	const char *scnName = SCENE_LUXBALL_HDR;
     for (int i = 1; i < argsList.size(); ++i) {
@@ -71,12 +74,12 @@ int main(int argc, char **argv) {
 			}
 		} else if (argMode.indexIn(argsList.at(i)) != -1 ) {   
             QString scene = argMode.cap(1);
-			if (scene.compare("BENCHMARK_OCL_GPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_GPU;
-			else if (scene.compare("BENCHMARK_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_CPUGPU;
-			else if (scene.compare("BENCHMARK_OCL_CPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_CPU;
+			if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NOSPECTRAL_OCL_GPU;
+			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NOSPECTRAL_OCL_CPUGPU;
+			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NOSPECTRAL_OCL_CPU;
 			else if (scene.compare("INTERACTIVE", Qt::CaseInsensitive) == 0)
 				mode = INTERACTIVE;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)

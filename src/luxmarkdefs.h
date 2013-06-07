@@ -19,8 +19,8 @@
  *   LuxRays website: http://www.luxrender.net                             *
  ***************************************************************************/
 
-#ifndef _SLGDEFS_H
-#define	_SLGDEFS_H
+#ifndef _LUXMARKDEFS_H
+#define	_LUXMARKDEFS_H
 
 #include <cmath>
 #include <sstream>
@@ -37,21 +37,10 @@
 	Unsupported Platform !!!
 #endif
 
-#include "luxrays/luxrays.h"
-#include "luxrays/core/utils.h"
-#include "luxrays/utils/atomic.h"
-
-#include "slg/slg.h"
-#include "slg/rendersession.h"
-#include "slg/renderconfig.h"
-#include "slg/sdl/scene.h"
-#include "slg/film/film.h"
-
 #include "mainwindow.h"
 
 using namespace std;
 using namespace luxrays;
-using namespace slg;
 
 extern MainWindow *LogWindow;
 
@@ -86,7 +75,11 @@ private:
 #define LM_ERROR(a) { if (LogWindow) { std::stringstream _LM_ERR_LOCAL_SS; _LM_ERR_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxErrorEvent(QString(_LM_ERR_LOCAL_SS.str().c_str()))); }}
 
 enum LuxMarkAppMode {
-	BENCHMARK_OCL_GPU, BENCHMARK_OCL_CPUGPU,  BENCHMARK_OCL_CPU, BENCHMARK_OCL_CUSTOM, INTERACTIVE, PAUSE
+	BENCHMARK_NOSPECTRAL_OCL_GPU,
+	BENCHMARK_NOSPECTRAL_OCL_CPUGPU,
+	BENCHMARK_NOSPECTRAL_OCL_CPU,
+	BENCHMARK_NOSPECTRAL_OCL_CUSTOM,
+	INTERACTIVE, PAUSE
 };
 
-#endif	/* _SLGDEFS_H */
+#endif	/* _LUXMARKDEFS_H */
