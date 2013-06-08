@@ -79,7 +79,38 @@ enum LuxMarkAppMode {
 	BENCHMARK_NOSPECTRAL_OCL_CPUGPU,
 	BENCHMARK_NOSPECTRAL_OCL_CPU,
 	BENCHMARK_NOSPECTRAL_OCL_CUSTOM,
+	BENCHMARK_SPECTRAL_HYBRID_GPU,
+	BENCHMARK_SPECTRAL_HYBRID_CUSTOM,
+	BENCHMARK_SPECTRAL_NATIVE_PATH,
+	BENCHMARK_SPECTRAL_NATIVE_BIDIR,
 	INTERACTIVE, PAUSE
 };
+
+inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
+	switch (mode) {
+		case BENCHMARK_NOSPECTRAL_OCL_GPU:
+			return "No Spectral OpenCL GPUs";
+		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
+			return "No Spectral OpenCL CPUs+GPUs";
+		case BENCHMARK_NOSPECTRAL_OCL_CPU:
+			return "No Spectral OpenCL CPUs";
+		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
+			return "No Spectral OpenCL Custom";
+		case BENCHMARK_SPECTRAL_HYBRID_GPU:
+			return "Spectral Hybrid C++/OpenCL GPUs";
+		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM:
+			return "Spectral Hybrid C++/OpenCL Custom";
+		case BENCHMARK_SPECTRAL_NATIVE_PATH:
+			return "Spectral C++";
+		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
+			return "Advanced Spectral C++";
+		case INTERACTIVE:
+			return "Interactive";
+		case PAUSE:
+			return "Pause";
+		default:
+			return "Unknown";
+	}
+}
 
 #endif	/* _LUXMARKDEFS_H */

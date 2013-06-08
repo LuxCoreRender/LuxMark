@@ -195,24 +195,44 @@ void MainWindow::setSalaScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_SALA);
 }
 
-void MainWindow::setBenchmarkGPUsMode() {
-	LM_LOG("Set Benchmark GPUs mode");
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_GPU);
 }
 
-void MainWindow::setBenchmarkCPUsGPUsMode() {
-	LM_LOG("Set Benchmark CPUs+GPUs mode");
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CPUGPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
 }
 
-void MainWindow::setBenchmarkCPUsMode() {
-	LM_LOG("Set Benchmark CPUs mode");
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPU);
 }
 
-void MainWindow::setBenchmarkCustomMode() {
-	LM_LOG("Set Benchmark Custom mode");
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CUSTOM");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_HYBRID_GPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_GPU);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_HYBRID_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_CUSTOM);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_PATH);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_BIDIR");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_BIDIR);
 }
 
 void MainWindow::setInteractiveMode() {
@@ -229,7 +249,7 @@ void MainWindow::setPauseMode() {
 
 void MainWindow::Pause() {
 	setPauseMode();
-	SetModeCheck(5);
+	SetModeCheck(9);
 }
 
 void MainWindow::ShowLogo() {
@@ -252,51 +272,16 @@ void MainWindow::ShowLogo() {
 }
 
 void MainWindow::SetModeCheck(const int index) {
-	if (index == 0) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(true);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Interactive->setChecked(false);
-		ui->action_Pause->setChecked(false);
-	} else if (index == 1) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(true);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Interactive->setChecked(false);
-		ui->action_Pause->setChecked(false);
-	} else if (index == 2) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(true);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Interactive->setChecked(false);
-		ui->action_Pause->setChecked(false);
-	} else if (index == 3) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(true);
-		ui->action_Interactive->setChecked(false);
-		ui->action_Pause->setChecked(false);
-	} else if (index == 4) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Interactive->setChecked(true);
-		ui->action_Pause->setChecked(false);
-	} else if (index == 5) {
-		ui->action_Benchmark_OpenCL_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_CPUs->setChecked(false);
-		ui->action_Benchmark_OpenCL_Custom->setChecked(false);
-		ui->action_Interactive->setChecked(false);
-		ui->action_Pause->setChecked(true);
-	} else
-		assert(false);
+	ui->action_Benchmark_OpenCL_GPUs->setChecked(index == 0);
+	ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(index == 1);
+	ui->action_Benchmark_OpenCL_CPUs->setChecked(index == 2);
+	ui->action_Benchmark_OpenCL_Custom->setChecked(index == 3);
+	ui->action_Benchmark_Hybrid_GPUs->setChecked(index == 4);
+	ui->action_Benchmark_Hybrid_Custom->setChecked(index == 5);
+	ui->action_Benchmark_Path->setChecked(index == 6);
+	ui->action_Benchmark_BiDir->setChecked(index == 7);
+	ui->action_Interactive->setChecked(index == 8);
+	ui->action_Pause->setChecked(index == 9);
 }
 
 void MainWindow::SetSceneCheck(const int index) {

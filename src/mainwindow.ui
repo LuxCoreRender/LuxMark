@@ -135,6 +135,12 @@
     <addaction name="action_Benchmark_OpenCL_CPUs"/>
     <addaction name="action_Benchmark_OpenCL_Custom"/>
     <addaction name="separator"/>
+    <addaction name="action_Benchmark_Hybrid_GPUs"/>
+    <addaction name="action_Benchmark_Hybrid_Custom"/>
+    <addaction name="separator"/>
+    <addaction name="action_Benchmark_Path"/>
+    <addaction name="action_Benchmark_BiDir"/>
+    <addaction name="separator"/>
     <addaction name="action_Interactive"/>
     <addaction name="action_Pause"/>
    </widget>
@@ -173,7 +179,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL &amp;GPUs-only)</string>
+    <string>Benchmark (No Spectral Rendering, OpenCL-only GPUs-only)</string>
    </property>
   </action>
   <action name="action_Interactive">
@@ -211,7 +217,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL CPUs &amp;+ GPUs)</string>
+    <string>Benchmark (No Spectral Rendering, OpenCL-only CPUs + GPUs)</string>
    </property>
   </action>
   <action name="action_Pause">
@@ -227,7 +233,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL &amp;CPUs-only)</string>
+    <string>Benchmark (No Spectral Rendering, OpenCL-only CPUs-only)</string>
    </property>
   </action>
   <action name="action_LuxBall_Sky">
@@ -257,7 +263,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (Only &amp;selected devices)</string>
+    <string>Benchmark (No Spectral Rendering, OpenCL-only selected devices only)</string>
    </property>
   </action>
   <action name="action_Room">
@@ -269,6 +275,38 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_Benchmark_Hybrid_GPUs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (Spectral Rendering, Hybrid C++/OpenCL GPUs-only)</string>
+   </property>
+  </action>
+  <action name="action_Benchmark_Hybrid_Custom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (Spectral Rendering, Hybrid C++/OpenCL selected devices only)</string>
+   </property>
+  </action>
+  <action name="action_Benchmark_BiDir">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (Advanced Spectral Rendering, Native C++ only)</string>
+   </property>
+  </action>
+  <action name="action_Benchmark_Path">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (Spectral Rendering, Native C++ only)</string>
    </property>
   </action>
  </widget>
@@ -344,7 +382,7 @@
    <sender>action_Benchmark_OpenCL_CPUs_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkCPUsGPUsMode()</slot>
+   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -376,7 +414,7 @@
    <sender>action_Benchmark_OpenCL_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkGPUsMode()</slot>
+   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -408,7 +446,7 @@
    <sender>action_Benchmark_OpenCL_CPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkCPUsMode()</slot>
+   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -456,7 +494,7 @@
    <sender>action_Benchmark_OpenCL_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkCustomMode()</slot>
+   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -484,6 +522,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Benchmark_Hybrid_GPUs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Benchmark_Hybrid_Custom</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Benchmark_Path</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Benchmark_BiDir</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitApp()</slot>
@@ -492,12 +594,16 @@
   <slot>setLuxBallHDRScene()</slot>
   <slot>setLuxBallSkyScene()</slot>
   <slot>setSalaScene()</slot>
-  <slot>setBenchmarkGPUsMode()</slot>
   <slot>setInteractiveMode()</slot>
-  <slot>setBenchmarkCPUsGPUsMode()</slot>
-  <slot>setBenchmarkCustomMode()</slot>
   <slot>setPauseMode()</slot>
-  <slot>setBenchmarkCPUsMode()</slot>
   <slot>setRoomScene()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
+  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
  </slots>
 </ui>

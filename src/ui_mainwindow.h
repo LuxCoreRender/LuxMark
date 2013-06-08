@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu May 30 15:44:07 2013
+** Created: Sat Jun 8 11:36:59 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -45,6 +45,10 @@ public:
     QAction *action_Sala;
     QAction *action_Benchmark_OpenCL_Custom;
     QAction *action_Room;
+    QAction *action_Benchmark_Hybrid_GPUs;
+    QAction *action_Benchmark_Hybrid_Custom;
+    QAction *action_Benchmark_BiDir;
+    QAction *action_Benchmark_Path;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QSplitter *splitter_2;
@@ -108,6 +112,18 @@ public:
         action_Room = new QAction(MainWindow);
         action_Room->setObjectName(QString::fromUtf8("action_Room"));
         action_Room->setCheckable(true);
+        action_Benchmark_Hybrid_GPUs = new QAction(MainWindow);
+        action_Benchmark_Hybrid_GPUs->setObjectName(QString::fromUtf8("action_Benchmark_Hybrid_GPUs"));
+        action_Benchmark_Hybrid_GPUs->setCheckable(true);
+        action_Benchmark_Hybrid_Custom = new QAction(MainWindow);
+        action_Benchmark_Hybrid_Custom->setObjectName(QString::fromUtf8("action_Benchmark_Hybrid_Custom"));
+        action_Benchmark_Hybrid_Custom->setCheckable(true);
+        action_Benchmark_BiDir = new QAction(MainWindow);
+        action_Benchmark_BiDir->setObjectName(QString::fromUtf8("action_Benchmark_BiDir"));
+        action_Benchmark_BiDir->setCheckable(true);
+        action_Benchmark_Path = new QAction(MainWindow);
+        action_Benchmark_Path->setObjectName(QString::fromUtf8("action_Benchmark_Path"));
+        action_Benchmark_Path->setCheckable(true);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setMinimumSize(QSize(160, 120));
@@ -193,6 +209,12 @@ public:
         menu_Mode->addAction(action_Benchmark_OpenCL_CPUs);
         menu_Mode->addAction(action_Benchmark_OpenCL_Custom);
         menu_Mode->addSeparator();
+        menu_Mode->addAction(action_Benchmark_Hybrid_GPUs);
+        menu_Mode->addAction(action_Benchmark_Hybrid_Custom);
+        menu_Mode->addSeparator();
+        menu_Mode->addAction(action_Benchmark_Path);
+        menu_Mode->addAction(action_Benchmark_BiDir);
+        menu_Mode->addSeparator();
         menu_Mode->addAction(action_Interactive);
         menu_Mode->addAction(action_Pause);
         menu_Scene->addAction(action_Room);
@@ -207,15 +229,19 @@ public:
         QObject::connect(action_About, SIGNAL(triggered()), MainWindow, SLOT(showAbout()));
         QObject::connect(action_LuxBall, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallScene()));
         QObject::connect(action_LuxBall_HDR, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallHDRScene()));
-        QObject::connect(action_Benchmark_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkCPUsGPUsMode()));
+        QObject::connect(action_Benchmark_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()));
         QObject::connect(action_Interactive, SIGNAL(triggered()), MainWindow, SLOT(setInteractiveMode()));
-        QObject::connect(action_Benchmark_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkGPUsMode()));
+        QObject::connect(action_Benchmark_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()));
         QObject::connect(action_Pause, SIGNAL(triggered()), MainWindow, SLOT(setPauseMode()));
-        QObject::connect(action_Benchmark_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkCPUsMode()));
+        QObject::connect(action_Benchmark_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()));
         QObject::connect(action_LuxBall_Sky, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallSkyScene()));
         QObject::connect(action_Sala, SIGNAL(triggered()), MainWindow, SLOT(setSalaScene()));
-        QObject::connect(action_Benchmark_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkCustomMode()));
+        QObject::connect(action_Benchmark_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()));
         QObject::connect(action_Room, SIGNAL(triggered()), MainWindow, SLOT(setRoomScene()));
+        QObject::connect(action_Benchmark_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()));
+        QObject::connect(action_Benchmark_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()));
+        QObject::connect(action_Benchmark_Path, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()));
+        QObject::connect(action_Benchmark_BiDir, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -226,22 +252,26 @@ public:
         action_Quit->setText(QApplication::translate("MainWindow", "&Quit", 0, QApplication::UnicodeUTF8));
         action_Quit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
-        action_Benchmark_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL &GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
         action_Interactive->setText(QApplication::translate("MainWindow", "&Interactive (OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setText(QApplication::translate("MainWindow", "LuxBall &HDR (Simple Benchmark: 262K triangles)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", 0, QApplication::UnicodeUTF8));
         action_LuxBall->setText(QApplication::translate("MainWindow", "&LuxBall  (Test: 262K triangles)", 0, QApplication::UnicodeUTF8));
         action_LuxBall->setShortcut(QApplication::translate("MainWindow", "Ctrl+L", 0, QApplication::UnicodeUTF8));
-        action_Benchmark_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL CPUs &+ GPUs)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, OpenCL-only CPUs + GPUs)", 0, QApplication::UnicodeUTF8));
         action_Pause->setText(QApplication::translate("MainWindow", "&Pause", 0, QApplication::UnicodeUTF8));
-        action_Benchmark_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL &CPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, OpenCL-only CPUs-only)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_Sky->setText(QApplication::translate("MainWindow", "LuxBall S&ky  (Test: 262K triangles)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_Sky->setShortcut(QApplication::translate("MainWindow", "Ctrl+K", 0, QApplication::UnicodeUTF8));
         action_Sala->setText(QApplication::translate("MainWindow", "&Sala (Medium Benchmark: 488K triangles)", 0, QApplication::UnicodeUTF8));
         action_Sala->setShortcut(QApplication::translate("MainWindow", "Ctrl+A", 0, QApplication::UnicodeUTF8));
-        action_Benchmark_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (Only &selected devices)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, OpenCL-only selected devices only)", 0, QApplication::UnicodeUTF8));
         action_Room->setText(QApplication::translate("MainWindow", "&Room (Complex Benchmark: 2016K triangles)", 0, QApplication::UnicodeUTF8));
         action_Room->setShortcut(QApplication::translate("MainWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (Spectral Rendering, Hybrid C++/OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (Spectral Rendering, Hybrid C++/OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_BiDir->setText(QApplication::translate("MainWindow", "Benchmark (Advanced Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
+        action_Benchmark_Path->setText(QApplication::translate("MainWindow", "Benchmark (Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
         hardwareDevicesLabel->setText(QApplication::translate("MainWindow", "Hardware Devices", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));

@@ -46,6 +46,8 @@ int main(int argc, char **argv) {
 	QRegExp argScene("--scene=(LUXBALL_HDR|SALA|ROOM)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
+		"BENCHMARK_SPECTRAL_HYBRID_GPU|"
+		"BENCHMARK_SPECTRAL_NATIVE_PATH|BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
 		"INTERACTIVE|PAUSE"
 		")");
 	QRegExp argSingleRun("--single-run");
@@ -80,6 +82,12 @@ int main(int argc, char **argv) {
 				mode = BENCHMARK_NOSPECTRAL_OCL_CPUGPU;
 			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_NOSPECTRAL_OCL_CPU;
+			else if (scene.compare("BENCHMARK_SPECTRAL_HYBRID_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_SPECTRAL_HYBRID_GPU;
+			else if (scene.compare("BENCHMARK_SPECTRAL_NATIVE_PATH", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_SPECTRAL_NATIVE_PATH;
+			else if (scene.compare("BENCHMARK_SPECTRAL_NATIVE_BIDIR", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_SPECTRAL_NATIVE_BIDIR;
 			else if (scene.compare("INTERACTIVE", Qt::CaseInsensitive) == 0)
 				mode = INTERACTIVE;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)

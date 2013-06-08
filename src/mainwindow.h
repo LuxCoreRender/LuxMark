@@ -93,10 +93,14 @@ private slots:
 	void setSalaScene();
 	void setRoomScene();
 
-	void setBenchmarkGPUsMode();
-	void setBenchmarkCPUsGPUsMode();
-	void setBenchmarkCPUsMode();
-	void setBenchmarkCustomMode();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM();
+	void setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU();
+	void setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM();
+	void setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH();
+	void setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR();
 	void setInteractiveMode();
 	void setPauseMode();
 };

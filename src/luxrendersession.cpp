@@ -55,26 +55,53 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 	luxParse(session->sceneFileName.c_str());
 
 	// Overwrite the Renderer settings
-	if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_GPU)
-		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
-	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU)
-		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 1\"]", LUX_NULL);
-	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CPU)
-		luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 0\" \"opencl.cpu.use = 1\"]", LUX_NULL);
-	else if (session->renderMode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM) {
-		// At the first run, hardwareTreeModel is NULL
-		if (session->deviceSelection == "")
-			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 1000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
-		else {
-			const string opts = "[\"screen.refresh.interval = 1000\" \"opencl.devices.select = " + session->deviceSelection + "\"]";
-			luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
+	const int maxpath = 12;
+
+	switch (session->renderMode) {
+		case BENCHMARK_NOSPECTRAL_OCL_GPU: {
+			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
 		}
-	} else {
-		LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxRenderSession::RenderthreadImpl(): " << session->renderMode << "</FONT>");
+		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU: {
+			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_NOSPECTRAL_OCL_CPU: {
+			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 0\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM: {
+			// At the first run, hardwareTreeModel is NULL
+			if (session->deviceSelection == "")
+				luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+			else {
+				const string opts = "[\"screen.refresh.interval = 2000\" \"opencl.devices.select = " + session->deviceSelection + "\"]";
+				luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
+			}
+
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_SPECTRAL_NATIVE_PATH: {
+			luxRenderer("sampler", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_SPECTRAL_NATIVE_BIDIR: {
+			luxRenderer("sampler", LUX_NULL);
+			luxSurfaceIntegrator("bidirectional", "integer eyedepth", &maxpath, "integer lightdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		default: {
+			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxRenderSession::RenderthreadImpl(): " << session->renderMode << "</FONT>");
+			break;
+		}
 	}
 
-
-	// Close the parsing phase
+	// Close the parsing phase. This function returns only at the end of the rendering.
 	luxParseEnd();
 
 	if (luxStatistics("sceneIsReady") == 0.)
@@ -94,19 +121,32 @@ void LuxRenderSession::Start() {
 
 	// Create the thread for the scene parsing
 	parseThread = new boost::thread(&RenderthreadImpl, this);
+	
+	// Wait the scene parsing to finish
+	while (!luxStatistics("sceneIsReady") && !parseError)
+		boost::this_thread::sleep(boost::posix_time::millisec(250));
+
+	// Add rendering threads
+	int threadsToAdd = boost::thread::hardware_concurrency();
+	while (--threadsToAdd)
+		luxAddThread();
 }
 
 void LuxRenderSession::Stop() {
 	assert (started);
-	
-	// Make sure lux core shuts down
-	int haltspp = luxGetIntAttribute("film", "haltSamplesPerPixel");
-	luxSetHaltSamplesPerPixel(haltspp, true, false);
+
+	if (!parseError) {
+		// Make sure lux core shuts down
+		int haltspp = luxGetIntAttribute("film", "haltSamplesPerPixel");
+		luxSetHaltSamplesPerPixel(haltspp, true, false);
+	}
 
 	parseThread->join();
 	delete parseThread;
 	parseThread = NULL;
 
-	luxWait();
-	luxCleanup();
+	if (!parseError) {
+		luxWait();
+		luxCleanup();
+	}
 }
