@@ -142,11 +142,10 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		mainWin->SetSceneCheck(4);
 
 	// Initialize the new mode
+	mainWin->SetModeCheck(mode);
 	if (mode == PAUSE) {
-		mainWin->SetModeCheck(9);
+		// Nothing to do
 	} else if (mode == INTERACTIVE) {
-		mainWin->SetModeCheck(8);
-
 		// Update timer
 		renderRefreshTimer = new QTimer();
 		connect(renderRefreshTimer, SIGNAL(timeout()), SLOT(RenderRefreshTimeout()));
@@ -154,23 +153,6 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		// Refresh the screen every 100ms in benchmark mode
 		renderRefreshTimer->start(100);
 	} else {
-		if (mode == BENCHMARK_NOSPECTRAL_OCL_GPU)
-			mainWin->SetModeCheck(0);
-		else if (mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU)
-			mainWin->SetModeCheck(1);
-		else if (mode == BENCHMARK_NOSPECTRAL_OCL_CPU)
-			mainWin->SetModeCheck(2);
-		else if (mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM)
-			mainWin->SetModeCheck(3);
-		else if (mode == BENCHMARK_SPECTRAL_HYBRID_GPU)
-			mainWin->SetModeCheck(4);
-		else if (mode == BENCHMARK_SPECTRAL_HYBRID_CUSTOM)
-			mainWin->SetModeCheck(5);
-		else if (mode == BENCHMARK_SPECTRAL_NATIVE_PATH)
-			mainWin->SetModeCheck(6);
-		else if (mode == BENCHMARK_SPECTRAL_NATIVE_BIDIR)
-			mainWin->SetModeCheck(7);
-
 		// Update timer
 		renderRefreshTimer = new QTimer();
 		connect(renderRefreshTimer, SIGNAL(timeout()), SLOT(RenderRefreshTimeout()));

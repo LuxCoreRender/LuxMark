@@ -29,6 +29,7 @@
 
 #include "ui_mainwindow.h"
 #include "hardwaretree.h"
+#include "luxmarkdefs.h"
 
 #include <QGraphicsPixmapItem>
 
@@ -59,7 +60,7 @@ public:
 	void ShowFrameBuffer(const unsigned char *frameBuffer,
 		const unsigned int width, const unsigned int height);
 
-	void SetModeCheck(const int index);
+	void SetModeCheck(const LuxMarkAppMode mode);
 	void SetSceneCheck(const int index);
 	void UpdateScreenLabel(const char *msg, const bool valid);
 	void SetHardwareTreeModel(HardwareTreeModel *treeModel);
@@ -97,6 +98,9 @@ private slots:
 	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU();
 	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU();
 	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM();
+	void setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH();
 	void setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU();
 	void setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM();
 	void setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH();
@@ -104,5 +108,41 @@ private slots:
 	void setInteractiveMode();
 	void setPauseMode();
 };
+
+//------------------------------------------------------------------------------
+// Log related definitions
+//------------------------------------------------------------------------------
+
+extern MainWindow *LogWindow;
+
+class LuxLogEvent: public QEvent {
+public:
+	LuxLogEvent(QString mesg);
+ 
+	QString getMessage() { return message; }
+
+private:
+	QString message;
+};
+
+class LuxErrorEvent: public QEvent {
+public:
+	LuxErrorEvent(QString mesg);
+
+	QString getMessage() { return message; }
+
+private:
+	QString message;
+};
+
+#define LM_LOG(a) { if (LogWindow) { std::stringstream _LM_LOG_LOCAL_SS; _LM_LOG_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxLogEvent(QString(_LM_LOG_LOCAL_SS.str().c_str()))); }}
+#define LM_LOG_LUXRAYS(a) { LM_LOG("<FONT COLOR=\"#002200\"><B>[LuxRays]</B></FONT> " << a); }
+#define LM_LOG_SLG(a) { LM_LOG("<FONT COLOR=\"#009900\"><B>[SLG]</B></FONT> " << a); }
+#define LM_LOG_SDL(a) { LM_LOG("<FONT COLOR=\"#004400\"><B>[SDL]</B></FONT> " << a); }
+#define LM_LOG_LUX_ERROR(a) { LM_LOG("<FONT COLOR=\"#990000\"><B>[LuxRender]</B></FONT> " << a); }
+#define LM_LOG_LUX_WARNING(a) { LM_LOG("<FONT COLOR=\"#999900\"><B>[LuxRender]</B></FONT> " << a); }
+#define LM_LOG_LUX(a) { LM_LOG("<FONT COLOR=\"#449944\"><B>[LuxRender]</B></FONT> " << a); }
+
+#define LM_ERROR(a) { if (LogWindow) { std::stringstream _LM_ERR_LOCAL_SS; _LM_ERR_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxErrorEvent(QString(_LM_ERR_LOCAL_SS.str().c_str()))); }}
 
 #endif	/* _MAINWINDOW_H */

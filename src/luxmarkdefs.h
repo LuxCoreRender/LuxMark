@@ -37,48 +37,19 @@
 	Unsupported Platform !!!
 #endif
 
-#include "mainwindow.h"
-
+#include <luxrays/luxrays.h>
+			
 using namespace std;
 using namespace luxrays;
-
-extern MainWindow *LogWindow;
-
-class LuxLogEvent: public QEvent {
-public:
-	LuxLogEvent(QString mesg);
- 
-	QString getMessage() { return message; }
-
-private:
-	QString message;
-};
-
-class LuxErrorEvent: public QEvent {
-public:
-	LuxErrorEvent(QString mesg);
-
-	QString getMessage() { return message; }
-
-private:
-	QString message;
-};
-
-#define LM_LOG(a) { if (LogWindow) { std::stringstream _LM_LOG_LOCAL_SS; _LM_LOG_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxLogEvent(QString(_LM_LOG_LOCAL_SS.str().c_str()))); }}
-#define LM_LOG_LUXRAYS(a) { LM_LOG("<FONT COLOR=\"#002200\"><B>[LuxRays]</B></FONT> " << a); }
-#define LM_LOG_SLG(a) { LM_LOG("<FONT COLOR=\"#009900\"><B>[SLG]</B></FONT> " << a); }
-#define LM_LOG_SDL(a) { LM_LOG("<FONT COLOR=\"#004400\"><B>[SDL]</B></FONT> " << a); }
-#define LM_LOG_LUX_ERROR(a) { LM_LOG("<FONT COLOR=\"#990000\"><B>[LuxRender]</B></FONT> " << a); }
-#define LM_LOG_LUX_WARNING(a) { LM_LOG("<FONT COLOR=\"#999900\"><B>[LuxRender]</B></FONT> " << a); }
-#define LM_LOG_LUX(a) { LM_LOG("<FONT COLOR=\"#449944\"><B>[LuxRender]</B></FONT> " << a); }
-
-#define LM_ERROR(a) { if (LogWindow) { std::stringstream _LM_ERR_LOCAL_SS; _LM_ERR_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxErrorEvent(QString(_LM_ERR_LOCAL_SS.str().c_str()))); }}
 
 enum LuxMarkAppMode {
 	BENCHMARK_NOSPECTRAL_OCL_GPU,
 	BENCHMARK_NOSPECTRAL_OCL_CPUGPU,
 	BENCHMARK_NOSPECTRAL_OCL_CPU,
 	BENCHMARK_NOSPECTRAL_OCL_CUSTOM,
+	BENCHMARK_NOSPECTRAL_HYBRID_GPU,
+	BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM,
+	BENCHMARK_NOSPECTRAL_NATIVE_PATH,
 	BENCHMARK_SPECTRAL_HYBRID_GPU,
 	BENCHMARK_SPECTRAL_HYBRID_CUSTOM,
 	BENCHMARK_SPECTRAL_NATIVE_PATH,
@@ -88,6 +59,9 @@ enum LuxMarkAppMode {
 
 inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 	switch (mode) {
+		//----------------------------------------------------------------------
+		// No Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_NOSPECTRAL_OCL_GPU:
 			return "No Spectral OpenCL GPUs";
 		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
@@ -96,14 +70,29 @@ inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 			return "No Spectral OpenCL CPUs";
 		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
 			return "No Spectral OpenCL Custom";
+		case BENCHMARK_NOSPECTRAL_HYBRID_GPU:
+			return "No Spectral Hybrid C++/OpenCL GPUs";
+		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM:
+			return "No Spectral Hybrid C++/OpenCL Custom";
+		case BENCHMARK_NOSPECTRAL_NATIVE_PATH:
+			return "No Spectral C++";
+		//----------------------------------------------------------------------
+		// Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_SPECTRAL_HYBRID_GPU:
 			return "Spectral Hybrid C++/OpenCL GPUs";
 		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM:
 			return "Spectral Hybrid C++/OpenCL Custom";
 		case BENCHMARK_SPECTRAL_NATIVE_PATH:
 			return "Spectral C++";
+		//----------------------------------------------------------------------
+		// Advanced Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
 			return "Advanced Spectral C++";
+		//----------------------------------------------------------------------
+		// Others
+		//----------------------------------------------------------------------
 		case INTERACTIVE:
 			return "Interactive";
 		case PAUSE:

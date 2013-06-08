@@ -215,6 +215,21 @@ void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM() {
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
 }
 
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_HYBRID_GPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_GPU);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM);
+}
+
+void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH() {
+	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_NATIVE_PATH);
+}
+
 void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU() {
 	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_HYBRID_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_GPU);
@@ -249,7 +264,7 @@ void MainWindow::setPauseMode() {
 
 void MainWindow::Pause() {
 	setPauseMode();
-	SetModeCheck(9);
+	SetModeCheck(PAUSE);
 }
 
 void MainWindow::ShowLogo() {
@@ -271,17 +286,23 @@ void MainWindow::ShowLogo() {
 	ui->RenderView->setInteractive(false);
 }
 
-void MainWindow::SetModeCheck(const int index) {
-	ui->action_Benchmark_OpenCL_GPUs->setChecked(index == 0);
-	ui->action_Benchmark_OpenCL_CPUs_GPUs->setChecked(index == 1);
-	ui->action_Benchmark_OpenCL_CPUs->setChecked(index == 2);
-	ui->action_Benchmark_OpenCL_Custom->setChecked(index == 3);
-	ui->action_Benchmark_Hybrid_GPUs->setChecked(index == 4);
-	ui->action_Benchmark_Hybrid_Custom->setChecked(index == 5);
-	ui->action_Benchmark_Path->setChecked(index == 6);
-	ui->action_Benchmark_BiDir->setChecked(index == 7);
-	ui->action_Interactive->setChecked(index == 8);
-	ui->action_Pause->setChecked(index == 9);
+void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
+	ui->action_NoSpectral_OpenCL_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_GPU);
+	ui->action_NoSpectral_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
+	ui->action_NoSpectral_OpenCL_CPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CPU);
+	ui->action_NoSpectral_OpenCL_Custom->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
+	ui->action_NoSpectral_Hybrid_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_HYBRID_GPU);
+	ui->action_NoSpectral_Hybrid_Custom->setChecked(mode == BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM);
+	ui->action_NoSpectral_Path->setChecked(mode == BENCHMARK_NOSPECTRAL_NATIVE_PATH);
+
+	ui->action_Spectral_Hybrid_GPUs->setChecked(mode == BENCHMARK_SPECTRAL_HYBRID_GPU);
+	ui->action_Spectral_Hybrid_Custom->setChecked(mode == BENCHMARK_SPECTRAL_HYBRID_CUSTOM);
+	ui->action_Spectral_Path->setChecked(mode == BENCHMARK_SPECTRAL_NATIVE_PATH);
+
+	ui->action_Spectral_BiDir->setChecked(mode == BENCHMARK_SPECTRAL_NATIVE_BIDIR);
+
+	ui->action_Interactive->setChecked(mode == INTERACTIVE);
+	ui->action_Pause->setChecked(mode == PAUSE);
 }
 
 void MainWindow::SetSceneCheck(const int index) {

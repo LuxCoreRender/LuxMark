@@ -30,7 +30,13 @@ static void PrintCmdLineHelp(const QString &cmd) {
 	cerr << "Usage: " << cmd.toAscii().data() << " [options]" << endl <<
 			" --help (display this help and exit)" << endl <<
 			" --scene=LUXBALL_HDR|SALA|ROOM (select the scene to use)" << endl <<
-			" --mode=BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|INTERACTIVE|PAUSE (select the mode to use)" << endl <<
+			" --mode="
+				"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
+				"BENCHMARK_NOSPECTRAL_HYBRID_GPU|BENCHMARK_NOSPECTRAL_NATIVE_PATH|"
+				"BENCHMARK_SPECTRAL_HYBRID_GPU|BENCHMARK_SPECTRAL_NATIVE_PATH|"
+				"BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
+				"INTERACTIVE|PAUSE"
+				" (select the mode to use)" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl;
 }
 
@@ -46,8 +52,9 @@ int main(int argc, char **argv) {
 	QRegExp argScene("--scene=(LUXBALL_HDR|SALA|ROOM)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
-		"BENCHMARK_SPECTRAL_HYBRID_GPU|"
-		"BENCHMARK_SPECTRAL_NATIVE_PATH|BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
+		"BENCHMARK_NOSPECTRAL_HYBRID_GPU|BENCHMARK_NOSPECTRAL_NATIVE_PATH|"
+		"BENCHMARK_SPECTRAL_HYBRID_GPU|BENCHMARK_SPECTRAL_NATIVE_PATH|"
+		"BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
 		"INTERACTIVE|PAUSE"
 		")");
 	QRegExp argSingleRun("--single-run");
@@ -82,6 +89,10 @@ int main(int argc, char **argv) {
 				mode = BENCHMARK_NOSPECTRAL_OCL_CPUGPU;
 			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_NOSPECTRAL_OCL_CPU;
+			else if (scene.compare("BENCHMARK_NOSPECTRAL_HYBRID_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NOSPECTRAL_HYBRID_GPU;
+			else if (scene.compare("BENCHMARK_NOSPECTRAL_NATIVE_PATH", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NOSPECTRAL_NATIVE_PATH;
 			else if (scene.compare("BENCHMARK_SPECTRAL_HYBRID_GPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_SPECTRAL_HYBRID_GPU;
 			else if (scene.compare("BENCHMARK_SPECTRAL_NATIVE_PATH", Qt::CaseInsensitive) == 0)

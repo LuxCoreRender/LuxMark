@@ -23,6 +23,7 @@
 #include <boost/filesystem.hpp>
 
 #include "luxrendersession.h"
+#include "mainwindow.h"
 
 LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
 		const string devSelection) {
@@ -58,38 +59,94 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 	const int maxpath = 12;
 
 	switch (session->renderMode) {
+		//----------------------------------------------------------------------
+		// No Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_NOSPECTRAL_OCL_GPU: {
-			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+			luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 1\" "
+					"\"opencl.cpu.use = 0\" "
+					"\"renderengine.type = PATHOCL\"]", LUX_NULL);
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
 		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU: {
-			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+			luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 1\" "
+					"\"opencl.cpu.use = 1\" "
+					"\"renderengine.type = PATHOCL\"]", LUX_NULL);
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
 		case BENCHMARK_NOSPECTRAL_OCL_CPU: {
-			luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 0\" \"opencl.cpu.use = 1\"]", LUX_NULL);
+			luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 0\" "
+					"\"opencl.cpu.use = 1\" "
+					"\"renderengine.type = PATHOCL\"]", LUX_NULL);
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
 		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM: {
 			// At the first run, hardwareTreeModel is NULL
 			if (session->deviceSelection == "")
-				luxRenderer("slg", "string config", "[\"screen.refresh.interval = 2000\" \"opencl.gpu.use = 1\" \"opencl.cpu.use = 0\"]", LUX_NULL);
+				luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 1\" "
+					"\"opencl.cpu.use = 0\" "
+					"\"renderengine.type = PATHOCL\"]", LUX_NULL);
 			else {
-				const string opts = "[\"screen.refresh.interval = 2000\" \"opencl.devices.select = " + session->deviceSelection + "\"]";
+				const string opts = "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.devices.select = " + session->deviceSelection + "\" "
+					"\"renderengine.type = PATHOCL\"]";
 				luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
 			}
 
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
+		case BENCHMARK_NOSPECTRAL_HYBRID_GPU: {
+			luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 1\" "
+					"\"opencl.cpu.use = 0\" "
+					"\"renderengine.type = PATHHYBRID\"]", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM: {
+			// At the first run, hardwareTreeModel is NULL
+			if (session->deviceSelection == "")
+				luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.gpu.use = 1\" "
+					"\"opencl.cpu.use = 0\" "
+					"\"renderengine.type = PATHHYBRID\"]", LUX_NULL);
+			else {
+				const string opts = "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"opencl.devices.select = " + session->deviceSelection + "\" "
+					"\"renderengine.type = PATHHYBRID\"]";
+				luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
+			}
+
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		//----------------------------------------------------------------------
+		// Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_SPECTRAL_NATIVE_PATH: {
 			luxRenderer("sampler", LUX_NULL);
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
+		//----------------------------------------------------------------------
+		// Advanced Spectral
+		//----------------------------------------------------------------------
 		case BENCHMARK_SPECTRAL_NATIVE_BIDIR: {
 			luxRenderer("sampler", LUX_NULL);
 			luxSurfaceIntegrator("bidirectional", "integer eyedepth", &maxpath, "integer lightdepth", &maxpath, LUX_NULL);
