@@ -32,8 +32,8 @@
 
 class LuxRenderSession {
 public:
-	LuxRenderSession(const std::string &sceneFileName, const LuxMarkAppMode mode,
-			const string devSelection = "");
+	LuxRenderSession(const string &sceneFileName, const LuxMarkAppMode mode,
+			const string &slgDevSel, const string &luxDevSel);
 	~LuxRenderSession();
 
 	void Start();
@@ -46,7 +46,7 @@ private:
 
 	std::string sceneFileName;
 	LuxMarkAppMode renderMode;
-	string deviceSelection;
+	string slgDeviceSelection, luxDeviceSelection;
 
 	boost::thread *parseThread;
 

@@ -174,8 +174,11 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		// Initialize the new mode
 		string sname(app->sceneName); 
 		// At the first run, hardwareTreeModel is NULL
-		const string deviceSelection = (app->hardwareTreeModel) ? (app->hardwareTreeModel->getDeviceSelectionString()) : "";
-		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection);
+		const string slgDeviceSelection = (app->hardwareTreeModel) ?
+			(app->hardwareTreeModel->getSLGDeviceSelectionString()) : "";
+		const string luxDeviceSelection = (app->hardwareTreeModel) ?
+			(app->hardwareTreeModel->getLuxDeviceSelectionString()) : "";
+		app->luxSession = new LuxRenderSession(sname, app->mode, slgDeviceSelection, luxDeviceSelection);
 
 		// Start the rendering
 		app->luxSession->Start();

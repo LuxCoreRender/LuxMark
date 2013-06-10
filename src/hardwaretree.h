@@ -92,7 +92,8 @@ public:
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
-	string getDeviceSelectionString() const;
+	string getSLGDeviceSelectionString() const;
+	string getLuxDeviceSelectionString() const;
 
 private:
 	MainWindow *win;
@@ -100,6 +101,7 @@ private:
 	HardwareTreeItem *rootItem;
 
 	vector<bool> deviceSelection;
+	vector<bool> isCPU;
 };
 
 //------------------------------------------------------------------------------

@@ -26,13 +26,14 @@
 #include "mainwindow.h"
 
 LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
-		const string devSelection) {
+		const string &slgDevSel, const string &luxDevSel) {
 	// Save the current directory
 	originalCurrentDirectory = boost::filesystem::current_path();
 
 	sceneFileName = boost::filesystem::system_complete(fileName).string();
 	renderMode = mode;
-	deviceSelection = devSelection;
+	slgDeviceSelection = slgDevSel;
+	luxDeviceSelection = luxDevSel;
 
 	parseThread = NULL;
 	started = false;
@@ -57,6 +58,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 
 	// Overwrite the Renderer settings
 	const int maxpath = 12;
+	const int raybuffersize = 16383;
 
 	switch (session->renderMode) {
 		//----------------------------------------------------------------------
@@ -91,7 +93,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 		}
 		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM: {
 			// At the first run, hardwareTreeModel is NULL
-			if (session->deviceSelection == "")
+			if (session->slgDeviceSelection == "")
 				luxRenderer("slg", "string config", "["
 					"\"screen.refresh.interval = 2000\" "
 					"\"opencl.gpu.use = 1\" "
@@ -100,7 +102,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 			else {
 				const string opts = "["
 					"\"screen.refresh.interval = 2000\" "
-					"\"opencl.devices.select = " + session->deviceSelection + "\" "
+					"\"opencl.devices.select = " + session->slgDeviceSelection + "\" "
 					"\"renderengine.type = PATHOCL\"]";
 				luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
 			}
@@ -119,7 +121,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 		}
 		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM: {
 			// At the first run, hardwareTreeModel is NULL
-			if (session->deviceSelection == "")
+			if (session->slgDeviceSelection == "")
 				luxRenderer("slg", "string config", "["
 					"\"screen.refresh.interval = 2000\" "
 					"\"opencl.gpu.use = 1\" "
@@ -128,7 +130,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 			else {
 				const string opts = "["
 					"\"screen.refresh.interval = 2000\" "
-					"\"opencl.devices.select = " + session->deviceSelection + "\" "
+					"\"opencl.devices.select = " + session->slgDeviceSelection + "\" "
 					"\"renderengine.type = PATHHYBRID\"]";
 				luxRenderer("slg", "string config", opts.c_str(), LUX_NULL);
 			}
@@ -136,9 +138,40 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
+		case BENCHMARK_NOSPECTRAL_NATIVE_PATH: {
+			luxRenderer("slg", "string config", "["
+					"\"screen.refresh.interval = 2000\" "
+					"\"renderengine.type = PATHCPU\"]", LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
 		//----------------------------------------------------------------------
 		// Spectral
 		//----------------------------------------------------------------------
+		case BENCHMARK_SPECTRAL_HYBRID_GPU: {
+			luxRenderer("hybrid",
+					"integer raybuffersize", &raybuffersize,
+					LUX_NULL);
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
+		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM: {
+			// At the first run, hardwareTreeModel is NULL
+			if (session->luxDeviceSelection == "")
+				luxRenderer("hybrid",
+						"integer raybuffersize", &raybuffersize,
+						LUX_NULL);
+			else {
+				const string opts = session->luxDeviceSelection;
+				luxRenderer("hybrid",
+						"integer raybuffersize", &raybuffersize,
+						"string opencl.devices.select", opts.c_str(),
+						LUX_NULL);
+			}
+
+			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
+			break;
+		}
 		case BENCHMARK_SPECTRAL_NATIVE_PATH: {
 			luxRenderer("sampler", LUX_NULL);
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);

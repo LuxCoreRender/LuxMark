@@ -174,8 +174,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
 			ss << "Max. Constant Memory: " << (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>() / 1024) << " Kbytes";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-			bool isCPU = (odevDesc->GetType() == DEVICE_TYPE_OPENCL_CPU);
-			if (isCPU) {
+			bool isCPUDev = (odevDesc->GetType() == DEVICE_TYPE_OPENCL_CPU);
+			if (isCPUDev) {
 				// The default mode is GPU-only
 				newNode->setChecked(false);
 				oclCPUDev->appendChild(newNode);
@@ -183,7 +183,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
 				newNode->setChecked(true);
 				oclGPUDev->appendChild(newNode);
 			}
-			deviceSelection.push_back(!isCPU);
+			deviceSelection.push_back(!isCPUDev);
+			isCPU.push_back(isCPUDev);
 		}
 	}
 
@@ -316,11 +317,22 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 		return false;
 }
 
-string HardwareTreeModel::getDeviceSelectionString() const {
+string HardwareTreeModel::getSLGDeviceSelectionString() const {
 	stringstream ss;
 
 	for (size_t i = 0; i < deviceSelection.size(); ++i)
 		ss << (deviceSelection[i] ? "1" : "0");
+
+	return ss.str();
+}
+
+string HardwareTreeModel::getLuxDeviceSelectionString() const {
+	stringstream ss;
+
+	for (size_t i = 0; i < deviceSelection.size(); ++i) {
+		if (!isCPU[i])
+			ss << (deviceSelection[i] ? "1" : "0");
+	}
 
 	return ss.str();
 }
