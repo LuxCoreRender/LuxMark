@@ -148,19 +148,12 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 	mainWin->SetModeCheck(mode);
 	if (mode == PAUSE) {
 		// Nothing to do
-	} else if (mode == INTERACTIVE) {
-		// Update timer
-		renderRefreshTimer = new QTimer();
-		connect(renderRefreshTimer, SIGNAL(timeout()), SLOT(RenderRefreshTimeout()));
-
-		// Refresh the screen every 100ms in benchmark mode
-		renderRefreshTimer->start(100);
 	} else {
 		// Update timer
 		renderRefreshTimer = new QTimer();
 		connect(renderRefreshTimer, SIGNAL(timeout()), SLOT(RenderRefreshTimeout()));
 
-		// Refresh the screen every 4 secs in benchmark mode
+		// Refresh the screen every 4 secs in benchmark or stress mode
 		renderRefreshTimer->start(4 * 1000);
 	}
 
@@ -225,6 +218,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	double minPerf = 0.0;
 	double totalPerf = 0.0;
 	switch (mode) {
+		case STRESSTEST_NOSPECTRAL_OCL_GPU:
+		case STRESSTEST_NOSPECTRAL_OCL_CPUGPU:
+		case STRESSTEST_NOSPECTRAL_OCL_CPU:
 		case BENCHMARK_NOSPECTRAL_OCL_GPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPU:
@@ -260,6 +256,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			}
 			break;
 		}
+		case STRESSTEST_SPECTRAL_NATIVE_BIDIR:
 		case BENCHMARK_NOSPECTRAL_NATIVE_PATH:
 		case BENCHMARK_SPECTRAL_NATIVE_PATH:
 		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
@@ -272,7 +269,11 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
+	bool benchmarkDone = (renderingTime > 120) &&
+		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
+		(mode != STRESSTEST_NOSPECTRAL_OCL_CPUGPU) &&
+		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
+		(mode != STRESSTEST_SPECTRAL_NATIVE_BIDIR);
 
 	char buf[512];
 	stringstream ss("");
@@ -280,8 +281,15 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	char validBuf[128];
 	if (benchmarkDone)
 		strcpy(validBuf, " (OK)");
-	else
-		sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
+	else {
+		if ((mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
+				(mode != STRESSTEST_NOSPECTRAL_OCL_CPUGPU) &&
+				(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
+				(mode != STRESSTEST_SPECTRAL_NATIVE_BIDIR))
+			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
+		else
+			strcpy(validBuf, "");
+	}
 
 	char triCountBuf[128];
 	if (triangleCount > 0.0)

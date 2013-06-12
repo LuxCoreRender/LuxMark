@@ -144,7 +144,12 @@
     <addaction name="separator"/>
     <addaction name="action_Spectral_BiDir"/>
     <addaction name="separator"/>
-    <addaction name="action_Interactive"/>
+    <addaction name="action_StressTest_NoSpectral_OpenCL_GPUs"/>
+    <addaction name="action_StressTest_NoSpectral_OpenCL_CPUs_GPUs"/>
+    <addaction name="action_StressTest_NoSpectral_OpenCL_CPUs"/>
+    <addaction name="separator"/>
+    <addaction name="action_StressTest_Spectral_BiDir"/>
+    <addaction name="separator"/>
     <addaction name="action_Pause"/>
    </widget>
    <widget class="QMenu" name="menu_Scene">
@@ -327,6 +332,26 @@
     <string>Benchmark (No Spectral Rendering, Native C++ only)</string>
    </property>
   </action>
+  <action name="action_StressTest_NoSpectral_OpenCL_GPUs">
+   <property name="text">
+    <string>Stress Test (No Spectral Rendering, OpenCL-only GPUs-only)</string>
+   </property>
+  </action>
+  <action name="action_StressTest_NoSpectral_OpenCL_CPUs_GPUs">
+   <property name="text">
+    <string>Stress Test (No Spectral Rendering, OpenCL-only CPUs+GPUs)</string>
+   </property>
+  </action>
+  <action name="action_StressTest_NoSpectral_OpenCL_CPUs">
+   <property name="text">
+    <string>Stress Test (No Spectral Rendering, OpenCL-only CPUs)</string>
+   </property>
+  </action>
+  <action name="action_StressTest_Spectral_BiDir">
+   <property name="text">
+    <string>Stress Test (Advanced Spectral Rendering, Native C++ only)</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="resources.qrc"/>
@@ -400,23 +425,7 @@
    <sender>action_NoSpectral_OpenCL_CPUs_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>380</x>
-     <y>318</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_Interactive</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setInteractiveMode()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -432,7 +441,7 @@
    <sender>action_NoSpectral_OpenCL_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -464,7 +473,7 @@
    <sender>action_NoSpectral_OpenCL_CPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -512,7 +521,7 @@
    <sender>action_NoSpectral_OpenCL_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -544,7 +553,7 @@
    <sender>action_Spectral_Hybrid_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
+   <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -560,7 +569,7 @@
    <sender>action_Spectral_Hybrid_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -576,7 +585,7 @@
    <sender>action_Spectral_Path</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
+   <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -592,7 +601,7 @@
    <sender>action_Spectral_BiDir</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
+   <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -608,7 +617,7 @@
    <sender>action_NoSpectral_Hybrid_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -624,7 +633,7 @@
    <sender>action_NoSpectral_Hybrid_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -640,7 +649,71 @@
    <sender>action_NoSpectral_Path</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
+   <slot>setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_StressTest_NoSpectral_OpenCL_GPUs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_GPU()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_StressTest_NoSpectral_OpenCL_CPUs_GPUs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_StressTest_NoSpectral_OpenCL_CPUs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_StressTest_Spectral_BiDir</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -663,16 +736,20 @@
   <slot>setInteractiveMode()</slot>
   <slot>setPauseMode()</slot>
   <slot>setRoomScene()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
-  <slot>setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
+  <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
+  <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
+  <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
+  <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
+  <slot>setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
+  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_GPU()</slot>
+  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()</slot>
+  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()</slot>
+  <slot>setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()</slot>
  </slots>
 </ui>

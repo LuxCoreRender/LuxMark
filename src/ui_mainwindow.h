@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Jun 10 10:25:31 2013
+** Created: Wed Jun 12 17:37:44 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -52,6 +52,10 @@ public:
     QAction *action_NoSpectral_Hybrid_GPUs;
     QAction *action_NoSpectral_Hybrid_Custom;
     QAction *action_NoSpectral_Path;
+    QAction *action_StressTest_NoSpectral_OpenCL_GPUs;
+    QAction *action_StressTest_NoSpectral_OpenCL_CPUs_GPUs;
+    QAction *action_StressTest_NoSpectral_OpenCL_CPUs;
+    QAction *action_StressTest_Spectral_BiDir;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QSplitter *splitter_2;
@@ -133,6 +137,14 @@ public:
         action_NoSpectral_Hybrid_Custom->setObjectName(QString::fromUtf8("action_NoSpectral_Hybrid_Custom"));
         action_NoSpectral_Path = new QAction(MainWindow);
         action_NoSpectral_Path->setObjectName(QString::fromUtf8("action_NoSpectral_Path"));
+        action_StressTest_NoSpectral_OpenCL_GPUs = new QAction(MainWindow);
+        action_StressTest_NoSpectral_OpenCL_GPUs->setObjectName(QString::fromUtf8("action_StressTest_NoSpectral_OpenCL_GPUs"));
+        action_StressTest_NoSpectral_OpenCL_CPUs_GPUs = new QAction(MainWindow);
+        action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setObjectName(QString::fromUtf8("action_StressTest_NoSpectral_OpenCL_CPUs_GPUs"));
+        action_StressTest_NoSpectral_OpenCL_CPUs = new QAction(MainWindow);
+        action_StressTest_NoSpectral_OpenCL_CPUs->setObjectName(QString::fromUtf8("action_StressTest_NoSpectral_OpenCL_CPUs"));
+        action_StressTest_Spectral_BiDir = new QAction(MainWindow);
+        action_StressTest_Spectral_BiDir->setObjectName(QString::fromUtf8("action_StressTest_Spectral_BiDir"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setMinimumSize(QSize(160, 120));
@@ -227,7 +239,12 @@ public:
         menu_Mode->addSeparator();
         menu_Mode->addAction(action_Spectral_BiDir);
         menu_Mode->addSeparator();
-        menu_Mode->addAction(action_Interactive);
+        menu_Mode->addAction(action_StressTest_NoSpectral_OpenCL_GPUs);
+        menu_Mode->addAction(action_StressTest_NoSpectral_OpenCL_CPUs_GPUs);
+        menu_Mode->addAction(action_StressTest_NoSpectral_OpenCL_CPUs);
+        menu_Mode->addSeparator();
+        menu_Mode->addAction(action_StressTest_Spectral_BiDir);
+        menu_Mode->addSeparator();
         menu_Mode->addAction(action_Pause);
         menu_Scene->addAction(action_Room);
         menu_Scene->addAction(action_Sala);
@@ -241,22 +258,25 @@ public:
         QObject::connect(action_About, SIGNAL(triggered()), MainWindow, SLOT(showAbout()));
         QObject::connect(action_LuxBall, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallScene()));
         QObject::connect(action_LuxBall_HDR, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallHDRScene()));
-        QObject::connect(action_NoSpectral_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()));
-        QObject::connect(action_Interactive, SIGNAL(triggered()), MainWindow, SLOT(setInteractiveMode()));
-        QObject::connect(action_NoSpectral_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU()));
+        QObject::connect(action_NoSpectral_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()));
+        QObject::connect(action_NoSpectral_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()));
         QObject::connect(action_Pause, SIGNAL(triggered()), MainWindow, SLOT(setPauseMode()));
-        QObject::connect(action_NoSpectral_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU()));
+        QObject::connect(action_NoSpectral_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()));
         QObject::connect(action_LuxBall_Sky, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallSkyScene()));
         QObject::connect(action_Sala, SIGNAL(triggered()), MainWindow, SLOT(setSalaScene()));
-        QObject::connect(action_NoSpectral_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()));
+        QObject::connect(action_NoSpectral_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()));
         QObject::connect(action_Room, SIGNAL(triggered()), MainWindow, SLOT(setRoomScene()));
-        QObject::connect(action_Spectral_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU()));
-        QObject::connect(action_Spectral_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()));
-        QObject::connect(action_Spectral_Path, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH()));
-        QObject::connect(action_Spectral_BiDir, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()));
-        QObject::connect(action_NoSpectral_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()));
-        QObject::connect(action_NoSpectral_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()));
-        QObject::connect(action_NoSpectral_Path, SIGNAL(triggered()), MainWindow, SLOT(setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()));
+        QObject::connect(action_Spectral_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_SPECTRAL_HYBRID_GPU()));
+        QObject::connect(action_Spectral_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()));
+        QObject::connect(action_Spectral_Path, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_SPECTRAL_NATIVE_PATH()));
+        QObject::connect(action_Spectral_BiDir, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()));
+        QObject::connect(action_NoSpectral_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()));
+        QObject::connect(action_NoSpectral_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()));
+        QObject::connect(action_NoSpectral_Path, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()));
+        QObject::connect(action_StressTest_NoSpectral_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_NOSPECTRAL_OCL_GPU()));
+        QObject::connect(action_StressTest_NoSpectral_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()));
+        QObject::connect(action_StressTest_NoSpectral_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()));
+        QObject::connect(action_StressTest_Spectral_BiDir, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -290,6 +310,10 @@ public:
         action_NoSpectral_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Hybrid C++/OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
         action_NoSpectral_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected evices only)", 0, QApplication::UnicodeUTF8));
         action_NoSpectral_Path->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_NoSpectral_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only CPUs+GPUs)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_NoSpectral_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only CPUs)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_Spectral_BiDir->setText(QApplication::translate("MainWindow", "Stress Test (Advanced Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
         hardwareDevicesLabel->setText(QApplication::translate("MainWindow", "Hardware Devices", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));

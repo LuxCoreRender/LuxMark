@@ -54,7 +54,11 @@ enum LuxMarkAppMode {
 	BENCHMARK_SPECTRAL_HYBRID_CUSTOM,
 	BENCHMARK_SPECTRAL_NATIVE_PATH,
 	BENCHMARK_SPECTRAL_NATIVE_BIDIR,
-	INTERACTIVE, PAUSE
+	STRESSTEST_NOSPECTRAL_OCL_GPU,
+	STRESSTEST_NOSPECTRAL_OCL_CPUGPU,
+	STRESSTEST_NOSPECTRAL_OCL_CPU,
+	STRESSTEST_SPECTRAL_NATIVE_BIDIR,
+	PAUSE
 };
 
 inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
@@ -93,8 +97,14 @@ inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 		//----------------------------------------------------------------------
 		// Others
 		//----------------------------------------------------------------------
-		case INTERACTIVE:
-			return "Interactive";
+		case STRESSTEST_NOSPECTRAL_OCL_GPU:
+			return "No Spectral OpenCL GPUs (stress test)";
+		case STRESSTEST_NOSPECTRAL_OCL_CPUGPU:
+			return "No Spectral OpenCL CPUs+GPUs (stress test)";
+		case STRESSTEST_NOSPECTRAL_OCL_CPU:
+			return "No Spectral OpenCL CPUs (stress test)";
+		case STRESSTEST_SPECTRAL_NATIVE_BIDIR:
+			return "Advanced Spectral C++ (stress test)";
 		case PAUSE:
 			return "Pause";
 		default:

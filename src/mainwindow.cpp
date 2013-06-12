@@ -195,64 +195,79 @@ void MainWindow::setSalaScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_SALA);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_GPU() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_GPU");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_GPU() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_GPU);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CPUGPU");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CPUGPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CPU() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CPU");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CPU() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPU);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_OCL_CUSTOM");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CUSTOM");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_HYBRID_GPU");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_HYBRID_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_GPU);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
+void MainWindow::setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH() {
+	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_NATIVE_PATH);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_GPU() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_HYBRID_GPU");
+void MainWindow::setMode_BENCHMARK_SPECTRAL_HYBRID_GPU() {
+	LM_LOG("Set mode: BENCHMARK_SPECTRAL_HYBRID_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_GPU);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_HYBRID_CUSTOM");
+void MainWindow::setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_SPECTRAL_HYBRID_CUSTOM");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_CUSTOM);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_PATH() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
+void MainWindow::setMode_BENCHMARK_SPECTRAL_NATIVE_PATH() {
+	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_PATH);
 }
 
-void MainWindow::setBenchmarkMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR() {
-	LM_LOG("Set Benchmark mode: BENCHMARK_SPECTRAL_NATIVE_BIDIR");
+void MainWindow::setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR() {
+	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_BIDIR");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_BIDIR);
 }
 
-void MainWindow::setInteractiveMode() {
-	LM_LOG("Set Interactive mode");
-	((LuxMarkApp *)qApp)->SetMode(INTERACTIVE);
+void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_GPU() {
+	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_GPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_GPU);
+}
+
+void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU() {
+	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_CPUGPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_CPUGPU);
+}
+
+void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_CPU() {
+	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_CPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_CPU);
+}
+
+void MainWindow::setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR() {
+	LM_LOG("Set mode: STRESSTEST_SPECTRAL_NATIVE_BIDIR");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_SPECTRAL_NATIVE_BIDIR);
 }
 
 void MainWindow::setPauseMode() {
@@ -301,7 +316,11 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 
 	ui->action_Spectral_BiDir->setChecked(mode == BENCHMARK_SPECTRAL_NATIVE_BIDIR);
 
-	ui->action_Interactive->setChecked(mode == INTERACTIVE);
+	ui->action_StressTest_NoSpectral_OpenCL_GPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_GPU);
+	ui->action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPUGPU);
+	ui->action_StressTest_NoSpectral_OpenCL_CPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPU);
+	ui->action_StressTest_Spectral_BiDir->setChecked(mode == STRESSTEST_SPECTRAL_NATIVE_BIDIR);
+
 	ui->action_Pause->setChecked(mode == PAUSE);
 }
 

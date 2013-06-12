@@ -64,6 +64,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 		//----------------------------------------------------------------------
 		// No Spectral
 		//----------------------------------------------------------------------
+		case STRESSTEST_NOSPECTRAL_OCL_GPU:
 		case BENCHMARK_NOSPECTRAL_OCL_GPU: {
 			luxRenderer("slg", "string config", "["
 					"\"screen.refresh.interval = 2000\" "
@@ -73,6 +74,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
+		case STRESSTEST_NOSPECTRAL_OCL_CPUGPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU: {
 			luxRenderer("slg", "string config", "["
 					"\"screen.refresh.interval = 2000\" "
@@ -82,6 +84,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 			luxSurfaceIntegrator("path", "integer maxdepth", &maxpath, LUX_NULL);
 			break;
 		}
+		case STRESSTEST_NOSPECTRAL_OCL_CPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPU: {
 			luxRenderer("slg", "string config", "["
 					"\"screen.refresh.interval = 2000\" "
@@ -180,6 +183,7 @@ void LuxRenderSession::RenderthreadImpl(LuxRenderSession *session) {
 		//----------------------------------------------------------------------
 		// Advanced Spectral
 		//----------------------------------------------------------------------
+		case STRESSTEST_SPECTRAL_NATIVE_BIDIR:
 		case BENCHMARK_SPECTRAL_NATIVE_BIDIR: {
 			luxRenderer("sampler", LUX_NULL);
 			luxSurfaceIntegrator("bidirectional", "integer eyedepth", &maxpath, "integer lightdepth", &maxpath, LUX_NULL);
