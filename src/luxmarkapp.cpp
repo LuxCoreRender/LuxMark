@@ -19,6 +19,9 @@
  *   LuxRays website: http://www.luxrender.net                             *
  ***************************************************************************/
 
+#include <limits>
+#include <boost/algorithm/string.hpp>
+
 #include <QGraphicsSceneMouseEvent>
 
 #include "slg/film/film.h"
@@ -211,12 +214,86 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	}
 
 	// Update the statistics
-	const double raysSec = 0.0;
-	const u_int triangleCount = 0;
+	double triangleCount = 0.0;
 	const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
-	const int renderingTime = luxGetDoubleAttribute("renderer_statistics", "elapsedTime"); 
+	const int renderingTime = luxGetDoubleAttribute("renderer_statistics", "elapsedTime");
 	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
+	vector<string> deviceNames;
+	vector<double> deviceRaysSecs;
+	vector<double> deviceMem, deviceMaxMem;
+	double minPerf = 0.0;
+	double totalPerf = 0.0;
+	switch (mode) {
+		//----------------------------------------------------------------------
+		// No Spectral
+		//----------------------------------------------------------------------
+		case BENCHMARK_NOSPECTRAL_OCL_GPU:
+		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
+		case BENCHMARK_NOSPECTRAL_OCL_CPU:
+		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
+		case BENCHMARK_NOSPECTRAL_HYBRID_GPU:
+		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM:
+		case BENCHMARK_NOSPECTRAL_NATIVE_PATH: {
+			triangleCount = luxGetDoubleAttribute("renderer_statistics", "triangleCount");
+
+			// Get the list of device names
+			char buf[4096];
+			luxGetStringAttribute("renderer_statistics", "deviceNames", buf, 4096);
+
+			string names(buf);
+			if (names.length() > 0) {
+				boost::split(deviceNames, names, boost::is_any_of(","));
+
+				// Remove native intersection devices
+				deviceNames.erase(remove(deviceNames.begin(), deviceNames.end(), "NativeIntersect"), deviceNames.end());
+
+				// Get each device statistics
+				minPerf = numeric_limits<double>::infinity();
+				totalPerf = 0.0;
+				for (u_int i = 0; i < deviceNames.size(); ++i) {
+					const string attrName = "device." + boost::lexical_cast<string>(i);
+
+					const double raySecs = luxGetDoubleAttribute("renderer_statistics", (attrName + ".raysecs").c_str());
+					deviceRaysSecs.push_back(raySecs);
+					deviceMaxMem.push_back(luxGetDoubleAttribute("renderer_statistics", (attrName + ".maxmem").c_str()));
+					deviceMem.push_back(luxGetDoubleAttribute("renderer_statistics", (attrName + ".memusage").c_str()));
+
+					minPerf = Min(raySecs, minPerf);
+					totalPerf += raySecs;
+				}
+			}
+			break;
+		}
+		//----------------------------------------------------------------------
+		// Spectral
+		//----------------------------------------------------------------------
+		case BENCHMARK_SPECTRAL_HYBRID_GPU: {
+			// TODO
+			break;
+		}
+		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM: {
+			// TODO
+			break;
+		}
+		case BENCHMARK_SPECTRAL_NATIVE_PATH: {
+			// TODO
+			break;
+		}
+		//----------------------------------------------------------------------
+		// Advanced Spectral
+		//----------------------------------------------------------------------
+		case BENCHMARK_SPECTRAL_NATIVE_BIDIR: {
+			// TODO
+			break;
+		}
+		default: {
+			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");
+			break;
+		}
+	}
+
+	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
 	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
 
@@ -229,11 +306,31 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	else
 		sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 
-	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Rays/sec % 6dK on %.1fK tris]",
+	char triCountBuf[128];
+	if (triangleCount > 0.0)
+		sprintf(triCountBuf, "[Rays/sec % 6dK on %.1fK tris]",
+			int(totalPerf / 1000.0), triangleCount / 1000.0);
+	else
+		strcpy(triCountBuf, "");
+
+	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK]%s",
 			LuxMarkAppMode2String(mode).c_str(),
 			renderingTime, validBuf, int(sampleSec / 1000.0),
-			int(raysSec / 1000.0), triangleCount / 1000.0);
+			triCountBuf);
 	ss << buf;
+
+	if (deviceNames.size() > 0) {
+		ss << "\n\nOpenCL rendering devices:";
+		for (size_t i = 0; i < deviceNames.size(); ++i) {
+			sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
+					deviceNames[i].c_str(),
+					int(deviceRaysSecs[i] / 1000.0),
+					(minPerf > 0.0) ? (deviceRaysSecs[i] / minPerf) : 0.f,
+					(totalPerf > 0.0) ? (100.0 * deviceRaysSecs[i] / totalPerf) : 0.f,
+					deviceMem[i] / (1024 * 1024), int(deviceMaxMem[i] / (1024 * 1024)));
+			ss << buf;
+		}
+	}
 
 	mainWin->UpdateScreenLabel(ss.str().c_str(), benchmarkDone);
 
@@ -256,96 +353,6 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			InitRendering(PAUSE, sceneName);
 		}
 	}
-
-//	// Update the statistics
-//	const vector<IntersectionDevice *> &intersectionDevices =
-//		renderEngine->GetIntersectionDevices();
-//
-//	double raysSec = 0.0;
-//	vector<double> raysSecs(intersectionDevices.size(), 0.0);
-//	for (size_t i = 0; i < intersectionDevices.size(); ++i) {
-//		raysSecs[i] = intersectionDevices[i]->GetTotalPerformance();
-//		raysSec += raysSecs[i];
-//	}
-//
-//	double sampleSec = renderEngine->GetTotalSamplesSec();
-//	int renderingTime = int(renderEngine->GetRenderingTime());
-//
-//	// After 120secs of benchmark, show the result dialog
-//	bool benchmarkDone = (renderingTime > 120) && (mode != INTERACTIVE);
-//
-//	char buf[512];
-//	stringstream ss("");
-//
-//	char validBuf[128];
-//	if (mode == INTERACTIVE)
-//		strcpy(validBuf, "");
-//	else {
-//		if (benchmarkDone)
-//			strcpy(validBuf, " (OK)");
-//		else
-//			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
-//	}	
-//
-//	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Rays/sec % 6dK on %.1fK tris]",
-//			(mode == BENCHMARK_OCL_GPU) ? "OpenCL GPUs" :
-//				((mode == BENCHMARK_OCL_CPUGPU) ? "OpenCL CPUs+GPUs" :
-//					((mode == BENCHMARK_OCL_CPU) ? "OpenCL CPUs" :
-//						((mode == BENCHMARK_OCL_CUSTOM) ? "OpenCL Custom" : "Interactive"))),
-//			renderingTime, validBuf, int(sampleSec / 1000.0),
-//			int(raysSec / 1000.0), renderConfig->scene->dataSet->GetTotalTriangleCount() / 1000.0);
-//	ss << buf;
-//
-//	if ((mode == BENCHMARK_OCL_GPU) || (mode == BENCHMARK_OCL_CPUGPU) ||
-//			(mode == BENCHMARK_OCL_CPU) || (mode == BENCHMARK_OCL_CUSTOM)) {
-//		ss << "\n\nOpenCL rendering devices:";
-//		double minPerf = raysSecs[0];
-//		double totalPerf = raysSecs[0];
-//		for (size_t i = 1; i < intersectionDevices.size(); ++i) {
-//			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
-//				minPerf = min(minPerf, raysSecs[i]);
-//				totalPerf += raysSecs[i];
-//			}
-//		}
-//
-//		for (size_t i = 0; i < intersectionDevices.size(); ++i) {
-//			if (intersectionDevices[i]->GetType() & DEVICE_TYPE_OPENCL_ALL) {
-//				const OpenCLDeviceDescription *desc = ((OpenCLIntersectionDevice *)intersectionDevices[i])->GetDeviceDesc();
-//				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %dM/%dM]",
-//						desc->GetName().c_str(),
-//						int(raysSecs[i] / 1000.0),
-//						raysSecs[i] / minPerf,
-//						100.0 * raysSecs[i] / totalPerf,
-//						int(intersectionDevices[i]->GetUsedMemory() / (1024 * 1024)),
-//						int(desc->GetMaxMemory() / (1024 * 1024)));
-//				ss << buf;
-//			}
-//		}
-//	}
-//
-//	mainWin->UpdateScreenLabel(ss.str().c_str(), benchmarkDone);
-//
-//	if (benchmarkDone) {
-//		// Check if I'm in single run mode
-//		if (singleRun) {
-//			cout << "Score: " << int(sampleSec / 1000.0) << endl;
-//
-//			exit(EXIT_SUCCESS);
-//		} else {
-//			const vector<OpenCLIntersectionDevice *> &devices =
-//				((const vector<OpenCLIntersectionDevice *> &)renderEngine->GetIntersectionDevices());
-//			vector<BenchmarkDeviceDescription> descs = BuildDeviceDescriptions(devices);
-//
-//			Stop();
-//
-//			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec, descs);
-//			dialog->exec();
-//			delete dialog;
-//
-//			// Go in PAUSE mode
-//			InitRendering(PAUSE, sceneName);
-//		}
-//	}
 }
 
 #define MOVE_STEP 0.5f
