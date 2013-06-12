@@ -225,16 +225,14 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	double minPerf = 0.0;
 	double totalPerf = 0.0;
 	switch (mode) {
-		//----------------------------------------------------------------------
-		// No Spectral
-		//----------------------------------------------------------------------
 		case BENCHMARK_NOSPECTRAL_OCL_GPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CPU:
 		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
 		case BENCHMARK_NOSPECTRAL_HYBRID_GPU:
 		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM:
-		case BENCHMARK_NOSPECTRAL_NATIVE_PATH: {
+		case BENCHMARK_SPECTRAL_HYBRID_GPU:
+		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM: {
 			triangleCount = luxGetDoubleAttribute("renderer_statistics", "triangleCount");
 
 			// Get the list of device names
@@ -244,9 +242,6 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			string names(buf);
 			if (names.length() > 0) {
 				boost::split(deviceNames, names, boost::is_any_of(","));
-
-				// Remove native intersection devices
-				deviceNames.erase(remove(deviceNames.begin(), deviceNames.end(), "NativeIntersect"), deviceNames.end());
 
 				// Get each device statistics
 				minPerf = numeric_limits<double>::infinity();
@@ -265,28 +260,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			}
 			break;
 		}
-		//----------------------------------------------------------------------
-		// Spectral
-		//----------------------------------------------------------------------
-		case BENCHMARK_SPECTRAL_HYBRID_GPU: {
-			// TODO
+		case BENCHMARK_NOSPECTRAL_NATIVE_PATH:
+		case BENCHMARK_SPECTRAL_NATIVE_PATH:
+		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
 			break;
-		}
-		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM: {
-			// TODO
-			break;
-		}
-		case BENCHMARK_SPECTRAL_NATIVE_PATH: {
-			// TODO
-			break;
-		}
-		//----------------------------------------------------------------------
-		// Advanced Spectral
-		//----------------------------------------------------------------------
-		case BENCHMARK_SPECTRAL_NATIVE_BIDIR: {
-			// TODO
-			break;
-		}
 		default: {
 			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");
 			break;
