@@ -73,16 +73,6 @@ LuxFrameBuffer::LuxFrameBuffer(const QPixmap &pixmap) : QGraphicsPixmapItem(pixm
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
 
-void LuxFrameBuffer::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-	if (luxApp)
-		luxApp->HandleMouseMoveEvent(event);
-}
-
-void LuxFrameBuffer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-	if (luxApp)
-		luxApp->HandleMousePressEvent(event);
-}
-
 //------------------------------------------------------------------------------
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags),
@@ -270,7 +260,12 @@ void MainWindow::setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR() {
 	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_SPECTRAL_NATIVE_BIDIR);
 }
 
-void MainWindow::setPauseMode() {
+void MainWindow::setMode_DEMO_LUXVR() {
+	LM_LOG("Set mode: DEMO_LUXVR");
+	((LuxMarkApp *)qApp)->SetMode(DEMO_LUXVR);
+}
+
+void MainWindow::setMode_PAUSE() {
 	LM_LOG("Set Pause mode");
 	((LuxMarkApp *)qApp)->SetMode(PAUSE);
 }
@@ -278,7 +273,7 @@ void MainWindow::setPauseMode() {
 //------------------------------------------------------------------------------
 
 void MainWindow::Pause() {
-	setPauseMode();
+	setMode_PAUSE();
 	SetModeCheck(PAUSE);
 }
 
@@ -320,6 +315,8 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPUGPU);
 	ui->action_StressTest_NoSpectral_OpenCL_CPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPU);
 	ui->action_StressTest_Spectral_BiDir->setChecked(mode == STRESSTEST_SPECTRAL_NATIVE_BIDIR);
+
+	ui->action_LuxVR->setChecked(mode == DEMO_LUXVR);
 
 	ui->action_Pause->setChecked(mode == PAUSE);
 }

@@ -42,9 +42,6 @@ public:
 	void SetLuxApp(LuxMarkApp *la) { luxApp = la; }
 
 private:
-	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-	void mousePressEvent(QGraphicsSceneMouseEvent *event);
-
 	LuxMarkApp *luxApp;
 };
 
@@ -109,7 +106,8 @@ private slots:
 	void setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU();
 	void setMode_STRESSTEST_NOSPECTRAL_OCL_CPU();
 	void setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR();
-	void setPauseMode();
+	void setMode_DEMO_LUXVR();
+	void setMode_PAUSE();
 };
 
 //------------------------------------------------------------------------------

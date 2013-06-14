@@ -30,6 +30,7 @@
 
 #include "luxmarkcfg.h"
 #include "luxmarkapp.h"
+#include "luxvrdialog.h"
 #include "resultdialog.h"
 #include "luxmarkdefs.h"
 
@@ -71,6 +72,9 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	luxSession = NULL;
 	renderRefreshTimer = NULL;
 	hardwareTreeModel = NULL;
+	
+	// Look for the directory where Lux executable are
+	exePath = boost::filesystem::path(boost::filesystem::initial_path<boost::filesystem::path>());
 }
 
 LuxMarkApp::~LuxMarkApp() {
@@ -146,7 +150,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	// Initialize the new mode
 	mainWin->SetModeCheck(mode);
-	if (mode == PAUSE) {
+	if ((mode == PAUSE) || (mode == DEMO_LUXVR)) {
 		// Nothing to do
 	} else {
 		// Update timer
@@ -159,7 +163,17 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	mainWin->ShowLogo();
 
-	if (mode != PAUSE) {
+	if (mode == PAUSE) {
+		// Nothing to do
+	} else if (mode == DEMO_LUXVR) {
+		// Show LuxVR dialog
+		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
+		dialog->exec();
+		delete dialog;
+
+		// Go in PAUSE mode
+		InitRendering(PAUSE, sceneName);
+	} else {
 		// Start the engine init thread
 		engineInitThread = new boost::thread(boost::bind(LuxMarkApp::EngineInitThreadImpl, this));
 	}
@@ -338,74 +352,4 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			InitRendering(PAUSE, sceneName);
 		}
 	}
-}
-
-#define MOVE_STEP 0.5f
-#define ROTATE_STEP 4.f
-void LuxMarkApp::HandleMouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-//	const double minInterval = 0.5;
-//
-//	if (mode == INTERACTIVE) {
-//		if (mouseButton0) {
-//			// Check elapsed time since last update
-//			if (WallClockTime() - lastMouseUpdate > minInterval) {
-//				const qreal distX = event->lastPos().x() - mouseGrabLastX;
-//				const qreal distY = event->lastPos().y() - mouseGrabLastY;
-//
-//				RenderConfig *renderConfig = renderSession->renderConfig;
-//				renderSession->BeginEdit();
-//				renderConfig->scene->camera->RotateDown(0.04f * distY * ROTATE_STEP);
-//				renderConfig->scene->camera->RotateRight(0.04f * distX * ROTATE_STEP);
-//				renderConfig->scene->camera->Update(
-//					renderSession->film->GetWidth(), renderSession->film->GetHeight());
-//				renderSession->editActions.AddAction(CAMERA_EDIT);
-//				renderSession->EndEdit();
-//
-//				mouseGrabLastX = event->lastPos().x();
-//				mouseGrabLastY = event->lastPos().y();
-//				lastMouseUpdate = WallClockTime();
-//			}
-//		} else if (mouseButton2) {
-//			// Check elapsed time since last update
-//			if (WallClockTime() - lastMouseUpdate > minInterval) {
-//				const qreal distX = event->lastPos().x() - mouseGrabLastX;
-//				const qreal distY = event->lastPos().y() - mouseGrabLastY;
-//
-//				RenderConfig *renderConfig = renderSession->renderConfig;
-//				renderSession->BeginEdit();
-//				renderConfig->scene->camera->TranslateRight(0.04f * distX * MOVE_STEP);
-//				renderConfig->scene->camera->TranslateBackward(0.04f * distY * MOVE_STEP);
-//				renderConfig->scene->camera->Update(
-//					renderSession->film->GetWidth(), renderSession->film->GetHeight());
-//				renderSession->editActions.AddAction(CAMERA_EDIT);
-//				renderSession->EndEdit();
-//
-//				mouseGrabLastX = event->lastPos().x();
-//				mouseGrabLastY = event->lastPos().y();
-//				lastMouseUpdate = WallClockTime();
-//			}
-//		}
-//	}
-}
-
-void LuxMarkApp::HandleMousePressEvent(QGraphicsSceneMouseEvent *event) {
-//	if (mode == INTERACTIVE) {
-//		if ((event->button() == Qt::LeftButton) || (event->button() == Qt::RightButton)) {
-//			if (event->button() == Qt::LeftButton) {
-//				mouseButton0 = true;
-//				mouseButton2 = false;
-//			} else if (event->button() == Qt::RightButton) {
-//				mouseButton0 = false;
-//				mouseButton2 = true;
-//			} else {
-//				mouseButton0 = false;
-//				mouseButton2 = false;
-//			}
-//
-//			// Record start position
-//			mouseGrabLastX = event->lastPos().x();
-//			mouseGrabLastY = event->lastPos().y();
-//			lastMouseUpdate = WallClockTime();
-//		}
-//	}
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Jun 12 17:37:44 2013
+** Created: Fri Jun 14 11:37:03 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -35,7 +35,6 @@ public:
     QAction *action_Quit;
     QAction *action_About;
     QAction *action_NoSpectral_OpenCL_GPUs;
-    QAction *action_Interactive;
     QAction *action_LuxBall_HDR;
     QAction *action_LuxBall;
     QAction *action_NoSpectral_OpenCL_CPUs_GPUs;
@@ -56,6 +55,7 @@ public:
     QAction *action_StressTest_NoSpectral_OpenCL_CPUs_GPUs;
     QAction *action_StressTest_NoSpectral_OpenCL_CPUs;
     QAction *action_StressTest_Spectral_BiDir;
+    QAction *action_LuxVR;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout_2;
     QSplitter *splitter_2;
@@ -89,9 +89,6 @@ public:
         action_NoSpectral_OpenCL_GPUs = new QAction(MainWindow);
         action_NoSpectral_OpenCL_GPUs->setObjectName(QString::fromUtf8("action_NoSpectral_OpenCL_GPUs"));
         action_NoSpectral_OpenCL_GPUs->setCheckable(true);
-        action_Interactive = new QAction(MainWindow);
-        action_Interactive->setObjectName(QString::fromUtf8("action_Interactive"));
-        action_Interactive->setCheckable(true);
         action_LuxBall_HDR = new QAction(MainWindow);
         action_LuxBall_HDR->setObjectName(QString::fromUtf8("action_LuxBall_HDR"));
         action_LuxBall_HDR->setCheckable(true);
@@ -145,6 +142,8 @@ public:
         action_StressTest_NoSpectral_OpenCL_CPUs->setObjectName(QString::fromUtf8("action_StressTest_NoSpectral_OpenCL_CPUs"));
         action_StressTest_Spectral_BiDir = new QAction(MainWindow);
         action_StressTest_Spectral_BiDir->setObjectName(QString::fromUtf8("action_StressTest_Spectral_BiDir"));
+        action_LuxVR = new QAction(MainWindow);
+        action_LuxVR->setObjectName(QString::fromUtf8("action_LuxVR"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setMinimumSize(QSize(160, 120));
@@ -245,6 +244,8 @@ public:
         menu_Mode->addSeparator();
         menu_Mode->addAction(action_StressTest_Spectral_BiDir);
         menu_Mode->addSeparator();
+        menu_Mode->addAction(action_LuxVR);
+        menu_Mode->addSeparator();
         menu_Mode->addAction(action_Pause);
         menu_Scene->addAction(action_Room);
         menu_Scene->addAction(action_Sala);
@@ -260,7 +261,7 @@ public:
         QObject::connect(action_LuxBall_HDR, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallHDRScene()));
         QObject::connect(action_NoSpectral_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()));
         QObject::connect(action_NoSpectral_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()));
-        QObject::connect(action_Pause, SIGNAL(triggered()), MainWindow, SLOT(setPauseMode()));
+        QObject::connect(action_Pause, SIGNAL(triggered()), MainWindow, SLOT(setMode_PAUSE()));
         QObject::connect(action_NoSpectral_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()));
         QObject::connect(action_LuxBall_Sky, SIGNAL(triggered()), MainWindow, SLOT(setLuxBallSkyScene()));
         QObject::connect(action_Sala, SIGNAL(triggered()), MainWindow, SLOT(setSalaScene()));
@@ -277,6 +278,7 @@ public:
         QObject::connect(action_StressTest_NoSpectral_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()));
         QObject::connect(action_StressTest_NoSpectral_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()));
         QObject::connect(action_StressTest_Spectral_BiDir, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()));
+        QObject::connect(action_LuxVR, SIGNAL(triggered()), MainWindow, SLOT(setMode_DEMO_LUXVR()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -288,7 +290,6 @@ public:
         action_Quit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
         action_NoSpectral_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
-        action_Interactive->setText(QApplication::translate("MainWindow", "&Interactive (OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setText(QApplication::translate("MainWindow", "LuxBall &HDR (Simple Benchmark: 262K triangles)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", 0, QApplication::UnicodeUTF8));
         action_LuxBall->setText(QApplication::translate("MainWindow", "&LuxBall  (Test: 262K triangles)", 0, QApplication::UnicodeUTF8));
@@ -314,6 +315,7 @@ public:
         action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only CPUs+GPUs)", 0, QApplication::UnicodeUTF8));
         action_StressTest_NoSpectral_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only CPUs)", 0, QApplication::UnicodeUTF8));
         action_StressTest_Spectral_BiDir->setText(QApplication::translate("MainWindow", "Stress Test (Advanced Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
+        action_LuxVR->setText(QApplication::translate("MainWindow", "LuxVR (No Spectral Rendering, OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
         hardwareDevicesLabel->setText(QApplication::translate("MainWindow", "Hardware Devices", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));

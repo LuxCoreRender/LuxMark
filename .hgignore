@@ -5,6 +5,10 @@
 ^src/(Debug|Release)/
 ^(Debug|Release|x64)/
 ^nbproject/*
+^luxvr*
+^luxconsole*
+^slg4*
+^scenes/luxball/luxvr-scene/*
 syntax: glob
 *~
 *CMakeFiles

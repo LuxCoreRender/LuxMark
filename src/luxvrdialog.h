@@ -19,78 +19,34 @@
  *   LuxRays website: http://www.luxrender.net                             *
  ***************************************************************************/
 
-#ifndef _LUXMARKAPP_H
-#define _LUXMARKAPP_H
+#ifndef _LUXVRDIALOG_H
+#define	_LUXVRDIALOG_H
 
-#include <QtGui/QApplication>
-#include <QTimer>
-
+#include <cstddef>
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 
 #include "luxmarkdefs.h"
-#include "mainwindow.h"
-#include "hardwaretree.h"
-#include "luxrendersession.h"
 
-//------------------------------------------------------------------------------
-// LuxMark Qt application
-//------------------------------------------------------------------------------
+#include "ui_luxvrdialog.h"
 
-// List of supported scenes
-#define SCENE_ROOM "scenes/room/render.cfg"
-#define SCENE_SALA "scenes/sala/render.cfg"
-#define SCENE_LUXBALL_HDR "scenes/luxball/luxball.Scene.00001.lxs"
-#define SCENE_LUXBALL "scenes/luxball/render.cfg"
-#define SCENE_LUXBALL_SKY "scenes/luxball/render-sunset.cfg"
-
-class LuxMarkApp : public QApplication {
+class LuxVRDialog : public QDialog {
 	Q_OBJECT
 
 public:
-	MainWindow *mainWin;
-
-	LuxMarkApp(int &argc, char **argv);
-	~LuxMarkApp();
-	
-	void Init(LuxMarkAppMode mode, const char *scnName, const bool singleRun);
-	void Stop();
-
-	void SetMode(LuxMarkAppMode m);
-	void SetScene(const char *name);
-
-	bool IsSingleRun() const { return singleRun; }
-
-	const boost::filesystem::path &GetExePath() const { return exePath; }
+	LuxVRDialog(const char *sceneName, const boost::filesystem::path &exePath,
+			QWidget *parent = NULL);
+	~LuxVRDialog();
 
 private:
-	static void EngineInitThreadImpl(LuxMarkApp *app);
+	static void LuxVRThreadImpl(LuxVRDialog *luxvrDialog);
+	static void ExecCmd(const string &cmd);
 
-	void InitRendering(LuxMarkAppMode mode, const char *scnName);
-
-	boost::filesystem::path exePath;
-
-	LuxMarkAppMode mode;
+	Ui::LuxVRDialog *ui;
 	const char *sceneName;
-	bool singleRun;
-
-	HardwareTreeModel *hardwareTreeModel;
-
-	boost::thread *engineInitThread;
-	double renderingStartTime;
-	bool engineInitDone;
-	LuxRenderSession *luxSession;
-
-	QTimer *renderRefreshTimer;
-
-	bool mouseButton0;
-	bool mouseButton2;
-	qreal mouseGrabLastX;
-	qreal mouseGrabLastY;
-	double lastMouseUpdate;
-
-private slots:
-	void RenderRefreshTimeout();
+	const boost::filesystem::path exePath;
+	boost::thread *luxvrThread;
 };
 
-#endif // _LUXMARKAPP_H
+#endif	/* _LUXVRDIALOG_H */
+
