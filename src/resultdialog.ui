@@ -79,7 +79,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="0" colspan="2">
+   <item row="5" column="0" colspan="2">
     <widget class="QLabel" name="deviceLabel">
      <property name="text">
       <string>Devices:</string>
@@ -89,7 +89,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
+   <item row="6" column="0" colspan="2">
     <widget class="QListView" name="deviceListView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -102,7 +102,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="2">
+   <item row="7" column="0" colspan="2">
     <widget class="QLabel" name="sampleSecLabel">
      <property name="text">
       <string>Result:</string>
@@ -112,7 +112,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="2">
+   <item row="8" column="0" colspan="2">
     <widget class="QLCDNumber" name="resultLCD">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -128,7 +128,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="2">
+   <item row="9" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout">
       <property name="margin">
@@ -161,6 +161,20 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="validationLablel">
+     <property name="text">
+      <string>Scene file validation:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="validationLabel">
+     <property name="text">
+      <string/>
+     </property>
     </widget>
    </item>
   </layout>

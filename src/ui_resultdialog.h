@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'resultdialog.ui'
 **
-** Created: Thu May 30 15:44:07 2013
+** Created: Sun Jun 16 09:53:10 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -42,6 +42,8 @@ public:
     QGridLayout *gridLayout;
     QPushButton *okButton;
     QPushButton *submitButton;
+    QLabel *validationLablel;
+    QLabel *validationLabel;
 
     void setupUi(QDialog *ResultDialog)
     {
@@ -91,7 +93,7 @@ public:
         deviceLabel->setObjectName(QString::fromUtf8("deviceLabel"));
         deviceLabel->setAlignment(Qt::AlignCenter);
 
-        formLayout->setWidget(2, QFormLayout::SpanningRole, deviceLabel);
+        formLayout->setWidget(5, QFormLayout::SpanningRole, deviceLabel);
 
         deviceListView = new QListView(ResultDialog);
         deviceListView->setObjectName(QString::fromUtf8("deviceListView"));
@@ -102,13 +104,13 @@ public:
         deviceListView->setSizePolicy(sizePolicy1);
         deviceListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-        formLayout->setWidget(3, QFormLayout::SpanningRole, deviceListView);
+        formLayout->setWidget(6, QFormLayout::SpanningRole, deviceListView);
 
         sampleSecLabel = new QLabel(ResultDialog);
         sampleSecLabel->setObjectName(QString::fromUtf8("sampleSecLabel"));
         sampleSecLabel->setAlignment(Qt::AlignCenter);
 
-        formLayout->setWidget(4, QFormLayout::SpanningRole, sampleSecLabel);
+        formLayout->setWidget(7, QFormLayout::SpanningRole, sampleSecLabel);
 
         resultLCD = new QLCDNumber(ResultDialog);
         resultLCD->setObjectName(QString::fromUtf8("resultLCD"));
@@ -120,7 +122,7 @@ public:
         resultLCD->setNumDigits(8);
         resultLCD->setProperty("value", QVariant(123456));
 
-        formLayout->setWidget(5, QFormLayout::SpanningRole, resultLCD);
+        formLayout->setWidget(8, QFormLayout::SpanningRole, resultLCD);
 
         widget = new QWidget(ResultDialog);
         widget->setObjectName(QString::fromUtf8("widget"));
@@ -145,7 +147,17 @@ public:
         gridLayout->addWidget(submitButton, 0, 1, 1, 1);
 
 
-        formLayout->setWidget(6, QFormLayout::SpanningRole, widget);
+        formLayout->setWidget(9, QFormLayout::SpanningRole, widget);
+
+        validationLablel = new QLabel(ResultDialog);
+        validationLablel->setObjectName(QString::fromUtf8("validationLablel"));
+
+        formLayout->setWidget(2, QFormLayout::LabelRole, validationLablel);
+
+        validationLabel = new QLabel(ResultDialog);
+        validationLabel->setObjectName(QString::fromUtf8("validationLabel"));
+
+        formLayout->setWidget(2, QFormLayout::FieldRole, validationLabel);
 
 
         retranslateUi(ResultDialog);
@@ -166,6 +178,8 @@ public:
         sampleSecLabel->setText(QApplication::translate("ResultDialog", "Result:", 0, QApplication::UnicodeUTF8));
         okButton->setText(QApplication::translate("ResultDialog", "&Ok", 0, QApplication::UnicodeUTF8));
         submitButton->setText(QApplication::translate("ResultDialog", "&Submit result", 0, QApplication::UnicodeUTF8));
+        validationLablel->setText(QApplication::translate("ResultDialog", "Scene file validation:", 0, QApplication::UnicodeUTF8));
+        validationLabel->setText(QString());
     } // retranslateUi
 
 };

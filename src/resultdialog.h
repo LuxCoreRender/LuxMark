@@ -42,6 +42,11 @@ public:
 	~ResultDialog();
 
 private:
+	static void MD5ThreadImpl(ResultDialog *resultDialog);
+	static void AddSceneFiles(ResultDialog *resultDialog,
+			vector<boost::filesystem::path> &files,
+			const boost::filesystem::path &path);
+
 	Ui::ResultDialog *ui;
 
 	const char *sceneName;
@@ -49,8 +54,16 @@ private:
 	const vector<BenchmarkDeviceDescription> &descs;
 	DeviceListModel *deviceListModel;
 
+	bool sceneValidation;
+	boost::thread *md5Thread;
+
 private slots:
 	void submitResult();
+
+    void setValidationLabel(const QString &text, const bool isOk);
+
+signals:
+	void validationLabelChanged(const QString &text, const bool isOk);
 };
 
 #endif	/* _RESULTDIALOG_H */
