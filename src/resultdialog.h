@@ -34,36 +34,44 @@ class ResultDialog : public QDialog {
 
 public:
 	ResultDialog(
-			LuxMarkAppMode mode,
+			const LuxMarkAppMode mode,
 			const char *sceneName,
 			const double sampleSecs,
 			const vector<BenchmarkDeviceDescription> &descs,
+			const unsigned char *frameBuffer,
+			const u_int frameBufferWidth, const u_int frameBufferHeight,
 			QWidget *parent = NULL);
 	~ResultDialog();
 
 private:
 	static void MD5ThreadImpl(ResultDialog *resultDialog);
+	static void ImageThreadImpl(ResultDialog *resultDialog);
 	static void AddSceneFiles(ResultDialog *resultDialog,
 			vector<boost::filesystem::path> &files,
 			const boost::filesystem::path &path);
 
 	Ui::ResultDialog *ui;
 
+	LuxMarkAppMode mode;
 	const char *sceneName;
 	double sampleSecs;
 	const vector<BenchmarkDeviceDescription> &descs;
+	const unsigned char *frameBuffer;
+	u_int frameBufferWidth, frameBufferHeight;
 	DeviceListModel *deviceListModel;
 
-	bool sceneValidation;
-	boost::thread *md5Thread;
+	bool sceneValidation, imageValidation;
+	boost::thread *md5Thread, *imageThread;
 
 private slots:
 	void submitResult();
 
-    void setValidationLabel(const QString &text, const bool isOk);
+    void setSceneValidationLabel(const QString &text, const bool isOk);
+	void setImageValidationLabel(const QString &text, const bool isOk);
 
 signals:
-	void validationLabelChanged(const QString &text, const bool isOk);
+	void sceneValidationLabelChanged(const QString &text, const bool isOk);
+	void imageValidationLabelChanged(const QString &text, const bool isOk);
 };
 
 #endif	/* _RESULTDIALOG_H */

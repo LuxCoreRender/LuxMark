@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'resultdialog.ui'
 **
-** Created: Sun Jun 16 09:53:10 2013
+** Created: Sun Jun 16 17:03:10 2013
 **      by: Qt User Interface Compiler version 4.8.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -42,8 +42,10 @@ public:
     QGridLayout *gridLayout;
     QPushButton *okButton;
     QPushButton *submitButton;
-    QLabel *validationLablel;
-    QLabel *validationLabel;
+    QLabel *sceneValidationLabel;
+    QLabel *sceneValidation;
+    QLabel *imageValidationLabel;
+    QLabel *imageValidation;
 
     void setupUi(QDialog *ResultDialog)
     {
@@ -149,15 +151,25 @@ public:
 
         formLayout->setWidget(9, QFormLayout::SpanningRole, widget);
 
-        validationLablel = new QLabel(ResultDialog);
-        validationLablel->setObjectName(QString::fromUtf8("validationLablel"));
+        sceneValidationLabel = new QLabel(ResultDialog);
+        sceneValidationLabel->setObjectName(QString::fromUtf8("sceneValidationLabel"));
 
-        formLayout->setWidget(2, QFormLayout::LabelRole, validationLablel);
+        formLayout->setWidget(2, QFormLayout::LabelRole, sceneValidationLabel);
 
-        validationLabel = new QLabel(ResultDialog);
-        validationLabel->setObjectName(QString::fromUtf8("validationLabel"));
+        sceneValidation = new QLabel(ResultDialog);
+        sceneValidation->setObjectName(QString::fromUtf8("sceneValidation"));
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, validationLabel);
+        formLayout->setWidget(2, QFormLayout::FieldRole, sceneValidation);
+
+        imageValidationLabel = new QLabel(ResultDialog);
+        imageValidationLabel->setObjectName(QString::fromUtf8("imageValidationLabel"));
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, imageValidationLabel);
+
+        imageValidation = new QLabel(ResultDialog);
+        imageValidation->setObjectName(QString::fromUtf8("imageValidation"));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, imageValidation);
 
 
         retranslateUi(ResultDialog);
@@ -178,8 +190,10 @@ public:
         sampleSecLabel->setText(QApplication::translate("ResultDialog", "Result:", 0, QApplication::UnicodeUTF8));
         okButton->setText(QApplication::translate("ResultDialog", "&Ok", 0, QApplication::UnicodeUTF8));
         submitButton->setText(QApplication::translate("ResultDialog", "&Submit result", 0, QApplication::UnicodeUTF8));
-        validationLablel->setText(QApplication::translate("ResultDialog", "Scene file validation:", 0, QApplication::UnicodeUTF8));
-        validationLabel->setText(QString());
+        sceneValidationLabel->setText(QApplication::translate("ResultDialog", "Scene file validation:", 0, QApplication::UnicodeUTF8));
+        sceneValidation->setText(QString());
+        imageValidationLabel->setText(QApplication::translate("ResultDialog", "Image validation:", 0, QApplication::UnicodeUTF8));
+        imageValidation->setText(QString());
     } // retranslateUi
 
 };

@@ -22,6 +22,7 @@
 #include <limits>
 #include <boost/algorithm/string.hpp>
 
+#include <QFile>
 #include <QGraphicsSceneMouseEvent>
 
 #include "slg/film/film.h"
@@ -206,19 +207,34 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 }
 
 void LuxMarkApp::RenderRefreshTimeout() {
-	if (!engineInitDone)
+	if (!engineInitDone || !luxStatistics("sceneIsReady"))
 		return;
 
-	if (luxStatistics("sceneIsReady") || luxStatistics("filmIsReady")) {
-		// Get the rendered image
-		luxUpdateFramebuffer();
-		const unsigned char *pixels = luxFramebuffer();
+	// Update shown image
 
-		// Update the window
-		int width = luxGetIntAttribute("film", "xResolution");
-		int height = luxGetIntAttribute("film", "yResolution");
-		mainWin->ShowFrameBuffer(pixels, width, height);
-	}
+	// Get the rendered image
+	luxUpdateFramebuffer();
+	const unsigned char *pixels = luxFramebuffer();
+
+	// Update the window
+	const int width = luxGetIntAttribute("film", "xResolution");
+	const int height = luxGetIntAttribute("film", "yResolution");
+	mainWin->ShowFrameBuffer(pixels, width, height);
+
+	// Save reference image
+	/*const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
+	const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
+	LM_LOG("Sample per pixel: " << samlePerPixel);
+	static bool saved = false;
+	if (!saved && samlePerPixel > 400) {
+		LM_LOG("Saving reference...");
+		const QByteArray data = QByteArray::fromRawData((char *)pixels, width * height * 3);
+		QFile refImage("reference.raw");
+		refImage.open(QIODevice::WriteOnly);
+		refImage.write(data);
+		refImage.close();
+		saved = true;
+	}*/
 
 	// Update the statistics
 	double triangleCount = 0.0;
@@ -283,7 +299,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	bool benchmarkDone = (renderingTime > 120) &&
+	const bool benchmarkDone = (renderingTime > 120) &&
 		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
 		(mode != STRESSTEST_NOSPECTRAL_OCL_CPUGPU) &&
 		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
@@ -344,7 +360,8 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 			Stop();
 
-			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec, descs);
+			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec, descs,
+					pixels, width, height);
 			dialog->exec();
 			delete dialog;
 
