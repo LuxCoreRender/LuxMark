@@ -28,6 +28,10 @@
 #include "submitdialog.h"
 #include "luxmarkapp.h"
 
+static QString Path2QString(const boost::filesystem::path &fileName) {
+	return QString::fromStdWString(fileName.generic_wstring());
+}
+
 ResultDialog::ResultDialog(const LuxMarkAppMode m,
 		const char *scnName, const double sampSecs,
 		const vector<BenchmarkDeviceDescription> &ds,
@@ -177,7 +181,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			emit resultDialog->sceneValidationLabelChanged(label, false);
 
 			// Read all file
-			QFile file(fileName.c_str());
+			QFile file(Path2QString(fileName));
 			hash.addData(file.readAll());
 			file.close();
 		}
@@ -218,7 +222,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 
 		// Read the reference file
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
-			const char *fileName;
+			boost::filesystem::path fileName;
 			// SLG benchmark
 			if ((resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_GPU) ||
 					(resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU) ||
@@ -227,13 +231,13 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 					(resultDialog->mode == BENCHMARK_NOSPECTRAL_HYBRID_GPU) ||
 					(resultDialog->mode == BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM) ||
 					(resultDialog->mode == BENCHMARK_NOSPECTRAL_NATIVE_PATH)) {
-				fileName = (scenePath / "reference-slg.raw").native().c_str();
+				fileName = scenePath / "reference-slg.raw";
 			} else
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
 			LM_LOG("Image validation file name: [" << fileName << "]");
 
 			// Read the raw data
-			QFile rawFile("/home/david/projects/luxrender-dev/luxmark/scenes/luxball/reference-slg.raw");
+			QFile rawFile(Path2QString(fileName));
 			if (!rawFile.open(QIODevice::ReadOnly))
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unable to open image reference file");
 			const QByteArray rawData = rawFile.readAll();
@@ -257,7 +261,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 			testImage[i] = resultDialog->frameBuffer[i] / 255.f;
 
 		// Run the image comparison
-		slg::ConvergenceTest  convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
+		slg::ConvergenceTest convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
 
 		// Reference image
 		convTest.Test(referenceImage);
