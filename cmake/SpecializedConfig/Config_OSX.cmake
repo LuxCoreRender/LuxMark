@@ -13,7 +13,7 @@ set(OSX_SEARCH_PATH     ${OSX_DEPENDENCY_ROOT})
 
 set(LuxRender_SOURCE	${CMAKE_SOURCE_DIR}/../lux) # The lux source dir
 MESSAGE(STATUS "Using lux source dir (headers): " ${LuxRender_SOURCE})
-set(LuxRender_BUILD	${CMAKE_SOURCE_DIR}/../lux_build_opt) # the lux build dir, may be named different
+set(LuxRender_BUILD	${CMAKE_SOURCE_DIR}/../lux) # the lux build dir, may be named different
 MESSAGE(STATUS "Using lux build dir (liblux): " ${LuxRender_BUILD})
 
 set(FREEIMAGE_SEARCH_PATH "${OSX_SEARCH_PATH}")
