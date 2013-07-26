@@ -318,7 +318,7 @@
   </action>
   <action name="action_NoSpectral_Hybrid_Custom">
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected evices only)</string>
+    <string>Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected devices only)</string>
    </property>
   </action>
   <action name="action_NoSpectral_Path">
