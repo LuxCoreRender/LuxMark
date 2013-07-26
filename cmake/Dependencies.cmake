@@ -151,8 +151,8 @@ ENDIF (SLG_INCLUDE_DIRS AND SLG_LIBRARY)
 #############################################################################
 
 IF(APPLE)
-	FIND_PATH(LUXRENDER_INCLUDE_DIRS NAMES core/lux.h PATHS ${OSX_DEPENDENCY_ROOT}/include/Lux)
-	FIND_LIBRARY(LUXRENDER_LIBRARY liblux.a ${OSX_DEPENDENCY_ROOT}/lib/Lux)
+	FIND_PATH(LUXRENDER_INCLUDE_DIRS NAMES core/lux.h PATHS ${LuxRender_SOURCE})
+	FIND_LIBRARY(LUXRENDER_LIBRARY liblux.dylib ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE})
 ELSE(APPLE)
 	FIND_PATH(LUXRENDER_INCLUDE_DIRS NAMES core/lux.h PATHS ../lux)
 	FIND_LIBRARY(LUXRENDER_LIBRARY lux PATHS ../lux ${LuxRender_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )

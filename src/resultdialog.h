@@ -24,6 +24,8 @@
 
 #include <cstddef>
 
+#include <boost/filesystem.hpp>
+
 #include "luxmarkdefs.h"
 #include "hardwaretree.h"
 

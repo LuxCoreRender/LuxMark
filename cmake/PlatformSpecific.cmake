@@ -154,8 +154,6 @@ IF(APPLE)
 #	INCLUDE_DIRECTORIES( ${OSX_DEPENDENCY_ROOT}/include )
 
 	### options
-	option(OSX_BUILD_LUXMARK "Compile LuxMark too" FALSE)
-	option(OSX_UPDATE_LUXMARK_REPO "Copy LuxMark dependencies over to macos repo after compile" FALSE)
 
 	set(LUXMARK_NO_DEFAULT_CONFIG true)
 	set(LUXMARK_CUSTOM_CONFIG Config_OSX)
@@ -188,8 +186,6 @@ IF(APPLE)
 	else()
 		MESSAGE(STATUS "BUILD_TYPE : " ${CMAKE_BUILD_TYPE} " - compile with: make " )
 	endif()
-	MESSAGE(STATUS "UPDATE_LUXMARK_IN_MACOS_REPO : " ${OSX_UPDATE_LUXMARK_REPO})
-	MESSAGE(STATUS "BUILD_LUXMARK_OSX : " ${OSX_BUILD_LUXMARK})
 	MESSAGE(STATUS "")
 	MESSAGE(STATUS "#####################################################################")
 
