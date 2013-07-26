@@ -171,6 +171,7 @@ IF(APPLE)
 				COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LuxMark.app/Contents/Resources
 				COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LuxMark.app/Contents/Resources/
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/liblux.dylib ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LuxMark.app/Contents/MacOS/
+				COMMAND ln -s ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/scenes
 #				COMMAND macdeployqt ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LuxMark.app ### bundling Qt frameworks ###
 				)
 ELSE(APPLE)

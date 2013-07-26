@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Jun 14 11:37:03 2013
-**      by: Qt User Interface Compiler version 4.8.3
+** Created: Fri Jul 26 22:29:56 2013
+**      by: Qt User Interface Compiler version 4.7.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -309,7 +309,7 @@ public:
         action_Spectral_BiDir->setText(QApplication::translate("MainWindow", "Benchmark (Advanced Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
         action_Spectral_Path->setText(QApplication::translate("MainWindow", "Benchmark (Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
         action_NoSpectral_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Hybrid C++/OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
-        action_NoSpectral_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected evices only)", 0, QApplication::UnicodeUTF8));
+        action_NoSpectral_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
         action_NoSpectral_Path->setText(QApplication::translate("MainWindow", "Benchmark (No Spectral Rendering, Native C++ only)", 0, QApplication::UnicodeUTF8));
         action_StressTest_NoSpectral_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
         action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (No Spectral Rendering, OpenCL-only CPUs+GPUs)", 0, QApplication::UnicodeUTF8));
