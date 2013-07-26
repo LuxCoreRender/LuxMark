@@ -56,6 +56,7 @@ public:
 	bool IsShowingLogo() const;
 	void ShowFrameBuffer(const unsigned char *frameBuffer,
 		const unsigned int width, const unsigned int height);
+	const unsigned char *GetFrameBuffer() const { return frameBuffer; }
 
 	void SetModeCheck(const LuxMarkAppMode mode);
 	void SetSceneCheck(const int index);

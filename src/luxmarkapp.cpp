@@ -214,16 +214,16 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the rendered image
 	luxUpdateFramebuffer();
-	const unsigned char *pixels = luxFramebuffer();
 
 	// Update the window
 	const int width = luxGetIntAttribute("film", "xResolution");
 	const int height = luxGetIntAttribute("film", "yResolution");
-	mainWin->ShowFrameBuffer(pixels, width, height);
+	const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
+	mainWin->ShowFrameBuffer(luxFramebuffer(), width, height);
+	const unsigned char *pixels = mainWin->GetFrameBuffer();
 
-	// Save reference image
-	/*const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
-	const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
+	// To save reference image
+	/*const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
 	LM_LOG("Sample per pixel: " << samlePerPixel);
 	static bool saved = false;
 	if (!saved && samlePerPixel > 400) {
@@ -238,7 +238,6 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Update the statistics
 	double triangleCount = 0.0;
-	const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
 	const int renderingTime = luxGetDoubleAttribute("renderer_statistics", "elapsedTime");
 	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
