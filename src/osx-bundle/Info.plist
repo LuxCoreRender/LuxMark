@@ -11,7 +11,7 @@
 	<key>CFBundleIconFile</key>
 	<string>LuxMark.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>org.luxrenderk.luxrender</string>
+	<string>org.luxrender.luxrender</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
