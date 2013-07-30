@@ -87,6 +87,8 @@ void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
 	if (!boost::filesystem::exists(luxvrPath))
 		luxvrPath = luxvrDialog->exePath / "luxvr.exe";
 	if (!boost::filesystem::exists(luxvrPath))
+		luxvrPath = luxvrDialog->exePath / "LuxMark.app/Contents/MacOS/luxvr"; // OSX application bundle
+	if (!boost::filesystem::exists(luxvrPath))
 		throw runtime_error("Unable to find luxvr executable");
 	LM_LOG("LuxVR path: [" << luxvrPath << "]");
 	const string luxvr = luxvrPath.make_preferred().string();
