@@ -174,7 +174,7 @@ IF(APPLE)
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/liblux.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle corelib
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxvr ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxvr
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxconsole ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxconsole
-				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/SmallluxGPU/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle slg
+				COMMAND ditto ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/SmallluxGPU/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/SmallluxGPU/ # bundle slg
 				COMMAND ln -s ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)
 #				COMMAND macdeployqt ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app ### bundling Qt frameworks ###
 				)
