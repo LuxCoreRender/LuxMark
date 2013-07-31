@@ -102,5 +102,7 @@ void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
 	LM_LOG("LuxVR done");
 	
 	// Close the dialog
+#if !defined __APPLE__  // closing luxvrDialog here gives a crash on OSX, so atm. disable until solved
 	luxvrDialog->close();
+#endif
 }
