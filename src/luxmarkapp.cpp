@@ -169,7 +169,16 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 	} else if (mode == DEMO_LUXVR) {
 		// Show LuxVR dialog
 		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
+		
+#if !defined __APPLE__
 		dialog->exec();
+#else
+		/* Alternative is to call setModal(false), then show()
+		 Unlike exec(), show() returns control to the caller immediately
+		 prevents crash on luxvrDialog->close() in luxvrdialog.cpp line 105 */
+		dialog->setModal(false);
+		dialog->show();
+#endif
 		delete dialog;
 
 		// Go in PAUSE mode
