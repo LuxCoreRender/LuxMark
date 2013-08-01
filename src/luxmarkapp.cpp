@@ -183,6 +183,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 #endif
 		delete dialog;
 		mainWin->show();
+		mainWin->raise(); // make sure focus goes back to luxmark gui
 		
 		// Go in PAUSE mode
 		InitRendering(PAUSE, sceneName);
