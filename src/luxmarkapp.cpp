@@ -175,10 +175,10 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 #if !defined __APPLE__
 		dialog->exec();
 #else
-		/* Alternative is to call setModal(false), then show()
-		 Unlike exec(), show() returns control to the caller immediately
-		 prevents crash on luxvrDialog->close() in luxvrdialog.cpp line 105 */
-		dialog->setModal(false);
+		/* Alternative is to set modality to NonModal, then show().
+		 Unlike the always modal exec(), show() returns control to the caller immediately,
+		 this prevents crashing on luxvrDialog->close() in luxvrdialog.cpp line 105 */
+		dialog->setWindowModality(Qt::NonModal);
 		dialog->show();
 #endif
 		delete dialog;
