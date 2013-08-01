@@ -20,6 +20,7 @@
  ***************************************************************************/
 
 #include <boost/lexical_cast.hpp>
+#include <QtGui/qevent.h>
 
 #include "luxmarkcfg.h"
 #include "luxvrdialog.h"
@@ -27,8 +28,12 @@
 
 LuxVRDialog::LuxVRDialog(const char *name,
 		const boost::filesystem::path &path, QWidget *parent) :
-		QDialog(parent), ui(new Ui::LuxVRDialog), sceneName(name), exePath(path) {
+		QDialog(parent), ui(new Ui::LuxVRDialog), sceneName(name), exePath(path),
+		toCloseDialog(false) {
 	ui->setupUi(this);
+
+	QObject::connect(this, SIGNAL(signalLuxVRThreadDone()),
+			this, SLOT(luxVRThreadDone()));
 
 	luxvrThread = new boost::thread(boost::bind(LuxVRDialog::LuxVRThreadImpl, this));
 }
@@ -38,6 +43,20 @@ LuxVRDialog::~LuxVRDialog() {
 	delete luxvrThread;
 
 	delete ui;
+}
+
+void LuxVRDialog::closeEvent(QCloseEvent *event) {
+	if (toCloseDialog)
+		event->accept(); // Close window
+	else
+		event->ignore(); // Keep window
+}
+
+void LuxVRDialog::luxVRThreadDone() {
+	toCloseDialog = true;
+
+	// Close the dialog
+	close();
 }
 
 #if defined(WIN32)
@@ -101,6 +120,5 @@ void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
 
 	LM_LOG("LuxVR done");
 	
-	// Close the dialog
-	luxvrDialog->close();
+	luxvrDialog->signalLuxVRThreadDone();
 }

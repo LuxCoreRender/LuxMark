@@ -169,22 +169,10 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 	} else if (mode == DEMO_LUXVR) {
 		// Show LuxVR dialog
 		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
-		
-		mainWin->hide(); // experimental, i personally like it better to hide the luxmark gui whereas luxvr demo - Jens
-		
-#if !defined __APPLE__
+
 		dialog->exec();
-#else
-		/* Alternative is to set modality to NonModal, then show().
-		 Unlike the always modal exec(), show() returns control to the caller immediately,
-		 this prevents crashing on luxvrDialog->close() in luxvrdialog.cpp line 105 */
-		dialog->setWindowModality(Qt::NonModal);
-		dialog->show();
-#endif
 		delete dialog;
-		mainWin->show();
-		mainWin->raise(); // make sure focus goes back to luxmark gui
-		
+
 		// Go in PAUSE mode
 		InitRendering(PAUSE, sceneName);
 	} else {

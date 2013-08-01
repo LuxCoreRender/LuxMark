@@ -8,6 +8,7 @@
 ^luxvr*
 ^luxconsole*
 ^slg4*
+^liblux.so*
 ^scenes/luxball/luxvr-scene/*
 syntax: glob
 *~

@@ -38,6 +38,10 @@ public:
 			QWidget *parent = NULL);
 	~LuxVRDialog();
 
+protected:
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *) { } // To ignore ESC key
+
 private:
 	static void LuxVRThreadImpl(LuxVRDialog *luxvrDialog);
 	static void ExecCmd(const string &cmd);
@@ -46,6 +50,14 @@ private:
 	const char *sceneName;
 	const boost::filesystem::path exePath;
 	boost::thread *luxvrThread;
+
+	bool toCloseDialog;
+
+private slots:
+	void luxVRThreadDone();
+
+signals:
+	void signalLuxVRThreadDone();
 };
 
 #endif	/* _LUXVRDIALOG_H */
