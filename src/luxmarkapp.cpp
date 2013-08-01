@@ -170,10 +170,9 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		// Show LuxVR dialog
 		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
 
-		mainWin->showMinimized(); // does this work on all OS ?
 		dialog->exec();
 		delete dialog;
-		mainWin->raise(); // make sure focus goes back to luxmark gui de-minimize
+		mainWin->raise(); // make luxmark gui frontmost win 
 		
 		// Go in PAUSE mode
 		InitRendering(PAUSE, sceneName);
