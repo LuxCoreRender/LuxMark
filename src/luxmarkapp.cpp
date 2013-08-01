@@ -170,6 +170,8 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		// Show LuxVR dialog
 		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
 		
+		mainWin->hide(); // experimental, i personally like it better to hide the luxmark gui whereas luxvr demo - Jens
+		
 #if !defined __APPLE__
 		dialog->exec();
 #else
@@ -180,7 +182,8 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		dialog->show();
 #endif
 		delete dialog;
-
+		mainWin->show();
+		
 		// Go in PAUSE mode
 		InitRendering(PAUSE, sceneName);
 	} else {
