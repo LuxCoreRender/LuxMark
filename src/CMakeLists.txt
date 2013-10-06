@@ -162,12 +162,13 @@ ENDIF(APPLE)
 
 IF(APPLE)
 	add_executable(LuxMark  ${GUI_TYPE} ${LUXMARK_SRCS})
-	target_link_libraries(LuxMark ${LUXRENDER_LIBRARY} ${SLG_LIBRARY} ${LUXRAYS_LIBRARY} ${Boost_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${GLEW_LIBRARY} ${GLUT_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
+	set(EXTRA_LINKFLAGS "-framework CoreFoundation") # for the workaround finding the bundle/scenefiles
+	target_link_libraries(LuxMark ${LUXRENDER_LIBRARY} ${SLG_LIBRARY} ${LUXRAYS_LIBRARY} ${Boost_LIBRARIES} ${FREEIMAGE_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${GLEW_LIBRARY} ${GLUT_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES} ${EXTRA_LINKFLAGS})
 
 	set_target_properties(LuxMark PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/Info.plist)
 	ADD_CUSTOM_COMMAND(
 			TARGET LuxMark POST_BUILD
-				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/scenes
+				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/scenes
 				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
 				COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
 				COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
@@ -175,7 +176,7 @@ IF(APPLE)
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxvr ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxvr
 				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxconsole ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxconsole
 				COMMAND ditto ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/SmallluxGPU/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/SmallluxGPU/ # bundle slg
-				COMMAND ln -s ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)
+				COMMAND ln -s ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents # change to copy for deploying  !!!
 #				COMMAND macdeployqt ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app ### bundling Qt frameworks ###
 				)
 ELSE(APPLE)
