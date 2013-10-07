@@ -35,9 +35,10 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 	LuxMarkApp* app = dynamic_cast<LuxMarkApp*>(QCoreApplication::instance());
 	if(app)
 	{
-		bundleDir = app->GetExePath().string() + (string)"/LuxMark.app/Contents/";
+		bundleDir = app->GetExePath().parent_path().parent_path(); // LuxMark.app/Contents
 	}
-	sceneFileName = bundleDir.string() + boost::filesystem::path(fileName).string();
+	cout << bundleDir << endl;
+	sceneFileName = bundleDir.string() + (string)"/" + boost::filesystem::path(fileName).string();
 #else
 	sceneFileName = boost::filesystem::system_complete(fileName).string();
 #endif
