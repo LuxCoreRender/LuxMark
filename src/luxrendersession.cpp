@@ -22,9 +22,11 @@
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 
-#include "luxmarkapp.h"
 #include "luxrendersession.h"
 #include "mainwindow.h"
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
 
 LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
 		const string &slgDevSel, const string &luxDevSel) {
@@ -32,13 +34,14 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 	originalCurrentDirectory = boost::filesystem::current_path();
 	
 #ifdef __APPLE__ // workaround for reliable find the bundlepath/scenefiles especially in 10.9	
-	LuxMarkApp* app = dynamic_cast<LuxMarkApp*>(QCoreApplication::instance());
-	if(app)
-	{
-		bundleDir = app->GetExePath().parent_path().parent_path(); // LuxMark.app/Contents
+	boost::filesystem::path exePath;
+	char result[ 1024 ]; // too short perhaps ?
+	uint32_t size=1023;
+	if (!_NSGetExecutablePath(result, &size)) {
+		exePath=string(result);
+		boost::filesystem::current_path(exePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scens dir
 	}
-	cout << bundleDir << endl;
-	sceneFileName = bundleDir.string() + (string)"/" + boost::filesystem::path(fileName).string();
+	sceneFileName = exePath.parent_path().parent_path().string() + (string)"/" + boost::filesystem::path(fileName).string();
 #else
 	sceneFileName = boost::filesystem::system_complete(fileName).string();
 #endif

@@ -43,7 +43,6 @@ private:
 	static void RenderthreadImpl(LuxRenderSession *session);
 
 	boost::filesystem::path originalCurrentDirectory;
-	boost::filesystem::path bundleDir;
 
 	std::string sceneFileName;
 	LuxMarkAppMode renderMode;

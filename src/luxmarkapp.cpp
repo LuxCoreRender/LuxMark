@@ -75,11 +75,7 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	hardwareTreeModel = NULL;
 	
 	// Look for the directory where Lux executable are
-#ifdef __APPLE__ // workaround for reliable find the bundlepath/scenefiles especially in 10.9
-	exePath = argv[0];
-#else
 	exePath = boost::filesystem::path(boost::filesystem::initial_path<boost::filesystem::path>());
-#endif
 }
 
 LuxMarkApp::~LuxMarkApp() {
