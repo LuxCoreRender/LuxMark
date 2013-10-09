@@ -39,7 +39,7 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 	uint32_t size=1023;
 	if (!_NSGetExecutablePath(result, &size)) {
 		exePath=string(result);
-		boost::filesystem::current_path(exePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scens dir
+		boost::filesystem::current_path(exePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes dir
 	}
 	sceneFileName = exePath.parent_path().parent_path().string() + (string)"/" + boost::filesystem::path(fileName).string();
 #else
