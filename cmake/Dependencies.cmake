@@ -72,21 +72,18 @@ if (OPENGL_FOUND)
 	include_directories(SYSTEM ${OPENGL_INCLUDE_PATH})
 endif()
 
+# GLEW
 set(GLEW_ROOT                  "${GLEW_SEARCH_PATH}")
 if(NOT APPLE)
 	find_package(GLEW)
 endif()
-
-# GLEW
 if (GLEW_FOUND)
 	include_directories(SYSTEM ${GLEW_INCLUDE_PATH})
 endif ()
 
-
+# GLUT
 set(GLUT_ROOT                  "${GLUT_SEARCH_PATH}")
 find_package(GLUT)
-
-# GLUT
 if (GLUT_FOUND)
 	include_directories(SYSTEM ${GLUT_INCLUDE_PATH})
 endif ()
