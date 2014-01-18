@@ -34,6 +34,8 @@
 #include "luxmarkapp.h"
 #include "luxmarkdefs.h"
 
+using namespace luxrays;
+
 MainWindow *LogWindow = NULL;
 
 int EVT_LUX_LOG_MESSAGE = QEvent::registerEventType();
@@ -45,23 +47,6 @@ LuxLogEvent::LuxLogEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_LOG_MESSAGE
 
 LuxErrorEvent::LuxErrorEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_ERR_MESSAGE), message(msg) {
 	setAccepted(false);
-}
-
-static void LuxRenderErrorHandler(int code, int severity, const char *msg) {
-	switch (severity) {
-		case LUX_ERROR:
-		case LUX_SEVERE:
-			LM_LOG_LUX_ERROR(msg);
-			break;
-		case LUX_WARNING:
-			LM_LOG_LUX_WARNING(msg);
-			break;
-		default:
-		case LUX_DEBUG:
-		case LUX_INFO:
-			LM_LOG_LUX(msg);
-			break;
-	}
 }
 
 //------------------------------------------------------------------------------
@@ -115,8 +100,6 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	}
 
 	ShowLogo();
-
-	luxErrorHandler(&::LuxRenderErrorHandler);
 }
 
 MainWindow::~MainWindow() {
@@ -150,25 +133,11 @@ void MainWindow::showAbout() {
 	dialog->exec();
 }
 
-void MainWindow::setLuxBallScene() {
-	LM_LOG("Set LuxBall scene");
-	authorLabelBack->setText(QString("Scene designed by LuxRender project"));
-	authorLabel->setText(authorLabelBack->text());
-	((LuxMarkApp *)qApp)->SetScene(SCENE_LUXBALL);
-}
-
 void MainWindow::setLuxBallHDRScene() {
 	LM_LOG("Set LuxBall HDR scene");
 	authorLabelBack->setText(QString("Scene designed by LuxRender project"));
 	authorLabel->setText(authorLabelBack->text());
 	((LuxMarkApp *)qApp)->SetScene(SCENE_LUXBALL_HDR);
-}
-
-void MainWindow::setLuxBallSkyScene() {
-	LM_LOG("Set LuxBall Sky scene");
-	authorLabelBack->setText(QString("Scene designed by LuxRender project"));
-	authorLabel->setText(authorLabelBack->text());
-	((LuxMarkApp *)qApp)->SetScene(SCENE_LUXBALL_SKY);
 }
 
 void MainWindow::setRoomScene() {
@@ -185,79 +154,54 @@ void MainWindow::setSalaScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_SALA);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_GPU() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_GPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_GPU);
+void MainWindow::setMode_BENCHMARK_OCL_GPU() {
+	LM_LOG("Set mode: BENCHMARK_OCL_GPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_GPU);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CPUGPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
+void MainWindow::setMode_BENCHMARK_OCL_CPUGPU() {
+	LM_LOG("Set mode: BENCHMARK_OCL_CPUGPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPUGPU);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CPU() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CPU);
+void MainWindow::setMode_BENCHMARK_OCL_CPU() {
+	LM_LOG("Set mode: BENCHMARK_OCL_CPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPU);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_OCL_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
+void MainWindow::setMode_BENCHMARK_OCL_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_OCL_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CUSTOM);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_HYBRID_GPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_GPU);
+void MainWindow::setMode_BENCHMARK_HYBRID_GPU() {
+	LM_LOG("Set mode: BENCHMARK_HYBRID_GPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_GPU);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM);
+void MainWindow::setMode_BENCHMARK_HYBRID_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_HYBRID_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_CUSTOM);
 }
 
-void MainWindow::setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH() {
+void MainWindow::setMode_BENCHMARK_NATIVE_PATH() {
 	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NOSPECTRAL_NATIVE_PATH);
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NATIVE_PATH);
 }
 
-void MainWindow::setMode_BENCHMARK_SPECTRAL_HYBRID_GPU() {
-	LM_LOG("Set mode: BENCHMARK_SPECTRAL_HYBRID_GPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_GPU);
+void MainWindow::setMode_STRESSTEST_OCL_GPU() {
+	LM_LOG("Set mode: STRESSTEST_OCL_GPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_GPU);
 }
 
-void MainWindow::setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_SPECTRAL_HYBRID_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_HYBRID_CUSTOM);
+void MainWindow::setMode_STRESSTEST_OCL_CPUGPU() {
+	LM_LOG("Set mode: STRESSTEST_OCL_CPUGPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_CPUGPU);
 }
 
-void MainWindow::setMode_BENCHMARK_SPECTRAL_NATIVE_PATH() {
-	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_PATH);
-}
-
-void MainWindow::setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR() {
-	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_BIDIR");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_SPECTRAL_NATIVE_BIDIR);
-}
-
-void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_GPU() {
-	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_GPU");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_GPU);
-}
-
-void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU() {
-	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_CPUGPU");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_CPUGPU);
-}
-
-void MainWindow::setMode_STRESSTEST_NOSPECTRAL_OCL_CPU() {
-	LM_LOG("Set mode: STRESSTEST_NOSPECTRAL_OCL_CPU");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NOSPECTRAL_OCL_CPU);
-}
-
-void MainWindow::setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR() {
-	LM_LOG("Set mode: STRESSTEST_SPECTRAL_NATIVE_BIDIR");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_SPECTRAL_NATIVE_BIDIR);
+void MainWindow::setMode_STRESSTEST_OCL_CPU() {
+	LM_LOG("Set mode: STRESSTEST_OCL_CPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_CPU);
 }
 
 void MainWindow::setMode_DEMO_LUXVR() {
@@ -297,24 +241,17 @@ void MainWindow::ShowLogo() {
 }
 
 void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
-	ui->action_NoSpectral_OpenCL_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_GPU);
-	ui->action_NoSpectral_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU);
-	ui->action_NoSpectral_OpenCL_CPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CPU);
-	ui->action_NoSpectral_OpenCL_Custom->setChecked(mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM);
-	ui->action_NoSpectral_Hybrid_GPUs->setChecked(mode == BENCHMARK_NOSPECTRAL_HYBRID_GPU);
-	ui->action_NoSpectral_Hybrid_Custom->setChecked(mode == BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM);
-	ui->action_NoSpectral_Path->setChecked(mode == BENCHMARK_NOSPECTRAL_NATIVE_PATH);
+	ui->action_OpenCL_GPUs->setChecked(mode == BENCHMARK_OCL_GPU);
+	ui->action_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_OCL_CPUGPU);
+	ui->action_OpenCL_CPUs->setChecked(mode == BENCHMARK_OCL_CPU);
+	ui->action_OpenCL_Custom->setChecked(mode == BENCHMARK_OCL_CUSTOM);
+	ui->action_Hybrid_GPUs->setChecked(mode == BENCHMARK_HYBRID_GPU);
+	ui->action_Hybrid_Custom->setChecked(mode == BENCHMARK_HYBRID_CUSTOM);
+	ui->action_Path->setChecked(mode == BENCHMARK_NATIVE_PATH);
 
-	ui->action_Spectral_Hybrid_GPUs->setChecked(mode == BENCHMARK_SPECTRAL_HYBRID_GPU);
-	ui->action_Spectral_Hybrid_Custom->setChecked(mode == BENCHMARK_SPECTRAL_HYBRID_CUSTOM);
-	ui->action_Spectral_Path->setChecked(mode == BENCHMARK_SPECTRAL_NATIVE_PATH);
-
-	ui->action_Spectral_BiDir->setChecked(mode == BENCHMARK_SPECTRAL_NATIVE_BIDIR);
-
-	ui->action_StressTest_NoSpectral_OpenCL_GPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_GPU);
-	ui->action_StressTest_NoSpectral_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPUGPU);
-	ui->action_StressTest_NoSpectral_OpenCL_CPUs->setChecked(mode == STRESSTEST_NOSPECTRAL_OCL_CPU);
-	ui->action_StressTest_Spectral_BiDir->setChecked(mode == STRESSTEST_SPECTRAL_NATIVE_BIDIR);
+	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);
+	ui->action_StressTest_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_OCL_CPUGPU);
+	ui->action_StressTest_OpenCL_CPUs->setChecked(mode == STRESSTEST_OCL_CPU);
 
 	ui->action_LuxVR->setChecked(mode == DEMO_LUXVR);
 
@@ -326,32 +263,14 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_Room->setChecked(true);
 		ui->action_Sala->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(false);
-		ui->action_LuxBall->setChecked(false);
-		ui->action_LuxBall_Sky->setChecked(false);
 	} else if (index == 1) {
 		ui->action_Room->setChecked(false);
 		ui->action_Sala->setChecked(true);
 		ui->action_LuxBall_HDR->setChecked(false);
-		ui->action_LuxBall->setChecked(false);
-		ui->action_LuxBall_Sky->setChecked(false);
 	} else if (index == 2) {
 		ui->action_Room->setChecked(false);
 		ui->action_Sala->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(true);
-		ui->action_LuxBall->setChecked(false);
-		ui->action_LuxBall_Sky->setChecked(false);
-	} else if (index == 3) {
-		ui->action_Room->setChecked(false);
-		ui->action_Sala->setChecked(false);
-		ui->action_LuxBall_HDR->setChecked(false);
-		ui->action_LuxBall->setChecked(true);
-		ui->action_LuxBall_Sky->setChecked(false);
-	} else if (index == 4) {
-		ui->action_Room->setChecked(false);
-		ui->action_Sala->setChecked(false);
-		ui->action_LuxBall_HDR->setChecked(false);
-		ui->action_LuxBall->setChecked(false);
-		ui->action_LuxBall_Sky->setChecked(true);
 	} else
 		assert(false);
 
@@ -361,7 +280,7 @@ bool MainWindow::IsShowingLogo() const {
 	return luxLogo->isVisible();
 }
 
-void MainWindow::ShowFrameBuffer(const unsigned char *frameBufferSrc,
+void MainWindow::ShowFrameBuffer(const float *frameBufferSrc,
 		const unsigned  int width, const unsigned  int height) {
 	if (luxLogo->isVisible())
 		luxLogo->hide();
@@ -374,7 +293,15 @@ void MainWindow::ShowFrameBuffer(const unsigned char *frameBufferSrc,
 		frameBuffer = new unsigned char[fbWidth * fbHeight * 3];
 	}
 
-	memcpy(frameBuffer, frameBufferSrc, width * height * 3);
+	for (u_int y = 0; y < height; ++y) {
+		for (u_int x = 0; x < width; ++x) {
+			const u_int srcIndex = (x + y * width) * 3;
+			const u_int dstIndex = (x + (height - y - 1) * width) * 3;
+			frameBuffer[dstIndex] = (unsigned char)(Clamp(frameBufferSrc[srcIndex] * 255.f + .5f, 0.f, 255.f));
+			frameBuffer[dstIndex + 1] = (unsigned char)(Clamp(frameBufferSrc[srcIndex + 1] * 255.f + .5f, 0.f, 255.f));
+			frameBuffer[dstIndex + 2] = (unsigned char)(Clamp(frameBufferSrc[srcIndex + 2] * 255.f + .5f, 0.f, 255.f));
+		}
+	}
 
 	luxFrameBuffer->setPixmap(QPixmap::fromImage(QImage(
 		frameBuffer, fbWidth, fbHeight, width * 3, QImage::Format_RGB888)));

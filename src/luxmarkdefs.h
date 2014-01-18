@@ -40,24 +40,18 @@
 #include <luxrays/luxrays.h>
 			
 using namespace std;
-using namespace luxrays;
 
 enum LuxMarkAppMode {
-	BENCHMARK_NOSPECTRAL_OCL_GPU,
-	BENCHMARK_NOSPECTRAL_OCL_CPUGPU,
-	BENCHMARK_NOSPECTRAL_OCL_CPU,
-	BENCHMARK_NOSPECTRAL_OCL_CUSTOM,
-	BENCHMARK_NOSPECTRAL_HYBRID_GPU,
-	BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM,
-	BENCHMARK_NOSPECTRAL_NATIVE_PATH,
-	BENCHMARK_SPECTRAL_HYBRID_GPU,
-	BENCHMARK_SPECTRAL_HYBRID_CUSTOM,
-	BENCHMARK_SPECTRAL_NATIVE_PATH,
-	BENCHMARK_SPECTRAL_NATIVE_BIDIR,
-	STRESSTEST_NOSPECTRAL_OCL_GPU,
-	STRESSTEST_NOSPECTRAL_OCL_CPUGPU,
-	STRESSTEST_NOSPECTRAL_OCL_CPU,
-	STRESSTEST_SPECTRAL_NATIVE_BIDIR,
+	BENCHMARK_OCL_GPU,
+	BENCHMARK_OCL_CPUGPU,
+	BENCHMARK_OCL_CPU,
+	BENCHMARK_OCL_CUSTOM,
+	BENCHMARK_HYBRID_GPU,
+	BENCHMARK_HYBRID_CUSTOM,
+	BENCHMARK_NATIVE_PATH,
+	STRESSTEST_OCL_GPU,
+	STRESSTEST_OCL_CPUGPU,
+	STRESSTEST_OCL_CPU,
 	DEMO_LUXVR,
 	PAUSE
 };
@@ -65,47 +59,31 @@ enum LuxMarkAppMode {
 inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 	switch (mode) {
 		//----------------------------------------------------------------------
-		// No Spectral
+		// Benchmark
 		//----------------------------------------------------------------------
-		case BENCHMARK_NOSPECTRAL_OCL_GPU:
-			return "No Spectral OpenCL GPUs";
-		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
-			return "No Spectral OpenCL CPUs+GPUs";
-		case BENCHMARK_NOSPECTRAL_OCL_CPU:
-			return "No Spectral OpenCL CPUs";
-		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
-			return "No Spectral OpenCL Custom";
-		case BENCHMARK_NOSPECTRAL_HYBRID_GPU:
-			return "No Spectral Hybrid C++/OpenCL GPUs";
-		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM:
-			return "No Spectral Hybrid C++/OpenCL Custom";
-		case BENCHMARK_NOSPECTRAL_NATIVE_PATH:
-			return "No Spectral C++";
+		case BENCHMARK_OCL_GPU:
+			return "OpenCL GPUs";
+		case BENCHMARK_OCL_CPUGPU:
+			return "OpenCL CPUs+GPUs";
+		case BENCHMARK_OCL_CPU:
+			return "OpenCL CPUs";
+		case BENCHMARK_OCL_CUSTOM:
+			return "OpenCL Custom";
+		case BENCHMARK_HYBRID_GPU:
+			return "Hybrid C++/OpenCL GPUs";
+		case BENCHMARK_HYBRID_CUSTOM:
+			return "Hybrid C++/OpenCL Custom";
+		case BENCHMARK_NATIVE_PATH:
+			return "C++";
 		//----------------------------------------------------------------------
-		// Spectral
+		// Stress test
 		//----------------------------------------------------------------------
-		case BENCHMARK_SPECTRAL_HYBRID_GPU:
-			return "Spectral Hybrid C++/OpenCL GPUs";
-		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM:
-			return "Spectral Hybrid C++/OpenCL Custom";
-		case BENCHMARK_SPECTRAL_NATIVE_PATH:
-			return "Spectral C++";
-		//----------------------------------------------------------------------
-		// Advanced Spectral
-		//----------------------------------------------------------------------
-		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
-			return "Advanced Spectral C++";
-		//----------------------------------------------------------------------
-		// Others
-		//----------------------------------------------------------------------
-		case STRESSTEST_NOSPECTRAL_OCL_GPU:
-			return "No Spectral OpenCL GPUs (stress test)";
-		case STRESSTEST_NOSPECTRAL_OCL_CPUGPU:
-			return "No Spectral OpenCL CPUs+GPUs (stress test)";
-		case STRESSTEST_NOSPECTRAL_OCL_CPU:
-			return "No Spectral OpenCL CPUs (stress test)";
-		case STRESSTEST_SPECTRAL_NATIVE_BIDIR:
-			return "Advanced Spectral C++ (stress test)";
+		case STRESSTEST_OCL_GPU:
+			return "OpenCL GPUs (stress test)";
+		case STRESSTEST_OCL_CPUGPU:
+			return "OpenCL CPUs+GPUs (stress test)";
+		case STRESSTEST_OCL_CPU:
+			return "OpenCL CPUs (stress test)";
 		case PAUSE:
 			return "Pause";
 		default:

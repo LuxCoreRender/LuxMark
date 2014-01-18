@@ -54,7 +54,7 @@ public:
 
 	void ShowLogo();
 	bool IsShowingLogo() const;
-	void ShowFrameBuffer(const unsigned char *frameBuffer,
+	void ShowFrameBuffer(const float *frameBuffer,
 		const unsigned int width, const unsigned int height);
 	const unsigned char *GetFrameBuffer() const { return frameBuffer; }
 
@@ -86,27 +86,20 @@ private slots:
 	void exitApp();
 	void showAbout();
 
-	void setLuxBallScene();
 	void setLuxBallHDRScene();
-	void setLuxBallSkyScene();
 	void setSalaScene();
 	void setRoomScene();
 
-	void setMode_BENCHMARK_NOSPECTRAL_OCL_GPU();
-	void setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU();
-	void setMode_BENCHMARK_NOSPECTRAL_OCL_CPU();
-	void setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM();
-	void setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU();
-	void setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM();
-	void setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH();
-	void setMode_BENCHMARK_SPECTRAL_HYBRID_GPU();
-	void setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM();
-	void setMode_BENCHMARK_SPECTRAL_NATIVE_PATH();
-	void setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR();
-	void setMode_STRESSTEST_NOSPECTRAL_OCL_GPU();
-	void setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU();
-	void setMode_STRESSTEST_NOSPECTRAL_OCL_CPU();
-	void setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR();
+	void setMode_BENCHMARK_OCL_GPU();
+	void setMode_BENCHMARK_OCL_CPUGPU();
+	void setMode_BENCHMARK_OCL_CPU();
+	void setMode_BENCHMARK_OCL_CUSTOM();
+	void setMode_BENCHMARK_HYBRID_GPU();
+	void setMode_BENCHMARK_HYBRID_CUSTOM();
+	void setMode_BENCHMARK_NATIVE_PATH();
+	void setMode_STRESSTEST_OCL_GPU();
+	void setMode_STRESSTEST_OCL_CPUGPU();
+	void setMode_STRESSTEST_OCL_CPU();
 	void setMode_DEMO_LUXVR();
 	void setMode_PAUSE();
 };
@@ -139,11 +132,8 @@ private:
 
 #define LM_LOG(a) { if (LogWindow) { std::stringstream _LM_LOG_LOCAL_SS; _LM_LOG_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxLogEvent(QString(_LM_LOG_LOCAL_SS.str().c_str()))); }}
 #define LM_LOG_LUXRAYS(a) { LM_LOG("<FONT COLOR=\"#002200\"><B>[LuxRays]</B></FONT> " << a); }
-#define LM_LOG_SLG(a) { LM_LOG("<FONT COLOR=\"#009900\"><B>[SLG]</B></FONT> " << a); }
-#define LM_LOG_SDL(a) { LM_LOG("<FONT COLOR=\"#004400\"><B>[SDL]</B></FONT> " << a); }
-#define LM_LOG_LUX_ERROR(a) { LM_LOG("<FONT COLOR=\"#990000\"><B>[LuxRender]</B></FONT> " << a); }
-#define LM_LOG_LUX_WARNING(a) { LM_LOG("<FONT COLOR=\"#999900\"><B>[LuxRender]</B></FONT> " << a); }
-#define LM_LOG_LUX(a) { LM_LOG("<FONT COLOR=\"#449944\"><B>[LuxRender]</B></FONT> " << a); }
+#define LM_LOG_SDL(a) { LM_LOG("<FONT COLOR=\"#005500\"><B>[SDL]</B></FONT> " << a); }
+#define LM_LOG_LUXCORE(a) { LM_LOG("<FONT COLOR=\"#009900\"><B>[LuxCore]</B></FONT> " << a); }
 
 #define LM_ERROR(a) { if (LogWindow) { std::stringstream _LM_ERR_LOCAL_SS; _LM_ERR_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxErrorEvent(QString(_LM_ERR_LOCAL_SS.str().c_str()))); }}
 

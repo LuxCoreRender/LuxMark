@@ -46,7 +46,7 @@ set(Boost_MINIMUM_VERSION       "1.44.0")
 
 set(Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.1" "1.46" "1.46.0" "1.45" "1.45.0" "1.44" "1.44.0")
 
-set(LUXMARK_BOOST_COMPONENTS thread filesystem system)
+set(LUXMARK_BOOST_COMPONENTS  thread program_options filesystem serialization iostreams regex system)
 find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS ${LUXMARK_BOOST_COMPONENTS})
 if (NOT Boost_FOUND)
         # Try again with the other type of libs
@@ -120,16 +120,20 @@ ENDIF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 
 #############################################################################
 #############################################################################
-##########################        Find SLG         ##########################
+########################        Find LuxCore         ########################
 #############################################################################
 #############################################################################
 
 IF(APPLE)
 	FIND_PATH(SLG_INCLUDE_DIRS NAMES slg/slg.h PATHS ${OSX_DEPENDENCY_ROOT}/include/LuxRays)
 	FIND_LIBRARY(SLG_LIBRARY libsmallluxgpu.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
+	FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ${OSX_DEPENDENCY_ROOT}/include/LuxRays)
+	FIND_LIBRARY(LUXCORE_LIBRARY libluxcore.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
 ELSE(APPLE)
 	FIND_PATH(SLG_INCLUDE_DIRS NAMES slg/slg.h PATHS ../luxrays/include)
 	FIND_LIBRARY(SLG_LIBRARY smallluxgpu PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
+	FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ../luxrays/include)
+	FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
 ENDIF(APPLE)
 
 IF (SLG_INCLUDE_DIRS AND SLG_LIBRARY)
@@ -140,26 +144,10 @@ ELSE (SLG_INCLUDE_DIRS AND SLG_LIBRARY)
 	MESSAGE(FATAL_ERROR "SLG Library not found.")
 ENDIF (SLG_INCLUDE_DIRS AND SLG_LIBRARY)
 
-
-#############################################################################
-#############################################################################
-#######################        Find LuxRender         #######################
-#############################################################################
-#############################################################################
-
-IF(APPLE)
-	FIND_PATH(LUXRENDER_INCLUDE_DIRS NAMES core/lux.h PATHS ${LuxRender_SOURCE})
-	FIND_LIBRARY(LUXRENDER_LIBRARY liblux.dylib ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE})
-ELSE(APPLE)
-	FIND_PATH(LUXRENDER_INCLUDE_DIRS NAMES core/lux.h PATHS ../lux)
-	FIND_LIBRARY(LUXRENDER_LIBRARY lux PATHS ../lux ${LuxRender_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-ENDIF(APPLE)
-
-IF (LUXRENDER_INCLUDE_DIRS AND LUXRENDER_LIBRARY)
-	MESSAGE(STATUS "LuxRender include directory: " ${LUXRENDER_INCLUDE_DIRS})
-	MESSAGE(STATUS "LuxRender library directory: " ${LUXRENDER_LIBRARY})
-	INCLUDE_DIRECTORIES(SYSTEM ${LUXRENDER_INCLUDE_DIRS}/core)
-	INCLUDE_DIRECTORIES(SYSTEM ${LUXRENDER_INCLUDE_DIRS})
-ELSE (LUXRENDER_INCLUDE_DIRS AND LUXRENDER_LIBRARY)
-	MESSAGE(FATAL_ERROR "LuxRender Library not found.")
-ENDIF (LUXRENDER_INCLUDE_DIRS AND LUXRENDER_LIBRARY)
+IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
+	MESSAGE(STATUS "LuxCore include directory: " ${LUXCORE_INCLUDE_DIRS})
+	MESSAGE(STATUS "LuxCore library directory: " ${LUXCORE_LIBRARY})
+	INCLUDE_DIRECTORIES(SYSTEM ${LUXCORE_INCLUDE_DIRS})
+ELSE (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
+	MESSAGE(FATAL_ERROR "LuxCore Library not found.")
+ENDIF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)

@@ -40,9 +40,7 @@
 // List of supported scenes
 #define SCENE_ROOM "scenes/room/render.cfg"
 #define SCENE_SALA "scenes/sala/render.cfg"
-#define SCENE_LUXBALL_HDR "scenes/luxball/luxball.Scene.00001.lxs"
-#define SCENE_LUXBALL "scenes/luxball/render.cfg"
-#define SCENE_LUXBALL_SKY "scenes/luxball/render-sunset.cfg"
+#define SCENE_LUXBALL_HDR "scenes/luxball/render.cfg"
 
 class LuxMarkApp : public QApplication {
 	Q_OBJECT

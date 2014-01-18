@@ -24,33 +24,37 @@
 
 #include <string>
 
-#include "api.h"
-#include "error.h"
-#include "server/renderserver.h"
-
+#include "luxcore/luxcore.h"
 #include "luxmarkdefs.h"
 
 class LuxRenderSession {
 public:
 	LuxRenderSession(const string &sceneFileName, const LuxMarkAppMode mode,
-			const string &slgDevSel, const string &luxDevSel);
+			const string &devSel);
 	~LuxRenderSession();
 
 	void Start();
 	void Stop();
 
+	const float *GetFrameBuffer() const;
+	u_int GetFrameBufferWidth() const;
+	u_int GetFrameBufferHeight() const;
+
+	const luxrays::Properties &GetStats() const;
+
 private:
-	static void RenderthreadImpl(LuxRenderSession *session);
+	static void RenderThreadImpl(LuxRenderSession *session);
 
 	boost::filesystem::path originalCurrentDirectory;
 
 	std::string sceneFileName;
 	LuxMarkAppMode renderMode;
-	string slgDeviceSelection, luxDeviceSelection;
+	string deviceSelection;
 
-	boost::thread *parseThread;
+	luxcore::RenderConfig *config;
+	luxcore::RenderSession *session;
 
-	bool started, parseError;
+	bool started;
 };
 
 #endif	/* LUXRENDERSESSION_H */

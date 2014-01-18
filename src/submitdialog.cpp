@@ -25,6 +25,8 @@
 #include "luxmarkcfg.h"
 #include "submitdialog.h"
 
+using namespace luxrays;
+
 #define SD_MSG(a) { std::stringstream _SD_LOG_LOCAL_SS; _SD_LOG_LOCAL_SS << a;  ProgessMessage(QString(_SD_LOG_LOCAL_SS.str().c_str())); }
 #define SD_LOG(a) { SD_MSG("<FONT COLOR=\"#0000ff\">" << a << "</FONT>"); }
 #define SD_LOG_ERROR(a) { SD_MSG("<FONT COLOR=\"#ff0000\">" << a << "</FONT>"); }

@@ -31,10 +31,8 @@ static void PrintCmdLineHelp(const QString &cmd) {
 			" --help (display this help and exit)" << endl <<
 			" --scene=LUXBALL_HDR|SALA|ROOM (select the scene to use)" << endl <<
 			" --mode="
-				"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
-				"BENCHMARK_NOSPECTRAL_HYBRID_GPU|BENCHMARK_NOSPECTRAL_NATIVE_PATH|"
-				"BENCHMARK_SPECTRAL_HYBRID_GPU|BENCHMARK_SPECTRAL_NATIVE_PATH|"
-				"BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
+				"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
+				"BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE_PATH|"
 				"INTERACTIVE|PAUSE"
 				" (select the mode to use)" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl;
@@ -51,16 +49,14 @@ int main(int argc, char **argv) {
 	QRegExp argHelp("--help");
 	QRegExp argScene("--scene=(LUXBALL_HDR|SALA|ROOM)");
 	QRegExp argMode("--mode=("
-		"BENCHMARK_NOSPECTRAL_OCL_GPU|BENCHMARK_NOSPECTRAL_OCL_CPUGPU|BENCHMARK_NOSPECTRAL_OCL_CPU|"
-		"BENCHMARK_NOSPECTRAL_HYBRID_GPU|BENCHMARK_NOSPECTRAL_NATIVE_PATH|"
-		"BENCHMARK_SPECTRAL_HYBRID_GPU|BENCHMARK_SPECTRAL_NATIVE_PATH|"
-		"BENCHMARK_SPECTRAL_NATIVE_BIDIR|"
-		"STRESSTEST_NOSPECTRAL_OCL_GPU|STRESSTEST_NOSPECTRAL_OCL_CPUGPU|STRESSTEST_NOSPECTRAL_OCL_CPU|STRESSTEST_SPECTRAL_NATIVE_BIDIR|"
+		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
+		"BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE_PATH|"
+		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|STRESSTEST_SPECTRAL_NATIVE_BIDIR|"
 		"PAUSE"
 		")");
 	QRegExp argSingleRun("--single-run");
 
-	LuxMarkAppMode mode = BENCHMARK_NOSPECTRAL_OCL_GPU;
+	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
 	// Remember to change the default label in mainwindow.cpp too
 	const char *scnName = SCENE_LUXBALL_HDR;
     for (int i = 1; i < argsList.size(); ++i) {
@@ -68,7 +64,7 @@ int main(int argc, char **argv) {
 			PrintCmdLineHelp(argsList.at(0));
             exit = true;
 			break;
-		} else if (argScene.indexIn(argsList.at(i)) != -1 ) {   
+		} else if (argScene.indexIn(argsList.at(i)) != -1) {   
             QString scene = argScene.cap(1);
 			if (scene.compare("LUXBALL_HDR", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_LUXBALL_HDR;
@@ -84,30 +80,22 @@ int main(int argc, char **argv) {
 			}
 		} else if (argMode.indexIn(argsList.at(i)) != -1 ) {   
             QString scene = argMode.cap(1);
-			if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_GPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_NOSPECTRAL_OCL_GPU;
-			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_NOSPECTRAL_OCL_CPUGPU;
-			else if (scene.compare("BENCHMARK_NOSPECTRAL_OCL_CPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_NOSPECTRAL_OCL_CPU;
-			else if (scene.compare("BENCHMARK_NOSPECTRAL_HYBRID_GPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_NOSPECTRAL_HYBRID_GPU;
-			else if (scene.compare("BENCHMARK_NOSPECTRAL_NATIVE_PATH", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_NOSPECTRAL_NATIVE_PATH;
-			else if (scene.compare("BENCHMARK_SPECTRAL_HYBRID_GPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_SPECTRAL_HYBRID_GPU;
-			else if (scene.compare("BENCHMARK_SPECTRAL_NATIVE_PATH", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_SPECTRAL_NATIVE_PATH;
-			else if (scene.compare("BENCHMARK_SPECTRAL_NATIVE_BIDIR", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_SPECTRAL_NATIVE_BIDIR;
-			else if (scene.compare("STRESSTEST_NOSPECTRAL_OCL_GPU", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_NOSPECTRAL_OCL_GPU;
-			else if (scene.compare("STRESSTEST_NOSPECTRAL_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_NOSPECTRAL_OCL_CPUGPU;
-			else if (scene.compare("STRESSTEST_NOSPECTRAL_OCL_CPU", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_NOSPECTRAL_OCL_CPU;
-			else if (scene.compare("STRESSTEST_SPECTRAL_NATIVE_BIDIR", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_SPECTRAL_NATIVE_BIDIR;
+			if (scene.compare("BENCHMARK_OCL_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_OCL_GPU;
+			else if (scene.compare("BENCHMARK_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_OCL_CPUGPU;
+			else if (scene.compare("BENCHMARK_OCL_CPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_OCL_CPU;
+			else if (scene.compare("BENCHMARK_HYBRID_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_HYBRID_GPU;
+			else if (scene.compare("BENCHMARK_NATIVE_PATH", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_NATIVE_PATH;
+			else if (scene.compare("STRESSTEST_OCL_GPU", Qt::CaseInsensitive) == 0)
+				mode = STRESSTEST_OCL_GPU;
+			else if (scene.compare("STRESSTEST_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
+				mode = STRESSTEST_OCL_CPUGPU;
+			else if (scene.compare("STRESSTEST_OCL_CPU", Qt::CaseInsensitive) == 0)
+				mode = STRESSTEST_OCL_CPU;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)
 				mode = PAUSE;
 			else {

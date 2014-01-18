@@ -130,25 +130,17 @@
     <property name="title">
      <string>&amp;Mode</string>
     </property>
-    <addaction name="action_NoSpectral_OpenCL_GPUs"/>
-    <addaction name="action_NoSpectral_OpenCL_CPUs_GPUs"/>
-    <addaction name="action_NoSpectral_OpenCL_CPUs"/>
-    <addaction name="action_NoSpectral_OpenCL_Custom"/>
-    <addaction name="action_NoSpectral_Hybrid_GPUs"/>
-    <addaction name="action_NoSpectral_Hybrid_Custom"/>
-    <addaction name="action_NoSpectral_Path"/>
+    <addaction name="action_OpenCL_GPUs"/>
+    <addaction name="action_OpenCL_CPUs_GPUs"/>
+    <addaction name="action_OpenCL_CPUs"/>
+    <addaction name="action_OpenCL_Custom"/>
+    <addaction name="action_Hybrid_GPUs"/>
+    <addaction name="action_Hybrid_Custom"/>
+    <addaction name="action_Path"/>
     <addaction name="separator"/>
-    <addaction name="action_Spectral_Hybrid_GPUs"/>
-    <addaction name="action_Spectral_Hybrid_Custom"/>
-    <addaction name="action_Spectral_Path"/>
-    <addaction name="separator"/>
-    <addaction name="action_Spectral_BiDir"/>
-    <addaction name="separator"/>
-    <addaction name="action_StressTest_NoSpectral_OpenCL_GPUs"/>
-    <addaction name="action_StressTest_NoSpectral_OpenCL_CPUs_GPUs"/>
-    <addaction name="action_StressTest_NoSpectral_OpenCL_CPUs"/>
-    <addaction name="separator"/>
-    <addaction name="action_StressTest_Spectral_BiDir"/>
+    <addaction name="action_StressTest_OpenCL_GPUs"/>
+    <addaction name="action_StressTest_OpenCL_CPUs_GPUs"/>
+    <addaction name="action_StressTest_OpenCL_CPUs"/>
     <addaction name="separator"/>
     <addaction name="action_LuxVR"/>
     <addaction name="separator"/>
@@ -161,9 +153,6 @@
     <addaction name="action_Room"/>
     <addaction name="action_Sala"/>
     <addaction name="action_LuxBall_HDR"/>
-    <addaction name="separator"/>
-    <addaction name="action_LuxBall"/>
-    <addaction name="action_LuxBall_Sky"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Mode"/>
@@ -184,12 +173,12 @@
     <string>About</string>
    </property>
   </action>
-  <action name="action_NoSpectral_OpenCL_GPUs">
+  <action name="action_OpenCL_GPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, OpenCL-only GPUs-only)</string>
+    <string>Benchmark (OpenCL-only GPUs-only)</string>
    </property>
   </action>
   <action name="action_LuxBall_HDR">
@@ -203,23 +192,12 @@
     <string>Ctrl+C</string>
    </property>
   </action>
-  <action name="action_LuxBall">
+  <action name="action_OpenCL_CPUs_GPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;LuxBall  (Test: 262K triangles)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+L</string>
-   </property>
-  </action>
-  <action name="action_NoSpectral_OpenCL_CPUs_GPUs">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Benchmark (No Spectral Rendering, OpenCL-only CPUs + GPUs)</string>
+    <string>Benchmark (OpenCL-only CPUs + GPUs)</string>
    </property>
   </action>
   <action name="action_Pause">
@@ -230,23 +208,12 @@
     <string>&amp;Pause</string>
    </property>
   </action>
-  <action name="action_NoSpectral_OpenCL_CPUs">
+  <action name="action_OpenCL_CPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, OpenCL-only CPUs-only)</string>
-   </property>
-  </action>
-  <action name="action_LuxBall_Sky">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>LuxBall S&amp;ky  (Test: 262K triangles)</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+K</string>
+    <string>Benchmark (OpenCL-only CPUs-only)</string>
    </property>
   </action>
   <action name="action_Sala">
@@ -260,12 +227,12 @@
     <string>Ctrl+A</string>
    </property>
   </action>
-  <action name="action_NoSpectral_OpenCL_Custom">
+  <action name="action_OpenCL_Custom">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, OpenCL-only selected devices only)</string>
+    <string>Benchmark (OpenCL-only selected devices only)</string>
    </property>
   </action>
   <action name="action_Room">
@@ -279,76 +246,39 @@
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="action_Spectral_Hybrid_GPUs">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="action_Hybrid_GPUs">
    <property name="text">
-    <string>Benchmark (Spectral Rendering, Hybrid C++/OpenCL GPUs-only)</string>
+    <string>Benchmark (Hybrid C++/OpenCL GPUs-only)</string>
    </property>
   </action>
-  <action name="action_Spectral_Hybrid_Custom">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="action_Hybrid_Custom">
    <property name="text">
-    <string>Benchmark (Spectral Rendering, Hybrid C++/OpenCL selected devices only)</string>
+    <string>Benchmark (Hybrid C++/OpenCL selected devices only)</string>
    </property>
   </action>
-  <action name="action_Spectral_BiDir">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="action_Path">
    <property name="text">
-    <string>Benchmark (Advanced Spectral Rendering, Native C++ only)</string>
+    <string>Benchmark (Native C++ only)</string>
    </property>
   </action>
-  <action name="action_Spectral_Path">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="action_StressTest_OpenCL_GPUs">
    <property name="text">
-    <string>Benchmark (Spectral Rendering, Native C++ only)</string>
+    <string>Stress Test (OpenCL-only GPUs-only)</string>
    </property>
   </action>
-  <action name="action_NoSpectral_Hybrid_GPUs">
+  <action name="action_StressTest_OpenCL_CPUs_GPUs">
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, Hybrid C++/OpenCL GPUs-only)</string>
+    <string>Stress Test (OpenCL-only CPUs+GPUs)</string>
    </property>
   </action>
-  <action name="action_NoSpectral_Hybrid_Custom">
+  <action name="action_StressTest_OpenCL_CPUs">
    <property name="text">
-    <string>Benchmark (No Spectral Rendering, Hybrid C++/OpenCL selected devices only)</string>
-   </property>
-  </action>
-  <action name="action_NoSpectral_Path">
-   <property name="text">
-    <string>Benchmark (No Spectral Rendering, Native C++ only)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_NoSpectral_OpenCL_GPUs">
-   <property name="text">
-    <string>Stress Test (No Spectral Rendering, OpenCL-only GPUs-only)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_NoSpectral_OpenCL_CPUs_GPUs">
-   <property name="text">
-    <string>Stress Test (No Spectral Rendering, OpenCL-only CPUs+GPUs)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_NoSpectral_OpenCL_CPUs">
-   <property name="text">
-    <string>Stress Test (No Spectral Rendering, OpenCL-only CPUs)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_Spectral_BiDir">
-   <property name="text">
-    <string>Stress Test (Advanced Spectral Rendering, Native C++ only)</string>
+    <string>Stress Test (OpenCL-only CPUs)</string>
    </property>
   </action>
   <action name="action_LuxVR">
    <property name="text">
-    <string>LuxVR (No Spectral Rendering, OpenCL-only GPUs-only)</string>
+    <string>LuxVR (OpenCL-only GPUs-only)</string>
    </property>
   </action>
  </widget>
@@ -389,22 +319,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_LuxBall</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setLuxBallScene()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>380</x>
-     <y>318</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>action_LuxBall_HDR</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -421,10 +335,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_OpenCL_CPUs_GPUs</sender>
+   <sender>action_OpenCL_CPUs_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
+   <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -437,10 +351,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_OpenCL_GPUs</sender>
+   <sender>action_OpenCL_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
+   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -469,26 +383,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_OpenCL_CPUs</sender>
+   <sender>action_OpenCL_CPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_LuxBall_Sky</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setLuxBallSkyScene()</slot>
+   <slot>setMode_BENCHMARK_OCL_CPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -517,10 +415,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_OpenCL_Custom</sender>
+   <sender>action_OpenCL_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_OCL_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -549,10 +447,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Spectral_Hybrid_GPUs</sender>
+   <sender>action_Hybrid_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
+   <slot>setMode_BENCHMARK_HYBRID_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -565,10 +463,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Spectral_Hybrid_Custom</sender>
+   <sender>action_Hybrid_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -581,10 +479,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Spectral_Path</sender>
+   <sender>action_Path</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
+   <slot>setMode_BENCHMARK_NATIVE_PATH()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -597,10 +495,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Spectral_BiDir</sender>
+   <sender>action_StressTest_OpenCL_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
+   <slot>setMode_STRESSTEST_OCL_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -613,10 +511,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_Hybrid_GPUs</sender>
+   <sender>action_StressTest_OpenCL_CPUs_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
+   <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -629,90 +527,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NoSpectral_Hybrid_Custom</sender>
+   <sender>action_StressTest_OpenCL_CPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_NoSpectral_Path</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_NoSpectral_OpenCL_GPUs</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_GPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_NoSpectral_OpenCL_CPUs_GPUs</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_NoSpectral_OpenCL_CPUs</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_Spectral_BiDir</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()</slot>
+   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -744,27 +562,20 @@
  <slots>
   <slot>exitApp()</slot>
   <slot>showAbout()</slot>
-  <slot>setLuxBallScene()</slot>
   <slot>setLuxBallHDRScene()</slot>
-  <slot>setLuxBallSkyScene()</slot>
   <slot>setSalaScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setRoomScene()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_GPU()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPUGPU()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CPU()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_OCL_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_GPU()</slot>
-  <slot>setMode_BENCHMARK_SPECTRAL_HYBRID_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_PATH()</slot>
-  <slot>setMode_BENCHMARK_SPECTRAL_NATIVE_BIDIR()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_GPU()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_NOSPECTRAL_NATIVE_PATH()</slot>
-  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_GPU()</slot>
-  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPUGPU()</slot>
-  <slot>setMode_STRESSTEST_NOSPECTRAL_OCL_CPU()</slot>
-  <slot>setMode_STRESSTEST_SPECTRAL_NATIVE_BIDIR()</slot>
+  <slot>setMode_BENCHMARK_OCL_GPU()</slot>
+  <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
+  <slot>setMode_BENCHMARK_OCL_CPU()</slot>
+  <slot>setMode_BENCHMARK_OCL_CUSTOM()</slot>
+  <slot>setMode_BENCHMARK_HYBRID_GPU()</slot>
+  <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
+  <slot>setMode_BENCHMARK_NATIVE_PATH()</slot>
+  <slot>setMode_STRESSTEST_OCL_GPU()</slot>
+  <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
+  <slot>setMode_STRESSTEST_OCL_CPU()</slot>
   <slot>setMode_DEMO_LUXVR()</slot>
  </slots>
 </ui>

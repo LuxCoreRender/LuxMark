@@ -31,7 +31,6 @@
 #include "luxrays/core/oclintersectiondevice.h"
 
 using namespace std;
-using namespace luxrays;
 
 class MainWindow;
 
@@ -92,8 +91,7 @@ public:
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
-	string getSLGDeviceSelectionString() const;
-	string getLuxDeviceSelectionString() const;
+	string getDeviceSelectionString() const;
 
 private:
 	MainWindow *win;
@@ -121,7 +119,7 @@ typedef struct {
 } BenchmarkDeviceDescription;
 
 extern vector<BenchmarkDeviceDescription> BuildDeviceDescriptions(
-	const vector<OpenCLIntersectionDevice *> &devices);
+	const vector<luxrays::OpenCLIntersectionDevice *> &devices);
 
 class DeviceListModel : public QAbstractItemModel {
 	Q_OBJECT

@@ -30,6 +30,8 @@
 #include "hardwaretree.h"
 #include "mainwindow.h"
 
+using namespace luxrays;
+
 //------------------------------------------------------------------------------
 // Hardware tree view
 //------------------------------------------------------------------------------
@@ -317,22 +319,11 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 		return false;
 }
 
-string HardwareTreeModel::getSLGDeviceSelectionString() const {
+string HardwareTreeModel::getDeviceSelectionString() const {
 	stringstream ss;
 
 	for (size_t i = 0; i < deviceSelection.size(); ++i)
 		ss << (deviceSelection[i] ? "1" : "0");
-
-	return ss.str();
-}
-
-string HardwareTreeModel::getLuxDeviceSelectionString() const {
-	stringstream ss;
-
-	for (size_t i = 0; i < deviceSelection.size(); ++i) {
-		if (!isCPU[i])
-			ss << (deviceSelection[i] ? "1" : "0");
-	}
 
 	return ss.str();
 }

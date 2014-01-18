@@ -224,14 +224,14 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
 			boost::filesystem::path fileName;
 			// SLG benchmark
-			if ((resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_GPU) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_CPUGPU) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_CPU) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_OCL_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_HYBRID_GPU) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_NOSPECTRAL_NATIVE_PATH)) {
-				fileName = scenePath / "reference-slg.raw";
+			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_CUSTOM) ||
+					(resultDialog->mode == BENCHMARK_HYBRID_GPU) ||
+					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM) ||
+					(resultDialog->mode == BENCHMARK_NATIVE_PATH)) {
+				fileName = scenePath / "reference.raw";
 			} else
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
 			LM_LOG("Image validation file name: [" << fileName << "]");

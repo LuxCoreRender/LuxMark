@@ -35,6 +35,8 @@
 #include "resultdialog.h"
 #include "luxmarkdefs.h"
 
+using namespace luxrays;
+
 static void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
 	printf("\n*** ");
 	if(fif != FIF_UNKNOWN)
@@ -42,6 +44,18 @@ static void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
 
 	printf("%s", message);
 	printf(" ***\n");
+}
+
+static void LuxCoreErrorHandler(const char *msg) {
+	if (strncmp(msg, "[LuxRays]", 9) == 0) {
+		LM_LOG_LUXRAYS(&msg[9]);
+	} else if (strncmp(msg, "[SDL]", 5) == 0) {
+		LM_LOG_SDL(&msg[5]);
+	} else if (strncmp(msg, "[LuxCore]", 9) == 0) {
+		LM_LOG_LUXCORE(&msg[9]);
+	} else {
+		LM_LOG_LUXCORE(msg);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -58,11 +72,7 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	srand(time(NULL));
 
 	// Initialize LuxRender API
-	luxInit();
-
-	// Set LuxRender log level
-	lux::luxLogFilter = LUX_DEBUG;
-	//lux::luxLogFilter = LUX_INFO;
+	luxcore::Init(LuxCoreErrorHandler);
 
 	singleRun = false;
 
@@ -98,7 +108,7 @@ void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName, const bool singl
 	singleRun = single;
 
 	LM_LOG("<FONT COLOR=\"#0000ff\">LuxMark v" << LUXMARK_VERSION_MAJOR << "." << LUXMARK_VERSION_MINOR << "</FONT>");
-	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxRender v" << luxVersion() << "</FONT>");
+	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxCore v" << LUXCORE_VERSION_MAJOR << "." << LUXCORE_VERSION_MINOR << "</FONT>");
 
 	// Initialize hardware information
 	hardwareTreeModel = new HardwareTreeModel(mainWin);
@@ -144,10 +154,6 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		mainWin->SetSceneCheck(1);
 	else if (!strcmp(scnName, SCENE_LUXBALL_HDR))
 		mainWin->SetSceneCheck(2);
-	else if (!strcmp(scnName, SCENE_LUXBALL))
-		mainWin->SetSceneCheck(3);
-	else if (!strcmp(scnName, SCENE_LUXBALL_SKY))
-		mainWin->SetSceneCheck(4);
 
 	// Initialize the new mode
 	mainWin->SetModeCheck(mode);
@@ -187,11 +193,9 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		// Initialize the new mode
 		string sname(app->sceneName); 
 		// At the first run, hardwareTreeModel is NULL
-		const string slgDeviceSelection = (app->hardwareTreeModel) ?
-			(app->hardwareTreeModel->getSLGDeviceSelectionString()) : "";
-		const string luxDeviceSelection = (app->hardwareTreeModel) ?
-			(app->hardwareTreeModel->getLuxDeviceSelectionString()) : "";
-		app->luxSession = new LuxRenderSession(sname, app->mode, slgDeviceSelection, luxDeviceSelection);
+		const string deviceSelection = (app->hardwareTreeModel) ?
+			(app->hardwareTreeModel->getDeviceSelectionString()) : "";
+		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection);
 
 		// Start the rendering
 		app->luxSession->Start();
@@ -209,19 +213,16 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 }
 
 void LuxMarkApp::RenderRefreshTimeout() {
-	if (!engineInitDone || !luxStatistics("sceneIsReady"))
+	if (!engineInitDone)
 		return;
 
+	const Properties &stats = luxSession->GetStats();
+
 	// Update shown image
-
-	// Get the rendered image
-	luxUpdateFramebuffer();
-
-	// Update the window
-	const int width = luxGetIntAttribute("film", "xResolution");
-	const int height = luxGetIntAttribute("film", "yResolution");
-	const float sampleCount = luxGetDoubleAttribute("film", "numberOfLocalSamples");
-	mainWin->ShowFrameBuffer(luxFramebuffer(), width, height);
+	const int width = luxSession->GetFrameBufferWidth();
+	const int height = luxSession->GetFrameBufferHeight();
+	const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
+	mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(), width, height);
 	const unsigned char *pixels = mainWin->GetFrameBuffer();
 
 	// To save reference image
@@ -239,58 +240,45 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	}*/
 
 	// Update the statistics
-	double triangleCount = 0.0;
-	const int renderingTime = luxGetDoubleAttribute("renderer_statistics", "elapsedTime");
+	const double renderingTime = stats.Get("stats.renderengine.time").Get<double>();
 	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
 	vector<string> deviceNames;
 	vector<double> deviceRaysSecs;
 	vector<double> deviceMem, deviceMaxMem;
+	double triangleCount = 0.0;
 	double minPerf = 0.0;
 	double totalPerf = 0.0;
 	switch (mode) {
-		case STRESSTEST_NOSPECTRAL_OCL_GPU:
-		case STRESSTEST_NOSPECTRAL_OCL_CPUGPU:
-		case STRESSTEST_NOSPECTRAL_OCL_CPU:
-		case BENCHMARK_NOSPECTRAL_OCL_GPU:
-		case BENCHMARK_NOSPECTRAL_OCL_CPUGPU:
-		case BENCHMARK_NOSPECTRAL_OCL_CPU:
-		case BENCHMARK_NOSPECTRAL_OCL_CUSTOM:
-		case BENCHMARK_NOSPECTRAL_HYBRID_GPU:
-		case BENCHMARK_NOSPECTRAL_HYBRID_CUSTOM:
-		case BENCHMARK_SPECTRAL_HYBRID_GPU:
-		case BENCHMARK_SPECTRAL_HYBRID_CUSTOM: {
-			triangleCount = luxGetDoubleAttribute("renderer_statistics", "triangleCount");
+		case STRESSTEST_OCL_GPU:
+		case STRESSTEST_OCL_CPUGPU:
+		case STRESSTEST_OCL_CPU:
+		case BENCHMARK_OCL_GPU:
+		case BENCHMARK_OCL_CPUGPU:
+		case BENCHMARK_OCL_CPU:
+		case BENCHMARK_OCL_CUSTOM:
+		case BENCHMARK_HYBRID_GPU:
+		case BENCHMARK_HYBRID_CUSTOM: {
+			triangleCount = stats.Get("stats.dataset.trianglecount").Get<double>();
 
-			// Get the list of device names
-			char buf[4096];
-			luxGetStringAttribute("renderer_statistics", "deviceNames", buf, 4096);
+			// Get each device statistics
+			minPerf = numeric_limits<double>::infinity();
+			totalPerf = 0.0;
+			const Property &deviceNames = stats.Get("stats.renderengine.devices");
+			for (u_int i = 0; i < deviceNames.GetSize(); ++i) {
+				const string deviceName = deviceNames.Get<string>(i);
 
-			string names(buf);
-			if (names.length() > 0) {
-				boost::split(deviceNames, names, boost::is_any_of(","));
+				const double raySecs = stats.Get("stats.renderengine.devices." + deviceName + ".performance.total").Get<double>();
+				deviceRaysSecs.push_back(raySecs);
+				deviceMaxMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.total").Get<double>());
+				deviceMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.used").Get<double>());
 
-				// Get each device statistics
-				minPerf = numeric_limits<double>::infinity();
-				totalPerf = 0.0;
-				for (u_int i = 0; i < deviceNames.size(); ++i) {
-					const string attrName = "device." + boost::lexical_cast<string>(i);
-
-					const double raySecs = luxGetDoubleAttribute("renderer_statistics", (attrName + ".raysecs").c_str());
-					deviceRaysSecs.push_back(raySecs);
-					deviceMaxMem.push_back(luxGetDoubleAttribute("renderer_statistics", (attrName + ".maxmem").c_str()));
-					deviceMem.push_back(luxGetDoubleAttribute("renderer_statistics", (attrName + ".memusage").c_str()));
-
-					minPerf = Min(raySecs, minPerf);
-					totalPerf += raySecs;
-				}
+				minPerf = Min(raySecs, minPerf);
+				totalPerf += raySecs;
 			}
 			break;
 		}
-		case STRESSTEST_SPECTRAL_NATIVE_BIDIR:
-		case BENCHMARK_NOSPECTRAL_NATIVE_PATH:
-		case BENCHMARK_SPECTRAL_NATIVE_PATH:
-		case BENCHMARK_SPECTRAL_NATIVE_BIDIR:
+		case BENCHMARK_NATIVE_PATH:
 			break;
 		default: {
 			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");
@@ -300,11 +288,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 120) &&
-		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
-		(mode != STRESSTEST_NOSPECTRAL_OCL_CPUGPU) &&
-		(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
-		(mode != STRESSTEST_SPECTRAL_NATIVE_BIDIR);
+	const bool benchmarkDone = (renderingTime > 120.0) &&
+		(mode != STRESSTEST_OCL_GPU) &&
+		(mode != STRESSTEST_OCL_CPUGPU) &&
+		(mode != STRESSTEST_OCL_GPU);
 
 	char buf[512];
 	stringstream ss("");
@@ -313,10 +300,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	if (benchmarkDone)
 		strcpy(validBuf, " (OK)");
 	else {
-		if ((mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
-				(mode != STRESSTEST_NOSPECTRAL_OCL_CPUGPU) &&
-				(mode != STRESSTEST_NOSPECTRAL_OCL_GPU) &&
-				(mode != STRESSTEST_SPECTRAL_NATIVE_BIDIR))
+		if ((mode != STRESSTEST_OCL_GPU) &&
+				(mode != STRESSTEST_OCL_CPUGPU) &&
+				(mode != STRESSTEST_OCL_GPU))
 			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 		else
 			strcpy(validBuf, "");
@@ -331,7 +317,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK]%s",
 			LuxMarkAppMode2String(mode).c_str(),
-			renderingTime, validBuf, int(sampleSec / 1000.0),
+			int(renderingTime), validBuf, int(sampleSec / 1000.0),
 			triCountBuf);
 	ss << buf;
 
