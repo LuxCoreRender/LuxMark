@@ -102,18 +102,23 @@ void LuxVRDialog::ExecCmd(const string &cmd) {
 void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
 	// Looks for LuxVR command
 	LM_LOG("Lux executable path: [" << luxvrDialog->exePath << "]");
-	boost::filesystem::path luxvrPath = luxvrDialog->exePath / "luxvr";
+	boost::filesystem::path luxvrPath = luxvrDialog->exePath / "slg4";
 	if (!boost::filesystem::exists(luxvrPath))
-		luxvrPath = luxvrDialog->exePath / "luxvr.exe";
+		luxvrPath = luxvrDialog->exePath / "slg4.exe";
 	if (!boost::filesystem::exists(luxvrPath))
-		luxvrPath = luxvrDialog->exePath / "LuxMark.app/Contents/MacOS/luxvr"; // OSX application bundle
+		luxvrPath = luxvrDialog->exePath / "LuxMark.app/Contents/MacOS/slg4"; // OSX application bundle
 	if (!boost::filesystem::exists(luxvrPath))
-		throw runtime_error("Unable to find luxvr executable");
+		throw runtime_error("Unable to find SLG4 executable");
 	LM_LOG("LuxVR path: [" << luxvrPath << "]");
 	const string luxvr = luxvrPath.make_preferred().string();
 	LM_LOG("LuxVR native path: [" << luxvr << "]");
 
-	const string luxvrCmd = "\"" + luxvr + "\" \"" + luxvrDialog->sceneName + "\"" + " 2>&1";
+	const string luxvrCmd = "\"" + luxvr + "\" "
+        "-R "
+        "-D renderengine.type RTPATHOCL "
+        "-D screen.refresh.interval 50 "
+        //"-D opencl.devices.select 10000 "
+        " \"" + luxvrDialog->sceneName + "\"" + " 2>&1";
 
 	// Start LuxVR
 	ExecCmd(luxvrCmd);

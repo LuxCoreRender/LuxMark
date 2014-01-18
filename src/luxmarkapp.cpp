@@ -278,7 +278,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			}
 			break;
 		}
-		case BENCHMARK_NATIVE_PATH:
+		case BENCHMARK_NATIVE:
 			break;
 		default: {
 			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");

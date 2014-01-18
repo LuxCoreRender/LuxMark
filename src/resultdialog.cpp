@@ -230,7 +230,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 					(resultDialog->mode == BENCHMARK_OCL_CUSTOM) ||
 					(resultDialog->mode == BENCHMARK_HYBRID_GPU) ||
 					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_NATIVE_PATH)) {
+					(resultDialog->mode == BENCHMARK_NATIVE)) {
 				fileName = scenePath / "reference.raw";
 			} else
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");

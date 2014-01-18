@@ -5,10 +5,7 @@
 ^src/(Debug|Release)/
 ^(Debug|Release|x64)/
 ^nbproject/*
-^luxvr*
-^luxconsole*
 ^slg4*
-^liblux.so*
 ^scenes/luxball/luxvr-scene/*
 syntax: glob
 *~

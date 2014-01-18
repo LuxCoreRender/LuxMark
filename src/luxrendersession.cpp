@@ -33,22 +33,9 @@ using namespace luxcore;
 
 LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
 		const string &devSel) {
-	// Save the current directory
-	originalCurrentDirectory = boost::filesystem::current_path();
-	
-#ifdef __APPLE__ // workaround for reliable find the bundlepath/scenefiles especially in 10.9	
-	boost::filesystem::path exePath;
-	char result[1024]; // too short perhaps ?
-	uint32_t size=1023;
-	if (!_NSGetExecutablePath(result, &size)) {
-		exePath=string(result);
-		boost::filesystem::current_path(exePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes dir
-	}
-	sceneFileName = exePath.parent_path().parent_path().string() + (string)"/" + boost::filesystem::path(fileName).string();
-#else
-	sceneFileName = boost::filesystem::system_complete(fileName).string();
-#endif
-	renderMode = mode;
+    renderMode = mode;
+	sceneFileName = fileName;
+    deviceSelection = devSel;
 
 	config = NULL;
 	session = NULL;
@@ -59,19 +46,11 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 LuxRenderSession::~LuxRenderSession() {
 	if (started)
 		Stop();
-
-	// Restore the current directory
-	boost::filesystem::current_path(originalCurrentDirectory);
 }
 
 void LuxRenderSession::Start() {
 	assert (!started);
 	started = true;
-
-	// Change the current working directory to the one storing the scene
-	boost::filesystem::path sceneFileComplete(boost::filesystem::system_complete(sceneFileName));
-	boost::filesystem::path workingDirectory = sceneFileComplete.parent_path();
-	boost::filesystem::current_path(workingDirectory);
 
 	// Load the configuration from file
 	Properties props(sceneFileName.c_str());
@@ -140,7 +119,7 @@ void LuxRenderSession::Start() {
 			}
 			break;
 		}
-		case BENCHMARK_NATIVE_PATH: {
+		case BENCHMARK_NATIVE: {
 			props <<
 					Property("renderengine.type")("PATHCPU");
 			break;
