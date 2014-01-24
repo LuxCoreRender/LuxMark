@@ -1,0 +1,54 @@
+/*
+ * LuxMark web site CSS
+ */
+
+html {
+	background: #333;
+}
+
+body {
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+}
+
+a:link {
+    color: #DD7F00;
+    text-decoration: none;
+}
+a:visited {
+    color: #DD7F00;
+    text-decoration: none;
+}
+a:hover	{
+    color: #D31141;
+    text-decoration: underline;
+}
+a:active {
+    color: #368AD2;
+    text-decoration: none;
+}
+
+#header {
+    color: #FFF;
+    background: rgb(204, 204, 204);
+    border-radius: 6px;
+    padding: 6px;
+    margin: 6px 0 0 0;
+}
+
+#navigation {
+    color: #FFF;
+    background: rgb(204, 204, 204);
+    border-radius: 6px;
+    padding: 6px;
+    margin: 6px 0 0 0;
+}
+
+#navigation a {
+    font-weight: bold;
+}
+
+#main-menu {
+    line-height: 1em;
+    padding: 0 0 6px 0;
+    border-bottom: 2px solid rgb(238, 238, 238);
+}
