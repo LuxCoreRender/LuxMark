@@ -121,59 +121,73 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
 		DeviceDescription *devDesc = devDescs[i];
 
 		if (devDesc->GetType() &  DEVICE_TYPE_OPENCL_ALL) {
-			const OpenCLDeviceDescription *odevDesc = (OpenCLDeviceDescription *)devDesc;
+            BenchmarkDeviceDescription deviceDesc;
+            const OpenCLDeviceDescription *odevDesc = (OpenCLDeviceDescription *)devDesc;
 
-			HardwareTreeItem *newNode = new HardwareTreeItem(index++, odevDesc->GetName().c_str());
+            deviceDesc.deviceName = odevDesc->GetName();
+			HardwareTreeItem *newNode = new HardwareTreeItem(index++, deviceDesc.deviceName.c_str());
 
 			stringstream ss;
 			cl::Platform platform = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_PLATFORM>();
-			ss << "Platform: " << platform.getInfo<CL_PLATFORM_VENDOR>();
+            deviceDesc.platformName = platform.getInfo<CL_PLATFORM_VENDOR>();
+			ss << "Platform: " << deviceDesc.platformName;
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
+           
 			ss.str("");
-			ss << "Platform Version: " << platform.getInfo<CL_PLATFORM_VERSION>();
+            deviceDesc.platformVersion = platform.getInfo<CL_PLATFORM_VERSION>();
+			ss << "Platform Version: " << deviceDesc.platformVersion;
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
 			ss << "Type: ";
 			switch (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_TYPE>()) {
 				case CL_DEVICE_TYPE_CPU:
+                    deviceDesc.deviceType = "CPU";
 					ss << "CPU";
 					break;
 				case CL_DEVICE_TYPE_GPU:
+                    deviceDesc.deviceType = "GPU";
 					ss << "GPU";
 					break;
 				case CL_DEVICE_TYPE_ACCELERATOR:
+                    deviceDesc.deviceType = "ACCELERATOR";
 					ss << "ACCELERATOR";
 					break;
 				default:
+                    deviceDesc.deviceType = "UNKNOWN";
 					ss << "UNKNOWN";
 					break;
 			}
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Compute Units: " << odevDesc->GetComputeUnits();
+            deviceDesc.units = odevDesc->GetComputeUnits();
+			ss << "Compute Units: " << deviceDesc.units;
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Clock: " << odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>() << " MHz";
+            deviceDesc.clock = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
+			ss << "Clock: " << deviceDesc.clock << " MHz";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Preferred vector width: " << odevDesc->GetNativeVectorWidthFloat();
+            deviceDesc.nativeVectorWidthFloat = odevDesc->GetNativeVectorWidthFloat();
+			ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Max. Global Memory: " << (odevDesc->GetMaxMemory() / 1024) << " Kbytes";
+            deviceDesc.globalMem = odevDesc->GetMaxMemory();
+			ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Local Memory: " << (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_LOCAL_MEM_SIZE>() / 1024) << " Kbytes";
+            deviceDesc.localMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_LOCAL_MEM_SIZE>();
+			ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			ss.str("");
-			ss << "Max. Constant Memory: " << (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>() / 1024) << " Kbytes";
+            deviceDesc.constantMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>();
+			ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
 			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 			bool isCPUDev = (odevDesc->GetType() == DEVICE_TYPE_OPENCL_CPU);
@@ -185,6 +199,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
 				newNode->setChecked(true);
 				oclGPUDev->appendChild(newNode);
 			}
+
+            deviceDescs.push_back(deviceDesc);
 			deviceSelection.push_back(!isCPUDev);
 			isCPU.push_back(isCPUDev);
 		}
@@ -328,47 +344,20 @@ string HardwareTreeModel::getDeviceSelectionString() const {
 	return ss.str();
 }
 
+vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs() const {
+    vector<BenchmarkDeviceDescription> descs;
+    
+    for (size_t i = 0; i < deviceSelection.size(); ++i) {
+        if (deviceSelection[i])
+            descs.push_back(deviceDescs[i]);
+    }
+
+    return descs;
+}
+
 //------------------------------------------------------------------------------
 // DeviceTreeModel
 //------------------------------------------------------------------------------
-
-vector<BenchmarkDeviceDescription> BuildDeviceDescriptions(
-	const vector<OpenCLIntersectionDevice *> &devices) {
-	vector<BenchmarkDeviceDescription> descs;
-
-	for (size_t i = 0; i < devices.size(); ++i) {
-		const OpenCLDeviceDescription *odevDesc = ((OpenCLIntersectionDevice *)devices[i])->GetDeviceDesc();
-		cl::Platform platform = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_PLATFORM>();
-
-		BenchmarkDeviceDescription desc;
-		desc.platformName = platform.getInfo<CL_PLATFORM_VENDOR>();
-		desc.platformVersion = platform.getInfo<CL_PLATFORM_VERSION>();
-		desc.deviceName = odevDesc->GetName();
-		switch (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_TYPE>()) {
-			case CL_DEVICE_TYPE_CPU:
-				desc.deviceType = "CPU";
-				break;
-			case CL_DEVICE_TYPE_GPU:
-				desc.deviceType = "GPU";
-				break;
-			case CL_DEVICE_TYPE_ACCELERATOR:
-				desc.deviceType = "ACCELERATOR";
-				break;
-			default:
-				desc.deviceType = "UNKNOWN";
-				break;
-		}
-		desc.units = odevDesc->GetComputeUnits();
-		desc.clock = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
-		desc.globalMem = odevDesc->GetMaxMemory() / 1024;
-		desc.localMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_LOCAL_MEM_SIZE>() / 1024;
-		desc.constantMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>() / 1024;
-
-		descs.push_back(desc);
-	}
-
-	return descs;
-}
 
 DeviceListModel::DeviceListModel(const vector<BenchmarkDeviceDescription> &descs) :
 			QAbstractItemModel() {
