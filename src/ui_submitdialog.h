@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'submitdialog.ui'
 **
-** Created: Thu May 30 15:44:07 2013
-**      by: Qt User Interface Compiler version 4.8.3
+** Created: Sun Jan 26 16:52:41 2014
+**      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -32,7 +32,6 @@ class Ui_SubmitDialog
 {
 public:
     QGridLayout *gridLayout;
-    QLabel *noteLabel;
     QLabel *accountNameLabel;
     QLineEdit *nameEdit;
     QLabel *accountPwdLabel;
@@ -45,6 +44,7 @@ public:
     QHBoxLayout *horizontalLayout;
     QPushButton *genericButton;
     QSpacerItem *horizontalSpacer;
+    QLabel *noteLabel;
 
     void setupUi(QDialog *SubmitDialog)
     {
@@ -57,21 +57,6 @@ public:
         SubmitDialog->setModal(true);
         gridLayout = new QGridLayout(SubmitDialog);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        noteLabel = new QLabel(SubmitDialog);
-        noteLabel->setObjectName(QString::fromUtf8("noteLabel"));
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(1);
-        sizePolicy.setVerticalStretch(1);
-        sizePolicy.setHeightForWidth(noteLabel->sizePolicy().hasHeightForWidth());
-        noteLabel->setSizePolicy(sizePolicy);
-        noteLabel->setTextFormat(Qt::RichText);
-        noteLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
-        noteLabel->setWordWrap(true);
-        noteLabel->setIndent(-1);
-        noteLabel->setOpenExternalLinks(true);
-
-        gridLayout->addWidget(noteLabel, 0, 0, 1, 4);
-
         accountNameLabel = new QLabel(SubmitDialog);
         accountNameLabel->setObjectName(QString::fromUtf8("accountNameLabel"));
         accountNameLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -80,11 +65,11 @@ public:
 
         nameEdit = new QLineEdit(SubmitDialog);
         nameEdit->setObjectName(QString::fromUtf8("nameEdit"));
-        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy1.setHorizontalStretch(2);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(nameEdit->sizePolicy().hasHeightForWidth());
-        nameEdit->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(2);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(nameEdit->sizePolicy().hasHeightForWidth());
+        nameEdit->setSizePolicy(sizePolicy);
         nameEdit->setEchoMode(QLineEdit::Normal);
 
         gridLayout->addWidget(nameEdit, 1, 1, 1, 1);
@@ -97,8 +82,8 @@ public:
 
         pwdEdit = new QLineEdit(SubmitDialog);
         pwdEdit->setObjectName(QString::fromUtf8("pwdEdit"));
-        sizePolicy1.setHeightForWidth(pwdEdit->sizePolicy().hasHeightForWidth());
-        pwdEdit->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(pwdEdit->sizePolicy().hasHeightForWidth());
+        pwdEdit->setSizePolicy(sizePolicy);
         pwdEdit->setEchoMode(QLineEdit::Password);
 
         gridLayout->addWidget(pwdEdit, 2, 1, 1, 1);
@@ -111,32 +96,32 @@ public:
 
         noteTextEdit = new QPlainTextEdit(SubmitDialog);
         noteTextEdit->setObjectName(QString::fromUtf8("noteTextEdit"));
-        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(1);
-        sizePolicy2.setHeightForWidth(noteTextEdit->sizePolicy().hasHeightForWidth());
-        noteTextEdit->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(1);
+        sizePolicy1.setHeightForWidth(noteTextEdit->sizePolicy().hasHeightForWidth());
+        noteTextEdit->setSizePolicy(sizePolicy1);
 
         gridLayout->addWidget(noteTextEdit, 3, 1, 1, 3);
 
         logLabel = new QLabel(SubmitDialog);
         logLabel->setObjectName(QString::fromUtf8("logLabel"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(1);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(logLabel->sizePolicy().hasHeightForWidth());
-        logLabel->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(1);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(logLabel->sizePolicy().hasHeightForWidth());
+        logLabel->setSizePolicy(sizePolicy2);
         logLabel->setAlignment(Qt::AlignCenter);
 
         gridLayout->addWidget(logLabel, 4, 0, 1, 4);
 
         resultText = new QTextEdit(SubmitDialog);
         resultText->setObjectName(QString::fromUtf8("resultText"));
-        QSizePolicy sizePolicy4(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy4.setHorizontalStretch(1);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(resultText->sizePolicy().hasHeightForWidth());
-        resultText->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy3.setHorizontalStretch(1);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(resultText->sizePolicy().hasHeightForWidth());
+        resultText->setSizePolicy(sizePolicy3);
         resultText->setLineWrapMode(QTextEdit::NoWrap);
         resultText->setReadOnly(true);
 
@@ -144,18 +129,18 @@ public:
 
         widget = new QWidget(SubmitDialog);
         widget->setObjectName(QString::fromUtf8("widget"));
-        sizePolicy3.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
-        widget->setSizePolicy(sizePolicy3);
+        sizePolicy2.setHeightForWidth(widget->sizePolicy().hasHeightForWidth());
+        widget->setSizePolicy(sizePolicy2);
         horizontalLayout = new QHBoxLayout(widget);
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         genericButton = new QPushButton(widget);
         genericButton->setObjectName(QString::fromUtf8("genericButton"));
-        QSizePolicy sizePolicy5(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(genericButton->sizePolicy().hasHeightForWidth());
-        genericButton->setSizePolicy(sizePolicy5);
+        QSizePolicy sizePolicy4(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(genericButton->sizePolicy().hasHeightForWidth());
+        genericButton->setSizePolicy(sizePolicy4);
 
         horizontalLayout->addWidget(genericButton);
 
@@ -165,6 +150,21 @@ public:
         horizontalSpacer = new QSpacerItem(60, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
 
         gridLayout->addItem(horizontalSpacer, 1, 2, 1, 1);
+
+        noteLabel = new QLabel(SubmitDialog);
+        noteLabel->setObjectName(QString::fromUtf8("noteLabel"));
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        sizePolicy5.setHorizontalStretch(1);
+        sizePolicy5.setVerticalStretch(1);
+        sizePolicy5.setHeightForWidth(noteLabel->sizePolicy().hasHeightForWidth());
+        noteLabel->setSizePolicy(sizePolicy5);
+        noteLabel->setTextFormat(Qt::RichText);
+        noteLabel->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        noteLabel->setWordWrap(true);
+        noteLabel->setIndent(-1);
+        noteLabel->setOpenExternalLinks(true);
+
+        gridLayout->addWidget(noteLabel, 0, 0, 1, 4);
 
 
         retranslateUi(SubmitDialog);
@@ -176,12 +176,12 @@ public:
     void retranslateUi(QDialog *SubmitDialog)
     {
         SubmitDialog->setWindowTitle(QApplication::translate("SubmitDialog", "Dialog", 0, QApplication::UnicodeUTF8));
-        noteLabel->setText(QApplication::translate("SubmitDialog", "<b>Note:</b> submiting a result to <a href=\"http://www.luxrender.net/luxmark\">www.luxrender.net/luxmark</a> requires a valid forum account. If you don't have an account, you can create one <a href=\"http://www.luxrender.net/forum/ucp.php?mode=register\">here</a>. Account names are case sensitive and the account activation can require up to 1 hour.", 0, QApplication::UnicodeUTF8));
         accountNameLabel->setText(QApplication::translate("SubmitDialog", "Account name:", 0, QApplication::UnicodeUTF8));
         accountPwdLabel->setText(QApplication::translate("SubmitDialog", "Account password:", 0, QApplication::UnicodeUTF8));
         resultNoteLabel->setText(QApplication::translate("SubmitDialog", "Result note:", 0, QApplication::UnicodeUTF8));
         logLabel->setText(QApplication::translate("SubmitDialog", "Submission log:", 0, QApplication::UnicodeUTF8));
         genericButton->setText(QApplication::translate("SubmitDialog", "&Cancel", 0, QApplication::UnicodeUTF8));
+        noteLabel->setText(QApplication::translate("SubmitDialog", "<html><head/><body><p><span style=\" font-weight:600;\">Note:</span> submiting a result to <a href=\"http://www.luxmark.info\"><span style=\" text-decoration: underline; color:#0000ff;\">www.luxmark.info</span></a> requires a valid account. If you don't have an account, you can create one <a href=\"http://www.luxmark.info/user/register\"><span style=\" text-decoration: underline; color:#0000ff;\">here</span></a>.</p></body></html>", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
