@@ -1,0 +1,84 @@
+<?php
+
+/**
+* Increase the length of the slogan.
+* Implements hook_form_FORM_ID_alter.
+*/
+function luxmark_web_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
+    $form['site_information']['site_slogan']['#maxlength'] = 255;
+}
+
+function luxmark_web_help($path, $arg) {
+    switch ($path) {
+        case "admin/help#luxmark_web":
+            return '<p>' . t("LuxMark Module") . '.</p>';
+    }
+}
+
+function luxmark_web_permission() {
+    return array(
+        'submit_result' => array(
+            'title' => t('Submit result'),
+            'description' => t('Allow users to submit a result')
+        )
+    );
+}
+
+function luxmark_web_menu() {
+    return array(
+        'submit_result' => array(
+            'title' => 'Submit result',
+            'page callback' => 'luxmark_web_submit_result',
+            'access arguments' => array('submit_result')
+        )
+    );
+}
+
+function luxmark_web_submit_result() {
+    try {
+        $uid = user_authenticate($_POST['name'], $_POST['password']);
+        if (!$uid)
+            print t("Invalid name and/or password");
+        else {
+            $newResult = new stdClass();
+            $newResult->type = 'luxmark_result';
+            node_object_prepare($newResult);
+            $newResult->language = LANGUAGE_NONE;
+            $newResult->uid = $uid;
+            $newResult->title = $_POST['name'] . '\'s result (' . date('Y/m/d H:i:s') .  ')';
+
+            $newResult->field_result_version[LANGUAGE_NONE][0]['value'] = $_POST['version'];
+            $newResult->field_result_os[LANGUAGE_NONE][0]['value'] = $_POST['os'];
+            $newResult->field_result_scene_name[LANGUAGE_NONE][0]['value'] = $_POST['scene_name'];
+            $newResult->field_result_score[LANGUAGE_NONE][0]['value'] = $_POST['score'];
+            $newResult->field_result_note[LANGUAGE_NONE][0]['value'] = $_POST['note'];
+            $dev_count = $_POST['dev_count'];
+            $newResult->field_result_dev_count[LANGUAGE_NONE][0]['value'] = $dev_count;
+
+            $newResult->field_stage_times[LANGUAGE_NONE] = array();
+            for ($i = 0; $i < $dev_count; $i++) {
+                $newResult->field_result_dev_platform_name[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_name'][$i];
+                $newResult->field_result_dev_platform_ver[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_ver'][$i];
+                $newResult->field_result_dev_name[LANGUAGE_NONE][]['value'] = $_POST['dev_name'][$i];
+                $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $_POST['dev_type'][$i];
+                $newResult->field_result_dev_units[LANGUAGE_NONE][]['value'] = $_POST['dev_units'][$i];
+                $newResult->field_result_dev_clock[LANGUAGE_NONE][]['value'] = $_POST['dev_clock'][$i];
+                $newResult->field_result_dev_global_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_global_mem'][$i];
+                $newResult->field_result_dev_local_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_local_mem'][$i];
+                $newResult->field_result_dev_constant_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_constant_mem'][$i];
+            }
+
+            $newResult = node_submit($newResult);
+
+            if ($newResult) {
+                node_save($newResult);
+                print 'OK';
+            } else
+                print 'FAILED';
+        }
+    } catch (Exception $ex) {
+        print t('Caught exception') . ': ' . $ex->getMessage();
+    }
+    
+    exit(0);
+}
