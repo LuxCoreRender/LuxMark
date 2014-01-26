@@ -264,9 +264,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			// Get each device statistics
 			minPerf = numeric_limits<double>::infinity();
 			totalPerf = 0.0;
-			const Property &deviceNames = stats.Get("stats.renderengine.devices");
-			for (u_int i = 0; i < deviceNames.GetSize(); ++i) {
-				const string deviceName = deviceNames.Get<string>(i);
+			const Property &devNames = stats.Get("stats.renderengine.devices");
+			for (u_int i = 0; i < devNames.GetSize(); ++i) {
+				const string deviceName = devNames.Get<string>(i);
+                deviceNames.push_back(deviceName);
 
 				const double raySecs = stats.Get("stats.renderengine.devices." + deviceName + ".performance.total").Get<double>();
 				deviceRaysSecs.push_back(raySecs);
@@ -345,9 +346,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		} else {
 			Stop();
 
+            vector<BenchmarkDeviceDescription> descs = hardwareTreeModel->getSelectedDeviceDescs(mode);
 			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec,
-                    hardwareTreeModel->getSelectedDeviceDescs(),
-					pixels, width, height);
+                    descs, pixels, width, height);
 			dialog->exec();
 			delete dialog;
 

@@ -34,7 +34,7 @@ static void PrintCmdLineHelp(const QString &cmd) {
                 "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
                 "BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE|"
                 "STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
-                "PAUSE"
+                "DEMO_LUXVR|PAUSE"
 				" (select the mode to use)" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl;
 }
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
 		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
 		"BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE|"
 		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
-		"PAUSE"
+		"DEMO_LUXVR|PAUSE"
 		")");
 	QRegExp argSingleRun("--single-run");
 
@@ -97,6 +97,8 @@ int main(int argc, char **argv) {
 				mode = STRESSTEST_OCL_CPUGPU;
 			else if (scene.compare("STRESSTEST_OCL_CPU", Qt::CaseInsensitive) == 0)
 				mode = STRESSTEST_OCL_CPU;
+			else if (scene.compare("DEMO_LUXVR", Qt::CaseInsensitive) == 0)
+				mode = DEMO_LUXVR;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)
 				mode = PAUSE;
 			else {
