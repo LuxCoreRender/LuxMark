@@ -53,8 +53,15 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 	ui->modeLabel->setText(LuxMarkAppMode2String(mode).c_str());
 	ui->sceneLabel->setText(sceneName);
 
-	deviceListModel = new DeviceListModel(descs);
-	ui->deviceListView->setModel(deviceListModel);
+    // Check if it is benchmark using OpenCL
+    if (mode != BENCHMARK_NATIVE) {
+        deviceListModel = new DeviceListModel(descs);
+        ui->deviceListView->setModel(deviceListModel);
+    } else {
+        deviceListModel = NULL;
+        ui->deviceLabel->setVisible(false);
+        ui->deviceListView->setVisible(false);
+    }
 
 	ui->resultLCD->display(int(sampleSecs / 1000.0));
 

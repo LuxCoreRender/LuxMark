@@ -344,12 +344,42 @@ string HardwareTreeModel::getDeviceSelectionString() const {
 	return ss.str();
 }
 
-vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs() const {
+vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
+    const LuxMarkAppMode mode) const {
     vector<BenchmarkDeviceDescription> descs;
-    
-    for (size_t i = 0; i < deviceSelection.size(); ++i) {
-        if (deviceSelection[i])
-            descs.push_back(deviceDescs[i]);
+
+    switch (mode) {
+        case DEMO_LUXVR:
+        case STRESSTEST_OCL_GPU:
+        case BENCHMARK_HYBRID_GPU:
+        case BENCHMARK_OCL_GPU:
+            for (size_t i = 0; i < deviceSelection.size(); ++i) {
+                if (!isCPU[i])
+                    descs.push_back(deviceDescs[i]);
+            }
+            break;
+        case STRESSTEST_OCL_CPUGPU:
+        case BENCHMARK_OCL_CPUGPU:
+            for (size_t i = 0; i < deviceSelection.size(); ++i)
+                descs.push_back(deviceDescs[i]);
+            break;
+        case STRESSTEST_OCL_CPU:
+        case BENCHMARK_OCL_CPU:
+            for (size_t i = 0; i < deviceSelection.size(); ++i) {
+                if (isCPU[i])
+                    descs.push_back(deviceDescs[i]);
+            }
+            break;
+        case BENCHMARK_HYBRID_CUSTOM:
+        case BENCHMARK_OCL_CUSTOM:
+            for (size_t i = 0; i < deviceSelection.size(); ++i) {
+                if (deviceSelection[i])
+                    descs.push_back(deviceDescs[i]);
+            }
+            break;
+        case PAUSE:
+        case BENCHMARK_NATIVE:
+            break;
     }
 
     return descs;

@@ -29,10 +29,12 @@
 #include "luxrays/luxrays.h"
 #include "luxrays/core/context.h"
 #include "luxrays/core/oclintersectiondevice.h"
+#include "luxmarkdefs.h"
 
 using namespace std;
 
 class MainWindow;
+
 
 //------------------------------------------------------------------------------
 // Hardware tree view
@@ -106,7 +108,7 @@ public:
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
 	string getDeviceSelectionString() const;
-    vector<BenchmarkDeviceDescription> getSelectedDeviceDescs() const;
+    vector<BenchmarkDeviceDescription> getSelectedDeviceDescs(const LuxMarkAppMode mode) const;
 
 private:
 	MainWindow *win;
