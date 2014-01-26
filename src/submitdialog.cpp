@@ -104,7 +104,7 @@ void SubmitDialog::genericButton() {
 		// Create the http request
 		SD_LOG("Creating HTTP request...");
 		QNetworkRequest request;
-		request.setUrl(QUrl("http://www.luxrender.net/luxmark/submit"));
+		request.setUrl(QUrl("http://www.luxmark.info/submit_result"));
 		request.setRawHeader("User-Agent", "LuxMark v" LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
 		// Const's patch for Qt 4.8.1
 		request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
@@ -115,6 +115,10 @@ void SubmitDialog::genericButton() {
 		params.addEncodedQueryItem("password", QUrl::toPercentEncoding(pwd));
 
 		SD_LOG("Submitted data:");
+
+		params.addEncodedQueryItem("version", QUrl::toPercentEncoding(LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR));
+		SD_LOG("version = " << version.toStdString());
+
 		params.addEncodedQueryItem("os", QUrl::toPercentEncoding(os));
 		SD_LOG("os = " << os.toStdString());
 
@@ -183,7 +187,7 @@ void SubmitDialog::genericButton() {
 }
 
 void SubmitDialog::httpFinished() {
-	//SD_LOG("httpFinished() - " << QString(reply->readAll()).toStdString());
+	SD_LOG("httpFinished() - " << QString(reply->readAll()).toStdString());
 	string result = QString(reply->readAll()).toStdString();
 
 	if (result == "OK") {

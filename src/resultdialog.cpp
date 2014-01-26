@@ -64,9 +64,6 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 			(strcmp(sceneName, SCENE_LUXBALL_HDR) != 0))
 		ui->submitButton->setEnabled(false);
 
-	// To re-enable only with official release
-	ui->submitButton->setEnabled(false);
-
 	QObject::connect(this, SIGNAL(sceneValidationLabelChanged(const QString &, const bool)),
 			this, SLOT(setSceneValidationLabel(const QString &, const bool)));
 	QObject::connect(this, SIGNAL(imageValidationLabelChanged(const QString &, const bool)),
