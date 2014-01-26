@@ -31,11 +31,13 @@ using namespace luxrays;
 #define SD_LOG(a) { SD_MSG("<FONT COLOR=\"#0000ff\">" << a << "</FONT>"); }
 #define SD_LOG_ERROR(a) { SD_MSG("<FONT COLOR=\"#ff0000\">" << a << "</FONT>"); }
 
-SubmitDialog::SubmitDialog(const char *scnName,
+SubmitDialog::SubmitDialog(
+        const LuxMarkAppMode m,
+        const char *scnName,
 		const double sampSecs,
-		const vector<BenchmarkDeviceDescription> &ds,
+		const vector<BenchmarkDeviceDescription> ds,
 		QWidget *parent) : QDialog(parent), ui(new Ui::SubmitDialog),
-		descs(ds) {
+		mode(m), descs(ds) {
 	sceneName = scnName;
 	sampleSecs = sampSecs;
 
@@ -84,10 +86,30 @@ void SubmitDialog::genericButton() {
 #else
 		const QString os = "Unknown";
 #endif
+        const QString version = LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR;
 		const QString scene = sceneName;
 		const QString score = ToString(int(sampleSecs / 1000.0)).c_str();
 		const QString note = ui->noteTextEdit->toPlainText();
 		const QString devCount = ToString(descs.size()).c_str();
+
+        QString benchMode;
+        switch (mode) {
+            case BENCHMARK_OCL_GPU:
+            case BENCHMARK_OCL_CPUGPU:
+            case BENCHMARK_OCL_CPU:
+            case BENCHMARK_OCL_CUSTOM:
+                benchMode = "OpenCL";
+                break;
+            case BENCHMARK_HYBRID_GPU:
+            case BENCHMARK_HYBRID_CUSTOM:
+                benchMode = "Hybrid C++/OpenCL";
+                break;
+            case BENCHMARK_NATIVE:
+                benchMode = "C++";
+                break;
+            default:
+                benchMode = "Unknown";
+        }
 
 		// Delete manager/reply if required
 		if (manager) {
@@ -116,11 +138,14 @@ void SubmitDialog::genericButton() {
 
 		SD_LOG("Submitted data:");
 
-		params.addEncodedQueryItem("version", QUrl::toPercentEncoding(LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR));
+		params.addEncodedQueryItem("version", QUrl::toPercentEncoding(version));
 		SD_LOG("version = " << version.toStdString());
 
 		params.addEncodedQueryItem("os", QUrl::toPercentEncoding(os));
 		SD_LOG("os = " << os.toStdString());
+
+		params.addEncodedQueryItem("mode", QUrl::toPercentEncoding(benchMode));
+		SD_LOG("mode = " << benchMode.toStdString());
 
 		params.addEncodedQueryItem("scene_name", QUrl::toPercentEncoding(scene));
 		SD_LOG("scene_name = " << scene.toStdString());
@@ -152,6 +177,9 @@ void SubmitDialog::genericButton() {
 
 			SD_LOG("dev_clock = " << descs[i].clock);
 			params.addEncodedQueryItem("dev_clock[]", QUrl::toPercentEncoding(QString(ToString(descs[i].clock).c_str())));
+
+			SD_LOG("dev_native_float_vec_width = " << descs[i].nativeVectorWidthFloat);
+			params.addEncodedQueryItem("dev_native_float_vec_width[]", QUrl::toPercentEncoding(QString(ToString(descs[i].nativeVectorWidthFloat).c_str())));
 
 			SD_LOG("dev_global_mem = " << descs[i].globalMem);
 			params.addEncodedQueryItem("dev_global_mem[]", QUrl::toPercentEncoding(QString(ToString(descs[i].globalMem).c_str())));
@@ -187,8 +215,8 @@ void SubmitDialog::genericButton() {
 }
 
 void SubmitDialog::httpFinished() {
-	SD_LOG("httpFinished() - " << QString(reply->readAll()).toStdString());
-	string result = QString(reply->readAll()).toStdString();
+    string result = QString(reply->readAll()).toStdString();
+	//SD_LOG("httpFinished() - [" << result << "] [" << (result == "OK") << "]");
 
 	if (result == "OK") {
 		SD_LOG("Result successfully submitted !");

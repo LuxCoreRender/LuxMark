@@ -343,11 +343,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 			exit(EXIT_SUCCESS);
 		} else {
-			const vector<BenchmarkDeviceDescription> descs;
-
 			Stop();
 
-			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec, descs,
+			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec,
+                    hardwareTreeModel->getSelectedDeviceDescs(),
 					pixels, width, height);
 			dialog->exec();
 			delete dialog;

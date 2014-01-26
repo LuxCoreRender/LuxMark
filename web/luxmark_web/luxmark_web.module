@@ -49,6 +49,7 @@ function luxmark_web_submit_result() {
 
             $newResult->field_result_version[LANGUAGE_NONE][0]['value'] = $_POST['version'];
             $newResult->field_result_os[LANGUAGE_NONE][0]['value'] = $_POST['os'];
+            $newResult->field_result_type[LANGUAGE_NONE][0]['value'] = $_POST['type'];
             $newResult->field_result_scene_name[LANGUAGE_NONE][0]['value'] = $_POST['scene_name'];
             $newResult->field_result_score[LANGUAGE_NONE][0]['value'] = $_POST['score'];
             $newResult->field_result_note[LANGUAGE_NONE][0]['value'] = $_POST['note'];
@@ -63,6 +64,7 @@ function luxmark_web_submit_result() {
                 $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $_POST['dev_type'][$i];
                 $newResult->field_result_dev_units[LANGUAGE_NONE][]['value'] = $_POST['dev_units'][$i];
                 $newResult->field_result_dev_clock[LANGUAGE_NONE][]['value'] = $_POST['dev_clock'][$i];
+                $newResult->field_result_dev_native_float_vec_width[LANGUAGE_NONE][]['value'] = $_POST['dev_native_float_vec_width'][$i];
                 $newResult->field_result_dev_global_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_global_mem'][$i];
                 $newResult->field_result_dev_local_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_local_mem'][$i];
                 $newResult->field_result_dev_constant_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_constant_mem'][$i];

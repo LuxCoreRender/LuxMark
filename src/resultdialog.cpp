@@ -34,12 +34,11 @@ static QString Path2QString(const boost::filesystem::path &fileName) {
 
 ResultDialog::ResultDialog(const LuxMarkAppMode m,
 		const char *scnName, const double sampSecs,
-		const vector<BenchmarkDeviceDescription> &ds,
+		const vector<BenchmarkDeviceDescription> ds,
 		const unsigned char *fb,
 		const u_int width, const u_int height,
 		QWidget *parent) : QDialog(parent),
-		ui(new Ui::ResultDialog), descs(ds) {
-	mode = m;
+		ui(new Ui::ResultDialog), mode(m), descs(ds) {
 	sceneName = scnName;
 	sampleSecs = sampSecs;
 	frameBuffer = fb;
@@ -103,7 +102,7 @@ ResultDialog::~ResultDialog() {
 
 void ResultDialog::submitResult() {
 	// TODO: wait for the end of all pending processes
-	SubmitDialog *dialog = new SubmitDialog(sceneName, sampleSecs, descs);
+	SubmitDialog *dialog = new SubmitDialog(mode, sceneName, sampleSecs, descs);
 	dialog->exec();
 	delete dialog;
 }

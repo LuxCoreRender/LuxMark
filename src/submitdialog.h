@@ -37,9 +37,10 @@ class SubmitDialog : public QDialog {
 
 public:
 	SubmitDialog(
+            LuxMarkAppMode mode,
 			const char *sceneName,
 			const double sampleSecs,
-			const vector<BenchmarkDeviceDescription> &descs,
+			const vector<BenchmarkDeviceDescription> descs,
 			QWidget *parent = NULL);
 	~SubmitDialog();
 
@@ -50,9 +51,10 @@ private:
 
 	Ui::SubmitDialog *ui;
 
+    const LuxMarkAppMode mode;
 	const char *sceneName;
 	double sampleSecs;
-	const vector<BenchmarkDeviceDescription> &descs;
+	const vector<BenchmarkDeviceDescription> descs;
 
 	SubmitState state;
 

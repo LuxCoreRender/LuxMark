@@ -75,6 +75,20 @@ private:
 // HardwareTreeModel
 //------------------------------------------------------------------------------
 
+typedef struct {
+	string platformName;
+	string platformVersion;
+	string deviceName;
+	string deviceType;
+	int units;
+	int clock;
+    int nativeVectorWidthFloat;
+	size_t globalMem;
+	size_t localMem;
+	size_t constantMem;
+} BenchmarkDeviceDescription;
+
+
 class HardwareTreeModel : public QAbstractItemModel {
 	Q_OBJECT
 
@@ -92,12 +106,14 @@ public:
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
 	string getDeviceSelectionString() const;
+    vector<BenchmarkDeviceDescription> getSelectedDeviceDescs() const;
 
 private:
 	MainWindow *win;
 
 	HardwareTreeItem *rootItem;
 
+    vector<BenchmarkDeviceDescription> deviceDescs;
 	vector<bool> deviceSelection;
 	vector<bool> isCPU;
 };
@@ -105,21 +121,6 @@ private:
 //------------------------------------------------------------------------------
 // DeviceTreeModel
 //------------------------------------------------------------------------------
-
-typedef struct {
-	string platformName;
-	string platformVersion;
-	string deviceName;
-	string deviceType;
-	int units;
-	int clock;
-	int globalMem;
-	int localMem;
-	int constantMem;
-} BenchmarkDeviceDescription;
-
-extern vector<BenchmarkDeviceDescription> BuildDeviceDescriptions(
-	const vector<luxrays::OpenCLIntersectionDevice *> &devices);
 
 class DeviceListModel : public QAbstractItemModel {
 	Q_OBJECT

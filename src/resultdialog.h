@@ -39,7 +39,7 @@ public:
 			const LuxMarkAppMode mode,
 			const char *sceneName,
 			const double sampleSecs,
-			const vector<BenchmarkDeviceDescription> &descs,
+			const vector<BenchmarkDeviceDescription> descs,
 			const unsigned char *frameBuffer,
 			const u_int frameBufferWidth, const u_int frameBufferHeight,
 			QWidget *parent = NULL);
@@ -54,10 +54,10 @@ private:
 
 	Ui::ResultDialog *ui;
 
-	LuxMarkAppMode mode;
+	const LuxMarkAppMode mode;
 	const char *sceneName;
 	double sampleSecs;
-	const vector<BenchmarkDeviceDescription> &descs;
+	const vector<BenchmarkDeviceDescription> descs;
 	const unsigned char *frameBuffer;
 	u_int frameBufferWidth, frameBufferHeight;
 	DeviceListModel *deviceListModel;
