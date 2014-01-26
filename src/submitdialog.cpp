@@ -84,7 +84,7 @@ void SubmitDialog::genericButton() {
 #else
 		const QString os = "Unknown";
 #endif
-        const QString version;
+        const QString version = (LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
 		const QString scene = sceneName;
 		const QString score = ToString(int(sampleSecs / 1000.0)).c_str();
 		const QString note = ui->noteTextEdit->toPlainText();
