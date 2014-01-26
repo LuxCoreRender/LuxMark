@@ -82,3 +82,18 @@ a:active {
     padding: 6px;
     margin: 0 0 6px 6px;
 }
+
+/******************************************************************************/
+/* Front page
+/******************************************************************************/
+
+.front #main #content {
+    padding: 6px;
+}
+
+.front #main #content>div {
+    border: 1px #FFF;
+    border-style: solid;
+    padding: 6px;
+    margin: 3px 3px 3px 3px;
+}

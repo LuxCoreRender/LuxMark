@@ -49,6 +49,7 @@ function luxmark_web_submit_result() {
 
             $newResult->field_result_version[LANGUAGE_NONE][0]['value'] = $_POST['version'];
             $newResult->field_result_os[LANGUAGE_NONE][0]['value'] = $_POST['os'];
+            $newResult->field_result_mode[LANGUAGE_NONE][0]['value'] = $_POST['mode'];
             $newResult->field_result_type[LANGUAGE_NONE][0]['value'] = $_POST['type'];
             $newResult->field_result_scene_name[LANGUAGE_NONE][0]['value'] = $_POST['scene_name'];
             $newResult->field_result_score[LANGUAGE_NONE][0]['value'] = $_POST['score'];
