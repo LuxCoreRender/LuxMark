@@ -31,6 +31,7 @@ a:active {
 #page-title {
     text-align: center;
     font-size: 1.3em;
+    font-style: italic;
 }
 
 /******************************************************************************/
@@ -144,26 +145,50 @@ table tbody tr:hover {
 /* Front page
 /******************************************************************************/
 
+.front #main #content #block-block-1 {
+    overflow: auto;
+}
+
+.front #main #content #block-block-1 h2 {
+    font-style: italic;
+}
+
+.front #main #content #block-block-1 .luxmark_introduction_img {
+    float: right;
+    padding: 6px;
+}
+
+.front #main #content #block-block-1 .luxmark_introduction_img img {
+    width: 320px;
+    height: auto;
+}
+.front #main #content #block-block-1 .luxmark_introduction_txt p {
+    text-align: justify;
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
 .front #main #content {
     padding: 6px;
 }
 
-.front #main #content>div {
+.front #main #content .node-luxmark-result {
+    background-color: rgb(110, 110, 110);
     border: 1px #FFF;
     border-style: solid;
     padding: 6px;
     margin: 3px 3px 3px 3px;
 }
 
-.front #main #content .field-name-field-result-scene-name .field-label,
-.front #main #content .field-name-field-result-mode .field-label,
-.front #main #content .field-name-field-result-score .field-label
+.front #main #content .node-luxmark-result .field-name-field-result-scene-name .field-label,
+.front #main #content .node-luxmark-result .field-name-field-result-mode .field-label,
+.front #main #content .node-luxmark-result .field-name-field-result-score .field-label
 {
     text-align: right;
     width: 15em;
 }
 
-.front #main #content .field-name-submitted-by {
+.front #main #content .node-luxmark-result .field-name-submitted-by {
     text-align: right;
 }
 
