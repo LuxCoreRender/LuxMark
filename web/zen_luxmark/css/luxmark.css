@@ -4,6 +4,7 @@
 
 html {
 	background: #333;
+    font-size: 14px;
 }
 
 body {
@@ -25,6 +26,45 @@ a:hover	{
 a:active {
     color: #368AD2;
     text-decoration: none;
+}
+
+/******************************************************************************/
+/* Table                                                                      */
+/******************************************************************************/
+
+table {
+    border-style: none;
+    border-spacing: 2px;
+    border-collapse: separate;
+}
+
+table th {
+    padding: 4px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(204, 204, 204);
+    margin: 1px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+table td {
+    padding: 2px;
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(204, 204, 204);
+    margin: 1px;
+}
+
+table .odd {
+    background-color: rgb(80, 80, 80);
+}
+
+table .even {
+    background-color: rgb(110, 110, 110);
+}
+
+table tbody tr:hover {
+	background-color: rgb(160, 80, 0);
 }
 
 /******************************************************************************/
@@ -84,6 +124,17 @@ a:active {
 }
 
 /******************************************************************************/
+/* Comments                                                                   */
+/******************************************************************************/
+
+#comments article {
+    background-color: rgb(110, 110, 110);
+    border-radius: 6px;
+    padding: 6px;
+    margin: 3px;
+}
+
+/******************************************************************************/
 /* Front page
 /******************************************************************************/
 
@@ -96,4 +147,52 @@ a:active {
     border-style: solid;
     padding: 6px;
     margin: 3px 3px 3px 3px;
+}
+
+.front #main #content .field-name-field-result-scene-name .field-label,
+.front #main #content .field-name-field-result-mode .field-label,
+.front #main #content .field-name-field-result-score .field-label
+{
+    text-align: right;
+    width: 15em;
+}
+
+.front #main #content .field-name-submitted-by {
+    text-align: right;
+}
+
+/******************************************************************************/
+/* Result page
+/******************************************************************************/
+
+.node-type-luxmark-result #content #page-title {
+    display: none;
+}
+
+.node-type-luxmark-result #content .field-name-author .field-label,
+.node-type-luxmark-result #content .field-name-post-date .field-label,
+.node-type-luxmark-result #content .field-name-field-result-os .field-label,
+.node-type-luxmark-result #content .field-name-field-result-mode .field-label,
+.node-type-luxmark-result #content .field-name-field-result-version .field-label,
+.node-type-luxmark-result #content .field-name-field-result-scene-name .field-label,
+.node-type-luxmark-result #content .field-name-field-result-score .field-label,
+.node-type-luxmark-result #content .field-name-field-result-note .field-label,
+.node-type-luxmark-result #content .field-name-field-result-dev-count .field-label
+{
+    text-align: right;
+    width: 15em;
+    font-size: 1.1em;
+}
+
+.node-type-luxmark-result #content .field-name-author .field-items,
+.node-type-luxmark-result #content .field-name-post-date .field-items,
+.node-type-luxmark-result #content .field-name-field-result-os .field-items,
+.node-type-luxmark-result #content .field-name-field-result-mode .field-items,
+.node-type-luxmark-result #content .field-name-field-result-version .field-items,
+.node-type-luxmark-result #content .field-name-field-result-scene-name .field-items,
+.node-type-luxmark-result #content .field-name-field-result-score .field-items,
+.node-type-luxmark-result #content .field-name-field-result-note .field-items,
+.node-type-luxmark-result #content .field-name-field-result-dev-count .field-items
+{
+    font-size: 1.1em;
 }

@@ -65,7 +65,7 @@ function luxmark_web_submit_result() {
                 $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $_POST['dev_type'][$i];
                 $newResult->field_result_dev_units[LANGUAGE_NONE][]['value'] = $_POST['dev_units'][$i];
                 $newResult->field_result_dev_clock[LANGUAGE_NONE][]['value'] = $_POST['dev_clock'][$i];
-                $newResult->field_result_dev_native_float_vec_width[LANGUAGE_NONE][]['value'] = $_POST['dev_native_float_vec_width'][$i];
+                $newResult->field_result_dev_native_float_ve[LANGUAGE_NONE][]['value'] = $_POST['dev_native_float_vec_width'][$i];
                 $newResult->field_result_dev_global_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_global_mem'][$i];
                 $newResult->field_result_dev_local_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_local_mem'][$i];
                 $newResult->field_result_dev_constant_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_constant_mem'][$i];
@@ -85,3 +85,134 @@ function luxmark_web_submit_result() {
     
     exit(0);
 }
+
+// Translate a device into its symbolic name
+function luxmark_web_symbolic_name($platformName, $deviceName, $units, $clock) {
+    static $DEVICE_SYMBOLIC_NAMES = array(
+        'Advanced Micro Devices, Inc.' =>
+        array(
+            //----------------------------------------------------------
+            // HD5xxx
+            //----------------------------------------------------------
+            'Cedar' =>
+            array(
+                '2' => 'HD5450'
+            ),
+            'Redwood' =>
+            array(
+                '4' => 'HD5550',
+                '5' => 'HD5x70'
+            ),
+            'Juniper' =>
+            array(
+                '9' => 'HD5750',
+                '10' => 'HD5770'
+            ),
+            'Cypress' =>
+            array(
+                '14' => 'HD5830',
+                '18' => 'HD5850',
+                '20' => 'HD5870'
+            ),
+            'Hemlock' =>
+            array(
+                '20' => 'HD5970'
+            ),
+            //----------------------------------------------------------
+            // HD6xxx
+            //----------------------------------------------------------
+            'Seymour' =>
+            array(
+                '2' => 'HD64x0M'
+            ),
+            'Caicos' =>
+            array(
+                '2' => 'HD6450'
+            ),
+            'Turks' =>
+            array(
+                '6' => 'HD6x70'
+            ),
+            'Whistler' =>
+            array(
+                '6' => 'HD67x0M'
+            ),
+            'Barts' =>
+            array(
+                '10' => 'HD6790',
+                '12' => 'HD6850',
+                '14' => 'HD6870'
+            ),
+            'Blackcomb' =>
+            array(
+                '12' => 'HD69x0M'
+            ),
+            'Cayman' =>
+            array(
+                '22' => 'HD6950',
+                '24' => 'HD6970'
+            ),
+            //----------------------------------------------------------
+            // HD7xxx
+            //----------------------------------------------------------
+            'Tahiti' =>
+            array(
+                '32' => 'HD7970'
+            )
+        )
+    );
+
+    if (isset($DEVICE_SYMBOLIC_NAMES[$platformName][$deviceName][$units])) {
+        return $DEVICE_SYMBOLIC_NAMES[$platformName][$deviceName][$units];
+    } else {
+        if (isset($clock)) {
+            return $deviceName . " [" . $units . " units @ " . $clock . "MHz]";
+        } else {
+            return $deviceName . " [" . $units . " units]";
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+// LuxMark result custom fields
+//------------------------------------------------------------------------------
+
+/*function result_dev_table() {
+    if ($entity->field_result_dev_count[LANGUAGE_NONE][0]['value'] > 0) {
+        print '<table class="views-table result_dev_table">';
+        print '<thead>' .
+                '<th>' . t('Platform name') . '</th>' .
+                '<th>' . t('Platform version') . '</th>' .
+                '<th>' . t('Symbolic device name') . '</th>' .
+                '<th>' . t('Device name') . '</th>' .
+                '<th>' . t('Device type') . '</th>' .
+                '<th>' . t('Units') . '</th>' .
+                '<th>' . t('Clock') . '</th>' .
+                '<th>' . t('Vector width') . '</th>' .
+                '<th>' . t('Max. global mem.') . '</th>' .
+                '<th>' . t('Local mem.') . '</th>' .
+                '<th>' . t('Constant mem.') . '</th>' .
+                '</thead><tbody>';
+
+        for ($i = 0; $i < $entity->field_result_dev_count[LANGUAGE_NONE][0]['value']; $i++) {
+            print '<tr class="' . (($i % 2 == 0) ? 'odd' : 'even') . '">' .
+                    '<td>' . $entity->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . $entity->field_result_dev_platform_ver[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . luxmark_web_symbolic_name($entity->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'],
+                            $entity->field_result_dev_name[LANGUAGE_NONE][$i]['value'],
+                            $entity->field_result_dev_units[LANGUAGE_NONE][$i]['value'],
+                            $entity->field_result_dev_clock[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . $entity->field_result_dev_name[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . $entity->field_result_dev_type[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . $entity->field_result_dev_units[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . number_format($entity->field_result_dev_clock[LANGUAGE_NONE][$i]['value']) . ' MHz</td>' .
+                    '<td>' . $entity->field_result_dev_native_float_ve[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . number_format($entity->field_result_dev_global_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
+                    '<td>' . number_format($entity->field_result_dev_local_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
+                    '<td>' . number_format($entity->field_result_dev_constant_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
+                    '</tr>';
+        }
+
+        print '</tbody></table>';
+    }
+}*/
