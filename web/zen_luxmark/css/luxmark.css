@@ -28,6 +28,11 @@ a:active {
     text-decoration: none;
 }
 
+#page-title {
+    text-align: center;
+    font-size: 1.3em;
+}
+
 /******************************************************************************/
 /* Table                                                                      */
 /******************************************************************************/
@@ -53,6 +58,7 @@ table td {
     color: rgb(255, 255, 255);
     border: 1px solid rgb(204, 204, 204);
     margin: 1px;
+    text-align: center;
 }
 
 table .odd {
@@ -169,6 +175,7 @@ table tbody tr:hover {
     display: none;
 }
 
+.node-type-luxmark-result #content .field-name-result-id-link .field-label,
 .node-type-luxmark-result #content .field-name-author .field-label,
 .node-type-luxmark-result #content .field-name-post-date .field-label,
 .node-type-luxmark-result #content .field-name-field-result-os .field-label,
@@ -184,6 +191,7 @@ table tbody tr:hover {
     font-size: 1.1em;
 }
 
+.node-type-luxmark-result #content .field-name-result-id-link .field-items,
 .node-type-luxmark-result #content .field-name-author .field-items,
 .node-type-luxmark-result #content .field-name-post-date .field-items,
 .node-type-luxmark-result #content .field-name-field-result-os .field-items,
