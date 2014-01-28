@@ -87,8 +87,6 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	luxSession = NULL;
 	renderRefreshTimer = NULL;
 	hardwareTreeModel = NULL;
-	
-// Look for the directory where Lux executable are
     
 #ifdef __APPLE__ // reliable reference for cwd, mandatory for bundles
     boost::filesystem::path bundlePath;
@@ -96,10 +94,10 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
     uint32_t size=1023;
     if (!_NSGetExecutablePath(result, &size)) {
     bundlePath=string(result);
-    boost::filesystem::current_path(bundlePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes dir
+    boost::filesystem::current_path(bundlePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes and slg4 dir
     }
 #endif
-
+    // Look for the directory where Lux executables are
 	exePath = boost::filesystem::path(boost::filesystem::initial_path<boost::filesystem::path>());
 }
 
