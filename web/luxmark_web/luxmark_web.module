@@ -204,9 +204,9 @@ function luxmark_web_symbolic_name_list($result) {
             $result .= $unique_device;
         }
 
-        return $result;
+        return check_plain($result);
     } else
-        return 'N/A';
+        return t('N/A');
 }
 
 // Used by code in View PHP module
@@ -243,9 +243,9 @@ function luxmark_web_view_php_symbolic_name_list($data) {
             $nameList .= $unique_device;
         }
 
-        return $nameList;
+        return check_plain($nameList);
     } else
-        return 'N/A';
+        return t('N/A');
 }
 
 //------------------------------------------------------------------------------
@@ -280,20 +280,20 @@ function luxmark_web_custom_field_result_dev_table($result) {
 
         for ($i = 0; $i < $result->field_result_dev_count[LANGUAGE_NONE][0]['value']; $i++) {
             print '<tr class="' . (($i % 2 == 0) ? 'odd' : 'even') . '">' .
-                    '<td>' . $result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'] . '</td>' .
-                    '<td>' . $result->field_result_dev_platform_ver[LANGUAGE_NONE][$i]['value'] . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_platform_ver[LANGUAGE_NONE][$i]['value']) . '</td>' .
                     '<td>' . luxmark_web_symbolic_name($result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'],
                             $result->field_result_dev_name[LANGUAGE_NONE][$i]['value'],
                             $result->field_result_dev_units[LANGUAGE_NONE][$i]['value'],
                             $result->field_result_dev_clock[LANGUAGE_NONE][$i]['value']) . '</td>' .
-                    '<td>' . $result->field_result_dev_name[LANGUAGE_NONE][$i]['value'] . '</td>' .
-                    '<td>' . $result->field_result_dev_type[LANGUAGE_NONE][$i]['value'] . '</td>' .
-                    '<td>' . $result->field_result_dev_units[LANGUAGE_NONE][$i]['value'] . '</td>' .
-                    '<td>' . number_format($result->field_result_dev_clock[LANGUAGE_NONE][$i]['value']) . ' MHz</td>' .
-                    '<td>' . $result->field_result_dev_native_float_ve[LANGUAGE_NONE][$i]['value'] . '</td>' .
-                    '<td>' . number_format($result->field_result_dev_global_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
-                    '<td>' . number_format($result->field_result_dev_local_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
-                    '<td>' . number_format($result->field_result_dev_constant_mem[LANGUAGE_NONE][$i]['value'] / 1024) . ' Kbytes</td>' .
+                    '<td>' . check_plain($result->field_result_dev_name[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_type[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_units[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_clock[LANGUAGE_NONE][$i]['value'])) . ' MHz</td>' .
+                    '<td>' . check_plain($result->field_result_dev_native_float_ve[LANGUAGE_NONE][$i]['value'] ). '</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_global_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_local_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_constant_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
                     '</tr>';
         }
 
