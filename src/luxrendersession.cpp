@@ -24,9 +24,6 @@
 
 #include "luxrendersession.h"
 #include "mainwindow.h"
-#ifdef __APPLE__
-#include <mach-o/dyld.h>
-#endif
 
 using namespace luxrays;
 using namespace luxcore;
@@ -35,19 +32,7 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 		const string &devSel) {
     renderMode = mode;
     
-#ifdef __APPLE__ // reliable reference for cwd
-    boost::filesystem::path exePath;
-    char result[1024];
-    uint32_t size=1023;
-    if (!_NSGetExecutablePath(result, &size)) {
-    exePath=string(result);
-    boost::filesystem::current_path(exePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes dir
-    }
-    sceneFileName = exePath.parent_path().parent_path().string() + "/" + fileName;
-#else
     sceneFileName = fileName;
-#endif
-    
     deviceSelection = devSel;
 
 	config = NULL;

@@ -35,6 +35,10 @@
 #include "resultdialog.h"
 #include "luxmarkdefs.h"
 
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
 using namespace luxrays;
 
 static void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
@@ -84,7 +88,18 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	renderRefreshTimer = NULL;
 	hardwareTreeModel = NULL;
 	
-	// Look for the directory where Lux executable are
+// Look for the directory where Lux executable are
+    
+#ifdef __APPLE__ // reliable reference for cwd, mandatory for bundles
+    boost::filesystem::path bundlePath;
+    char result[1024];
+    uint32_t size=1023;
+    if (!_NSGetExecutablePath(result, &size)) {
+    bundlePath=string(result);
+    boost::filesystem::current_path(bundlePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes dir
+    }
+#endif
+
 	exePath = boost::filesystem::path(boost::filesystem::initial_path<boost::filesystem::path>());
 }
 
