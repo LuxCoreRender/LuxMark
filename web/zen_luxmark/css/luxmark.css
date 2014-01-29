@@ -122,12 +122,37 @@ table tbody tr:hover {
     padding: 0 0 0 0;
 }
 
-#block-user-login {
+#block-user-login,
+#block-system-navigation
+{
     color: #FFF;
     background-color: rgb(90, 90, 90);
     border-radius: 6px;
     padding: 6px;
     margin: 0 0 6px 6px;
+}
+
+#block-user-login h2,
+#block-system-navigation h2
+{
+    text-align: center;
+    font-size: 1.1em;
+}
+
+#block-user-login #user-login-form {
+    background: rgb(204, 204, 204);
+    padding: 6px;
+}
+
+
+#block-system-navigation .menu {
+    background: rgb(204, 204, 204);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#block-user-login #user-login-form .form-item-name {
+    margin-top: 0;
 }
 
 /******************************************************************************/
@@ -228,4 +253,10 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-field-result-dev-count .field-items
 {
     font-size: 1.1em;
+}
+
+.node-type-luxmark-result #comments {
+    background-color: rgb(80, 80, 80);
+    border-radius: 6px;
+    padding: 6px;
 }
