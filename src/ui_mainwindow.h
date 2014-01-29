@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Jan 17 12:25:46 2014
+** Created: Wed Jan 29 11:25:42 2014
 **      by: Qt User Interface Compiler version 4.8.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -244,24 +244,24 @@ public:
         action_Quit->setText(QApplication::translate("MainWindow", "&Quit", 0, QApplication::UnicodeUTF8));
         action_Quit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
-        action_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setText(QApplication::translate("MainWindow", "LuxBall &HDR (Simple Benchmark: 262K triangles)", 0, QApplication::UnicodeUTF8));
         action_LuxBall_HDR->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", 0, QApplication::UnicodeUTF8));
-        action_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL-only CPUs + GPUs)", 0, QApplication::UnicodeUTF8));
+        action_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL CPUs + GPUs)", 0, QApplication::UnicodeUTF8));
         action_Pause->setText(QApplication::translate("MainWindow", "&Pause", 0, QApplication::UnicodeUTF8));
-        action_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL-only CPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL CPUs)", 0, QApplication::UnicodeUTF8));
         action_Sala->setText(QApplication::translate("MainWindow", "&Sala (Medium Benchmark: 488K triangles)", 0, QApplication::UnicodeUTF8));
         action_Sala->setShortcut(QApplication::translate("MainWindow", "Ctrl+A", 0, QApplication::UnicodeUTF8));
-        action_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL-only selected devices only)", 0, QApplication::UnicodeUTF8));
+        action_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
         action_Room->setText(QApplication::translate("MainWindow", "&Room (Complex Benchmark: 2016K triangles)", 0, QApplication::UnicodeUTF8));
         action_Room->setShortcut(QApplication::translate("MainWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
-        action_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (Hybrid C++/OpenCL GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (Hybrid C++/OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
         action_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (Hybrid C++/OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
-        action_Path->setText(QApplication::translate("MainWindow", "Benchmark (Native C++ only)", 0, QApplication::UnicodeUTF8));
-        action_StressTest_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
-        action_StressTest_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL-only CPUs+GPUs)", 0, QApplication::UnicodeUTF8));
-        action_StressTest_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL-only CPUs)", 0, QApplication::UnicodeUTF8));
-        action_LuxVR->setText(QApplication::translate("MainWindow", "LuxVR (OpenCL-only GPUs-only)", 0, QApplication::UnicodeUTF8));
+        action_Path->setText(QApplication::translate("MainWindow", "Benchmark (Native C++)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL CPUs+GPUs)", 0, QApplication::UnicodeUTF8));
+        action_StressTest_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL CPUs)", 0, QApplication::UnicodeUTF8));
+        action_LuxVR->setText(QApplication::translate("MainWindow", "LuxVR (OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
         hardwareDevicesLabel->setText(QApplication::translate("MainWindow", "Hardware Devices", 0, QApplication::UnicodeUTF8));
         menu_File->setTitle(QApplication::translate("MainWindow", "&File", 0, QApplication::UnicodeUTF8));
         menu_Help->setTitle(QApplication::translate("MainWindow", "&Help", 0, QApplication::UnicodeUTF8));
