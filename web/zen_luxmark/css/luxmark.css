@@ -42,6 +42,8 @@ table {
     border-style: none;
     border-spacing: 2px;
     border-collapse: separate;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 table th {
@@ -230,6 +232,7 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-post-date .field-label,
 .node-type-luxmark-result #content .field-name-field-result-os .field-label,
 .node-type-luxmark-result #content .field-name-field-result-mode .field-label,
+.node-type-luxmark-result #content .field-name-field-result-submode .field-label,
 .node-type-luxmark-result #content .field-name-field-result-version .field-label,
 .node-type-luxmark-result #content .field-name-field-result-scene-name .field-label,
 .node-type-luxmark-result #content .field-name-field-result-score .field-label,
@@ -246,6 +249,7 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-post-date .field-items,
 .node-type-luxmark-result #content .field-name-field-result-os .field-items,
 .node-type-luxmark-result #content .field-name-field-result-mode .field-items,
+.node-type-luxmark-result #content .field-name-field-result-submode .field-items,
 .node-type-luxmark-result #content .field-name-field-result-version .field-items,
 .node-type-luxmark-result #content .field-name-field-result-scene-name .field-items,
 .node-type-luxmark-result #content .field-name-field-result-score .field-items,
