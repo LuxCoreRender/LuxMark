@@ -57,18 +57,37 @@ function luxmark_web_submit_result() {
             $dev_count = $_POST['dev_count'];
             $newResult->field_result_dev_count[LANGUAGE_NONE][0]['value'] = $dev_count;
 
+            $hasCPU = false;
+            $hasGPU = false;
             $newResult->field_stage_times[LANGUAGE_NONE] = array();
             for ($i = 0; $i < $dev_count; $i++) {
                 $newResult->field_result_dev_platform_name[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_name'][$i];
                 $newResult->field_result_dev_platform_ver[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_ver'][$i];
                 $newResult->field_result_dev_name[LANGUAGE_NONE][]['value'] = $_POST['dev_name'][$i];
-                $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $_POST['dev_type'][$i];
+
+                $type = $_POST['dev_type'][$i];
+                $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $type;
+                $hasCPU |= ($type == 'CPU');
+                $hasGPU |= ($type == 'GPU');
+                
                 $newResult->field_result_dev_units[LANGUAGE_NONE][]['value'] = $_POST['dev_units'][$i];
                 $newResult->field_result_dev_clock[LANGUAGE_NONE][]['value'] = $_POST['dev_clock'][$i];
                 $newResult->field_result_dev_native_float_ve[LANGUAGE_NONE][]['value'] = $_POST['dev_native_float_vec_width'][$i];
                 $newResult->field_result_dev_global_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_global_mem'][$i];
                 $newResult->field_result_dev_local_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_local_mem'][$i];
                 $newResult->field_result_dev_constant_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_constant_mem'][$i];
+            }
+
+            if ($hasCPU) {
+                if ($hasGPU)
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'CPU+GPU';
+                else
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'CPU';
+            } else {
+                if ($hasGPU)
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'GPU';
+                else
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'NOT APPLICABLE';                
             }
 
             $newResult = node_submit($newResult);
