@@ -112,6 +112,13 @@ function luxmark_web_symbolic_name_to_scene_path($sceneName) {
         return FALSE;
 }
 
+function luxmark_web_scene_path_to_symbolic_name($sceneName) {
+    if ($sceneName == 'scenes/luxball/render.cfg')
+        return 'LuxBall HDR';
+    else
+        return $sceneName;
+}
+
 // Translate a device into its symbolic name
 function luxmark_web_symbolic_name($platformName, $deviceName, $units, $clock) {
     static $DEVICE_SYMBOLIC_NAMES = array(
