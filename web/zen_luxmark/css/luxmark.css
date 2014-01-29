@@ -207,7 +207,7 @@ table tbody tr:hover {
     margin: 3px 3px 3px 3px;
 }
 
-.front #main #content .node-luxmark-result .field-name-field-result-scene-name .field-label,
+.front #main #content .node-luxmark-result .field-name-short-scene-name .field-label,
 .front #main #content .node-luxmark-result .field-name-field-result-mode .field-label,
 .front #main #content .node-luxmark-result .field-name-field-result-score .field-label
 {
@@ -234,7 +234,7 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-field-result-mode .field-label,
 .node-type-luxmark-result #content .field-name-field-result-submode .field-label,
 .node-type-luxmark-result #content .field-name-field-result-version .field-label,
-.node-type-luxmark-result #content .field-name-field-result-scene-name .field-label,
+.node-type-luxmark-result #content .field-name-short-scene-name .field-label,
 .node-type-luxmark-result #content .field-name-field-result-score .field-label,
 .node-type-luxmark-result #content .field-name-field-result-note .field-label,
 .node-type-luxmark-result #content .field-name-field-result-dev-count .field-label
@@ -251,7 +251,7 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-field-result-mode .field-items,
 .node-type-luxmark-result #content .field-name-field-result-submode .field-items,
 .node-type-luxmark-result #content .field-name-field-result-version .field-items,
-.node-type-luxmark-result #content .field-name-field-result-scene-name .field-items,
+.node-type-luxmark-result #content .field-name-short-scene-name .field-items,
 .node-type-luxmark-result #content .field-name-field-result-score .field-items,
 .node-type-luxmark-result #content .field-name-field-result-note .field-items,
 .node-type-luxmark-result #content .field-name-field-result-dev-count .field-items
