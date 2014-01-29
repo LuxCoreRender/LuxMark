@@ -178,7 +178,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL-only GPUs-only)</string>
+    <string>Benchmark (OpenCL GPUs)</string>
    </property>
   </action>
   <action name="action_LuxBall_HDR">
@@ -197,7 +197,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL-only CPUs + GPUs)</string>
+    <string>Benchmark (OpenCL CPUs + GPUs)</string>
    </property>
   </action>
   <action name="action_Pause">
@@ -213,7 +213,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL-only CPUs-only)</string>
+    <string>Benchmark (OpenCL CPUs)</string>
    </property>
   </action>
   <action name="action_Sala">
@@ -232,7 +232,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL-only selected devices only)</string>
+    <string>Benchmark (OpenCL selected devices only)</string>
    </property>
   </action>
   <action name="action_Room">
@@ -248,7 +248,7 @@
   </action>
   <action name="action_Hybrid_GPUs">
    <property name="text">
-    <string>Benchmark (Hybrid C++/OpenCL GPUs-only)</string>
+    <string>Benchmark (Hybrid C++/OpenCL GPUs)</string>
    </property>
   </action>
   <action name="action_Hybrid_Custom">
@@ -258,27 +258,27 @@
   </action>
   <action name="action_Path">
    <property name="text">
-    <string>Benchmark (Native C++ only)</string>
+    <string>Benchmark (Native C++)</string>
    </property>
   </action>
   <action name="action_StressTest_OpenCL_GPUs">
    <property name="text">
-    <string>Stress Test (OpenCL-only GPUs-only)</string>
+    <string>Stress Test (OpenCL GPUs)</string>
    </property>
   </action>
   <action name="action_StressTest_OpenCL_CPUs_GPUs">
    <property name="text">
-    <string>Stress Test (OpenCL-only CPUs+GPUs)</string>
+    <string>Stress Test (OpenCL CPUs+GPUs)</string>
    </property>
   </action>
   <action name="action_StressTest_OpenCL_CPUs">
    <property name="text">
-    <string>Stress Test (OpenCL-only CPUs)</string>
+    <string>Stress Test (OpenCL CPUs)</string>
    </property>
   </action>
   <action name="action_LuxVR">
    <property name="text">
-    <string>LuxVR (OpenCL-only GPUs-only)</string>
+    <string>LuxVR (OpenCL GPUs)</string>
    </property>
   </action>
  </widget>
