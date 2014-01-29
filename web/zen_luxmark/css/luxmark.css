@@ -73,7 +73,7 @@ table .even {
 }
 
 table tbody tr:hover {
-	background-color: rgb(160, 80, 0);
+	background-color: rgb(40, 40, 40);
 }
 
 /******************************************************************************/
@@ -257,6 +257,14 @@ table tbody tr:hover {
 .node-type-luxmark-result #content .field-name-field-result-dev-count .field-items
 {
     font-size: 1.1em;
+}
+
+.node-type-luxmark-result #content .field-name-field-result-note .field-item {
+    white-space: pre-wrap;      /* CSS3 */   
+    white-space: -moz-pre-wrap; /* Firefox */    
+    white-space: -pre-wrap;     /* Opera <7 */   
+    white-space: -o-pre-wrap;   /* Opera 7 */    
+    word-wrap: break-word;      /* IE */
 }
 
 .node-type-luxmark-result #comments {
