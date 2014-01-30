@@ -32,6 +32,7 @@ a:active {
     text-align: center;
     font-size: 1.3em;
     font-style: italic;
+    margin: 6px 0;
 }
 
 /******************************************************************************/
@@ -42,8 +43,7 @@ table {
     border-style: none;
     border-spacing: 2px;
     border-collapse: separate;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 table th {
@@ -108,11 +108,18 @@ table tbody tr:hover {
 
 /******************************************************************************/
 
+.breadcrumb {
+    padding: 3px;
+    border-radius: 6px;
+    border: 1px solid rgb(204, 204, 204);
+}
+
 #content {
     color: #FFF;
     background-color: rgb(90, 90, 90);
     border-radius: 6px;
     margin: 12px 0 0 0;
+    padding: 6px;
 }
 
 /******************************************************************************/
@@ -219,12 +226,34 @@ table tbody tr:hover {
     text-align: right;
 }
 
+.front #main #content .node-luxmark-result .links {
+    display: block;
+    text-align: right;
+    margin: 0;
+}
+
+.front #main #content .node-luxmark-result .links li {
+    margin: 0;
+    padding: 0;
+}
+
+.front #main #content .node-luxmark-result .comment-add {
+    display: none;
+}
+
 /******************************************************************************/
 /* Result page
 /******************************************************************************/
 
 .node-type-luxmark-result #content #page-title {
     display: none;
+}
+
+.node-type-luxmark-result #content .field-name-result-id-link {
+    margin-top: 12px;
+}
+.node-type-luxmark-result #content .field-name-field-result-dev-count {
+    margin-bottom: 12px;
 }
 
 .node-type-luxmark-result #content .field-name-result-id-link .field-label,
@@ -271,4 +300,30 @@ table tbody tr:hover {
     background-color: rgb(80, 80, 80);
     border-radius: 6px;
     padding: 6px;
+}
+
+/******************************************************************************/
+/* Search results page
+/******************************************************************************/
+
+.page-search-results form {
+    background: rgb(204, 204, 204);
+    padding: 6px;
+    margin: 0;
+}
+
+.page-search-results form label {
+    display: inline-block;
+    text-align: right;
+    width: 9em;
+}
+
+.page-search-results form .form-item {
+    margin: 6px 0;
+}
+
+.page-search-results form #edit-submit {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
