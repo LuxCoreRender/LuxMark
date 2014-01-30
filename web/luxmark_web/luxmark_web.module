@@ -20,6 +20,10 @@ function luxmark_web_permission() {
         'submit_result' => array(
             'title' => t('Submit result'),
             'description' => t('Allow users to submit a result')
+        ),
+        'search_results' => array(
+            'title' => t('Search results'),
+            'description' => t('Allow users to search results')
         )
     );
 }
@@ -30,6 +34,12 @@ function luxmark_web_menu() {
             'title' => 'Submit result',
             'page callback' => 'luxmark_web_submit_result',
             'access arguments' => array('submit_result')
+        ),
+        'search_results' => array(
+            'title' => 'Search results',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('luxmark_web_search_results_form'),
+            'access arguments' => array('search_results')
         )
     );
 }
@@ -99,10 +109,122 @@ function luxmark_web_submit_result() {
                 print 'FAILED';
         }
     } catch (Exception $ex) {
-        print t('Caught exception') . ': ' . $ex->getMessage();
+        drupal_set_message(t('Caught exception: @msg'), array('@msg' => $e->getMessage()));
     }
     
     exit(0);
+}
+
+function luxmark_web_search_results_form($form, &$form_state) {
+	try {
+		$form['#attributes']['class'][] = 'luxmark_web_search_results_form';
+
+        $form['os'] = array(
+            '#type' => 'select',
+            '#title' => 'OS:',
+            '#options' => array(
+                'all' => t('Any'),
+                'Linux' => t('Linux'),
+                'MacOS' => t('MacOS'),
+                'Windows' => t('Windows')
+            )
+        );
+        $form['scene'] = array(
+            '#type' => 'select',
+            '#title' => 'Scene:',
+            '#options' => array(
+                'LuxBall HDR' => t('LuxBall HDR')
+            )
+        );
+        $form['mode'] = array(
+            '#type' => 'select',
+            '#title' => 'Mode:',
+            '#options' => array(
+                'all' => t('Any'),
+                'OpenCL' => t('OpenCL'),
+                'Hybrid' => t('Hybrid C++/OpenCL'),
+                'C++' => t('C++')
+            )
+        );
+        $form['submode'] = array(
+            '#type' => 'select',
+            '#title' => 'Sub-mode:',
+            '#options' => array(
+                'all' => t('Any'),
+                'GPU' => t('GPU'),
+                'CPU+GPU' => t('CPU+GPU'),
+                'CPU' => t('CPU')
+            )
+        );
+        $form['dev_count'] = array(
+            '#type' => 'select',
+            '#title' => 'Device count:',
+            '#options' => array(
+                'all' => t('Any'),
+                '1' => t('1'),
+                '2' => t('2'),
+                '3' => t('3'),
+                '4' => t('4'),
+                '5' => t('5'),
+                '6' => t('6'),
+                '7' => t('7'),
+                '8' => t('8'),
+                '9' => t('9')
+            )
+        );
+
+        // Extract all possible Platform name + Device name
+        //
+        // SELECT DISTINCT field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value
+        //  FROM node AS n, field_data_field_result_dev_platform_name AS p_name, field_data_field_result_dev_name AS d_name, field_data_field_result_dev_units AS d_units
+        //  WHERE type = 'luxmark_result' AND p_name.entity_id = n.nid AND d_name.entity_id = n.nid AND p_name.delta = d_name.delta AND d_units.entity_id = n.nid AND p_name.delta = d_units.delta
+        //  ORDER BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value;
+
+        $uniqueNames = array();
+        $uniqueNames['all'] = t('Any');
+        $result = db_query('SELECT DISTINCT field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value FROM node AS n, field_data_field_result_dev_platform_name AS p_name, field_data_field_result_dev_name AS d_name, field_data_field_result_dev_units AS d_units WHERE type = \'luxmark_result\' AND p_name.entity_id = n.nid AND d_name.entity_id = n.nid AND p_name.delta = d_name.delta AND d_units.entity_id = n.nid AND p_name.delta = d_units.delta ORDER BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value');
+        foreach ($result as $record) {
+            $uniqueNames[
+                $record->field_result_dev_platform_name_value . '_SEPARETOR_' .
+                $record->field_result_dev_name_value . '_SEPARETOR_' .
+                $record->field_result_dev_units_value] =
+                    $record->field_result_dev_platform_name_value . ' - ' .
+                    $record->field_result_dev_name_value  . ' [' .
+                    $record->field_result_dev_units_value . ' units]';
+        }
+        $form['dev_name'] = array(
+            '#type' => 'select',
+            '#title' => 'Device name:',
+            '#options' => $uniqueNames
+        );
+
+        $form['button_group']['submit'] = array(
+			'#type' => 'submit',
+			'#value' => t('Search'),
+			);		
+
+		return $form;
+	} catch (Exception $e) {
+		drupal_set_message(t('Caught exception: @msg'), array('@msg' => $e->getMessage()));
+		return;
+	}
+}
+
+function luxmark_web_search_results_form_submit($form, &$form_state) {
+    if ($form_state['values']['dev_name'] == 'all')
+        $devName = 'all';
+    else {
+        $e = explode('_SEPARETOR_', $form_state['values']['dev_name']);
+        $devName = $e[0] . '/' . $e[1] . '/' . $e[2];
+    }
+
+    $form_state['redirect'] = 'view_search_results/' .
+        $form_state['values']['os'] . '/' .
+        $form_state['values']['scene'] . '/' . 
+        $form_state['values']['mode'] . '/' .
+        $form_state['values']['submode'] . '/' .
+        $form_state['values']['dev_count'] . '/' .
+        $devName;
 }
 
 function luxmark_web_symbolic_name_to_scene_path($sceneName) {
