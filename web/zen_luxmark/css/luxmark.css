@@ -132,17 +132,23 @@ table tbody tr:hover {
 }
 
 #block-user-login,
-#block-system-navigation
+#block-system-navigation,
+#block-views-result-count-block,
+#block-views-devices-count-block,
+#block-views-users-count-block
 {
     color: #FFF;
     background-color: rgb(90, 90, 90);
     border-radius: 6px;
-    padding: 6px;
+    padding: 0 6px 6px 6px;
     margin: 0 0 6px 6px;
 }
 
 #block-user-login h2,
-#block-system-navigation h2
+#block-system-navigation h2,
+#block-views-result-count-block h2,
+#block-views-devices-count-block h2,
+#block-views-users-count-block h2
 {
     text-align: center;
     font-size: 1.1em;
@@ -153,15 +159,26 @@ table tbody tr:hover {
     padding: 6px;
 }
 
+#block-user-login #user-login-form .form-item-name {
+    margin-top: 0;
+}
 
 #block-system-navigation .menu {
+    color: #DD7F00;
     background: rgb(204, 204, 204);
     margin-top: 0;
     margin-bottom: 0;
 }
 
-#block-user-login #user-login-form .form-item-name {
-    margin-top: 0;
+#block-views-devices-count-block .view,
+#block-views-result-count-block .view,
+#block-views-users-count-block .view
+{
+    color: #000;
+    background: rgb(204, 204, 204);
+    text-align: center;
+    font-size: 3.5em;
+    line-height: 1.5em;
 }
 
 /******************************************************************************/
