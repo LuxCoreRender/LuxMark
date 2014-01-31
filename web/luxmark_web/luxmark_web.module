@@ -21,6 +21,10 @@ function luxmark_web_permission() {
             'title' => t('Submit result'),
             'description' => t('Allow users to submit a result')
         ),
+        'average_result' => array(
+            'title' => t('Average result'),
+            'description' => t('Allow users to check average result')
+        ),
         'search_results' => array(
             'title' => t('Search results'),
             'description' => t('Allow users to search results')
@@ -34,6 +38,12 @@ function luxmark_web_menu() {
             'title' => 'Submit result',
             'page callback' => 'luxmark_web_submit_result',
             'access arguments' => array('submit_result')
+        ),
+        'average_result/%' => array(
+            'title' => 'Average result',
+            'page callback' => 'luxmark_web_average_result',
+            'page arguments' => array(1),
+            'access arguments' => array('average_result')
         ),
         'search_results' => array(
             'title' => 'Search results',
@@ -108,11 +118,81 @@ function luxmark_web_submit_result() {
             } else
                 print 'FAILED';
         }
-    } catch (Exception $ex) {
-        drupal_set_message(t('Caught exception: @msg'), array('@msg' => $e->getMessage()));
+    } catch (Exception $e) {
+        print t('Caught exception: @msg', array('@msg' => $e->getMessage()));
+        print 'FAILED';
     }
-    
+
     exit(0);
+}
+
+function luxmark_web_average_result($scene) {
+    try {
+        // Extract avrage device result
+        
+        $result = db_query('SELECT ' .
+            'field_result_dev_platform_name_value, ' .
+            'field_result_dev_name_value, ' .
+            'field_result_dev_units_value, ' .
+            'AVG(score.field_result_score_value) AS avg_score, ' .
+            'COUNT(*) AS count ' .
+            'FROM ' .
+            'node AS n, ' .
+            'field_data_field_result_dev_count as dev_count, ' .
+            'field_data_field_result_scene_name as scene_name, ' .
+            'field_data_field_result_mode as r_mode, ' .
+            'field_data_field_result_score as score, ' .
+            'field_data_field_result_dev_platform_name AS p_name, ' .
+            'field_data_field_result_dev_name AS d_name, ' .
+            'field_data_field_result_dev_units AS d_units ' .
+            'WHERE ' .
+            'type = \'luxmark_result\' AND ' .
+            'dev_count.field_result_dev_count_value = 1 AND ' .
+            'scene_name.field_result_scene_name_value = \'' . luxmark_web_symbolic_name_to_scene_path($scene) . '\' AND ' .
+            'r_mode.field_result_mode_value = \'OpenCL\' AND ' .
+            'dev_count.entity_id = n.nid AND ' .
+            'scene_name.entity_id = n.nid AND ' .
+            'r_mode.entity_id = n.nid AND ' .
+            'score.entity_id = n.nid AND ' .
+            'p_name.entity_id = n.nid AND ' .
+            'd_name.entity_id = n.nid AND ' .
+            'p_name.delta = d_name.delta AND ' .
+            'd_units.entity_id = n.nid AND ' .
+            'p_name.delta = d_units.delta ' .
+            'GROUP BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value ' .
+            'ORDER BY avg_score DESC');
+
+        $table = '<table class="views-table result_dev_table">' .
+                '<thead>' .
+                '<th>' . t('Platform name') . '</th>' .
+                '<th>' . t('Device name') . '</th>' .
+                '<th>' . t('Units') . '</th>' .
+                '<th>' . t('Avg. score') . '</th>' .
+                '<th>' . t('Results count') . '</th>' .
+                '</thead><tbody>';
+
+        $i = 0;
+        foreach ($result as $record) {
+            $table .= '<tr class="' . (($i++ % 2 == 0) ? 'odd' : 'even') . '">' .
+                    '<td>' . check_plain($record->field_result_dev_platform_name_value) . '</td>' .
+                    '<td>' . check_plain($record->field_result_dev_name_value) . '</td>' .
+                    '<td>' . check_plain($record->field_result_dev_units_value) . '</td>' .
+                    '<td>' . check_plain(intval($record->avg_score)) . '</td>' .
+                    '<td>' . l(check_plain($record->count), 'view_search_results/all/' .
+                            check_plain($scene) . '/OpenCL/all/1/' .
+                            check_plain($record->field_result_dev_platform_name_value) . '/' .
+                            check_plain($record->field_result_dev_name_value) . '/' .
+                            check_plain($record->field_result_dev_units_value)) . '</td>' .
+                    '</tr>';
+        }
+
+        $table .= '</tbody></table>';
+
+        return array('#markup' => $table);
+    } catch (Exception $e) {
+        drupal_set_message(t('Caught exception: @msg', array('@msg' => $e->getMessage())), 'error');
+        return array('#markup' => 'Error');
+    }
 }
 
 function luxmark_web_search_results_form($form, &$form_state) {
@@ -174,12 +254,6 @@ function luxmark_web_search_results_form($form, &$form_state) {
         );
 
         // Extract all possible Platform name + Device name
-        //
-        // SELECT DISTINCT field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value
-        //  FROM node AS n, field_data_field_result_dev_platform_name AS p_name, field_data_field_result_dev_name AS d_name, field_data_field_result_dev_units AS d_units
-        //  WHERE type = 'luxmark_result' AND p_name.entity_id = n.nid AND d_name.entity_id = n.nid AND p_name.delta = d_name.delta AND d_units.entity_id = n.nid AND p_name.delta = d_units.delta
-        //  ORDER BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value;
-
         $uniqueNames = array();
         $uniqueNames['all'] = t('Any');
         $result = db_query('SELECT DISTINCT field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value FROM node AS n, field_data_field_result_dev_platform_name AS p_name, field_data_field_result_dev_name AS d_name, field_data_field_result_dev_units AS d_units WHERE type = \'luxmark_result\' AND p_name.entity_id = n.nid AND d_name.entity_id = n.nid AND p_name.delta = d_name.delta AND d_units.entity_id = n.nid AND p_name.delta = d_units.delta ORDER BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value');
@@ -205,8 +279,8 @@ function luxmark_web_search_results_form($form, &$form_state) {
 
 		return $form;
 	} catch (Exception $e) {
-		drupal_set_message(t('Caught exception: @msg'), array('@msg' => $e->getMessage()));
-		return;
+		drupal_set_message(t('Caught exception: @msg', array('@msg' => $e->getMessage())), 'error');
+		return array('#markup' => 'Error');
 	}
 }
 
