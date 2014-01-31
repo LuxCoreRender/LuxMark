@@ -106,7 +106,7 @@ void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
 	if (!boost::filesystem::exists(luxvrPath))
 		luxvrPath = luxvrDialog->exePath / "slg4.exe";
 	if (!boost::filesystem::exists(luxvrPath))
-		luxvrPath = luxvrDialog->exePath / "SmallluxGPU/slg4"; // inside OSX bundle
+		luxvrPath = luxvrDialog->exePath / "SmallluxGPU/slg4"; // OSX bundle
 	if (!boost::filesystem::exists(luxvrPath))
 		throw runtime_error("Unable to find SLG4 executable");
 	LM_LOG("LuxVR path: [" << luxvrPath << "]");
