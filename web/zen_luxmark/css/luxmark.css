@@ -181,6 +181,10 @@ table tbody tr:hover {
     width: 100%;
 }
 
+.region-sidebar-second .block-views .view table th {
+    font-size: 1.0em;
+}
+
 #block-views-devices-count-block .view,
 #block-views-result-count-block .view,
 #block-views-users-count-block .view
