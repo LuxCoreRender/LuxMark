@@ -1,0 +1,531 @@
+<?php
+
+/**
+* Increase the length of the slogan.
+* Implements hook_form_FORM_ID_alter.
+*/
+function luxmark_web_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
+    $form['site_information']['site_slogan']['#maxlength'] = 255;
+}
+
+function luxmark_web_help($path, $arg) {
+    switch ($path) {
+        case "admin/help#luxmark_web":
+            return '<p>' . t("LuxMark Module") . '.</p>';
+    }
+}
+
+function luxmark_web_permission() {
+    return array(
+        'submit_result' => array(
+            'title' => t('Submit result'),
+            'description' => t('Allow users to submit a result')
+        ),
+        'average_result' => array(
+            'title' => t('Average result'),
+            'description' => t('Allow users to check average result')
+        ),
+        'search_results' => array(
+            'title' => t('Search results'),
+            'description' => t('Allow users to search results')
+        )
+    );
+}
+
+function luxmark_web_menu() {
+    return array(
+        'submit_result' => array(
+            'title' => 'Submit result',
+            'page callback' => 'luxmark_web_submit_result',
+            'access arguments' => array('submit_result')
+        ),
+        'average_result/%' => array(
+            'title' => 'Average result',
+            'page callback' => 'luxmark_web_average_result',
+            'page arguments' => array(1),
+            'access arguments' => array('average_result')
+        ),
+        'search_results' => array(
+            'title' => 'Search results',
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('luxmark_web_search_results_form'),
+            'access arguments' => array('search_results')
+        )
+    );
+}
+
+function luxmark_web_submit_result() {
+    try {
+        $uid = user_authenticate($_POST['name'], $_POST['password']);
+        if (!$uid)
+            print t("Invalid name and/or password");
+        else {
+            $newResult = new stdClass();
+            $newResult->type = 'luxmark_result';
+            node_object_prepare($newResult);
+            $newResult->language = LANGUAGE_NONE;
+            $newResult->uid = $uid;
+            $newResult->title = $_POST['name'] . '\'s result (' . date('Y/m/d H:i:s') .  ')';
+
+            $newResult->field_result_version[LANGUAGE_NONE][0]['value'] = $_POST['version'];
+            $newResult->field_result_os[LANGUAGE_NONE][0]['value'] = $_POST['os'];
+            $newResult->field_result_mode[LANGUAGE_NONE][0]['value'] = $_POST['mode'];
+            $newResult->field_result_type[LANGUAGE_NONE][0]['value'] = $_POST['type'];
+            $newResult->field_result_scene_name[LANGUAGE_NONE][0]['value'] = $_POST['scene_name'];
+            $newResult->field_result_score[LANGUAGE_NONE][0]['value'] = $_POST['score'];
+            $newResult->field_result_note[LANGUAGE_NONE][0]['value'] = $_POST['note'];
+            $dev_count = $_POST['dev_count'];
+            $newResult->field_result_dev_count[LANGUAGE_NONE][0]['value'] = $dev_count;
+
+            $hasCPU = false;
+            $hasGPU = false;
+            $newResult->field_stage_times[LANGUAGE_NONE] = array();
+            for ($i = 0; $i < $dev_count; $i++) {
+                $newResult->field_result_dev_platform_name[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_name'][$i];
+                $newResult->field_result_dev_platform_ver[LANGUAGE_NONE][]['value'] = $_POST['dev_platform_ver'][$i];
+                $newResult->field_result_dev_name[LANGUAGE_NONE][]['value'] = $_POST['dev_name'][$i];
+
+                $type = $_POST['dev_type'][$i];
+                $newResult->field_result_dev_type[LANGUAGE_NONE][]['value'] = $type;
+                $hasCPU |= ($type == 'CPU');
+                $hasGPU |= ($type == 'GPU');
+                
+                $newResult->field_result_dev_units[LANGUAGE_NONE][]['value'] = $_POST['dev_units'][$i];
+                $newResult->field_result_dev_clock[LANGUAGE_NONE][]['value'] = $_POST['dev_clock'][$i];
+                $newResult->field_result_dev_native_float_ve[LANGUAGE_NONE][]['value'] = $_POST['dev_native_float_vec_width'][$i];
+                $newResult->field_result_dev_global_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_global_mem'][$i];
+                $newResult->field_result_dev_local_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_local_mem'][$i];
+                $newResult->field_result_dev_constant_mem[LANGUAGE_NONE][]['value'] = $_POST['dev_constant_mem'][$i];
+            }
+
+            if ($hasCPU) {
+                if ($hasGPU)
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'CPU+GPU';
+                else
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'CPU';
+            } else {
+                if ($hasGPU)
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'GPU';
+                else
+                    $newResult->field_result_submode[LANGUAGE_NONE][0]['value'] = 'NOT APPLICABLE';                
+            }
+
+            $newResult = node_submit($newResult);
+
+            if ($newResult) {
+                node_save($newResult);
+                print 'OK';
+            } else
+                print 'FAILED';
+        }
+    } catch (Exception $e) {
+        print t('Caught exception: @msg', array('@msg' => $e->getMessage()));
+        print 'FAILED';
+    }
+
+    exit(0);
+}
+
+function luxmark_web_average_result($scene) {
+    try {
+        // Extract avrage device result
+        
+        $result = db_query('SELECT ' .
+            'field_result_dev_platform_name_value, ' .
+            'field_result_dev_name_value, ' .
+            'field_result_dev_units_value, ' .
+            'AVG(score.field_result_score_value) AS avg_score, ' .
+            'COUNT(*) AS count ' .
+            'FROM ' .
+            'node AS n, ' .
+            'field_data_field_result_dev_count as dev_count, ' .
+            'field_data_field_result_scene_name as scene_name, ' .
+            'field_data_field_result_mode as r_mode, ' .
+            'field_data_field_result_score as score, ' .
+            'field_data_field_result_dev_platform_name AS p_name, ' .
+            'field_data_field_result_dev_name AS d_name, ' .
+            'field_data_field_result_dev_units AS d_units ' .
+            'WHERE ' .
+            'type = \'luxmark_result\' AND ' .
+            'dev_count.field_result_dev_count_value = 1 AND ' .
+            'scene_name.field_result_scene_name_value = \'' . luxmark_web_symbolic_name_to_scene_path($scene) . '\' AND ' .
+            'r_mode.field_result_mode_value = \'OpenCL\' AND ' .
+            'dev_count.entity_id = n.nid AND ' .
+            'scene_name.entity_id = n.nid AND ' .
+            'r_mode.entity_id = n.nid AND ' .
+            'score.entity_id = n.nid AND ' .
+            'p_name.entity_id = n.nid AND ' .
+            'd_name.entity_id = n.nid AND ' .
+            'p_name.delta = d_name.delta AND ' .
+            'd_units.entity_id = n.nid AND ' .
+            'p_name.delta = d_units.delta ' .
+            'GROUP BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value ' .
+            'ORDER BY avg_score DESC');
+
+        $table = '<table class="views-table result_dev_table">' .
+                '<thead>' .
+                '<th>' . t('Platform name') . '</th>' .
+                '<th>' . t('Device name') . '</th>' .
+                '<th>' . t('Units') . '</th>' .
+                '<th>' . t('Avg. score') . '</th>' .
+                '<th>' . t('Results count') . '</th>' .
+                '</thead><tbody>';
+
+        $i = 0;
+        foreach ($result as $record) {
+            $table .= '<tr class="' . (($i++ % 2 == 0) ? 'odd' : 'even') . '">' .
+                    '<td>' . check_plain($record->field_result_dev_platform_name_value) . '</td>' .
+                    '<td>' . check_plain($record->field_result_dev_name_value) . '</td>' .
+                    '<td>' . check_plain($record->field_result_dev_units_value) . '</td>' .
+                    '<td>' . check_plain(intval($record->avg_score)) . '</td>' .
+                    '<td>' . l(check_plain($record->count), 'view_search_results/all/' .
+                            check_plain($scene) . '/OpenCL/all/1/' .
+                            check_plain($record->field_result_dev_platform_name_value) . '/' .
+                            check_plain($record->field_result_dev_name_value) . '/' .
+                            check_plain($record->field_result_dev_units_value)) . '</td>' .
+                    '</tr>';
+        }
+
+        $table .= '</tbody></table>';
+
+        return array('#markup' => $table);
+    } catch (Exception $e) {
+        drupal_set_message(t('Caught exception: @msg', array('@msg' => $e->getMessage())), 'error');
+        return array('#markup' => 'Error');
+    }
+}
+
+function luxmark_web_search_results_form($form, &$form_state) {
+	try {
+		$form['#attributes']['class'][] = 'luxmark_web_search_results_form';
+
+        $form['os'] = array(
+            '#type' => 'select',
+            '#title' => 'OS:',
+            '#options' => array(
+                'all' => t('Any'),
+                'Linux' => t('Linux'),
+                'MacOS' => t('MacOS'),
+                'Windows' => t('Windows')
+            )
+        );
+        $form['scene'] = array(
+            '#type' => 'select',
+            '#title' => 'Scene:',
+            '#options' => array(
+                'LuxBall HDR' => t('LuxBall HDR')
+            )
+        );
+        $form['mode'] = array(
+            '#type' => 'select',
+            '#title' => 'Mode:',
+            '#options' => array(
+                'all' => t('Any'),
+                'OpenCL' => t('OpenCL'),
+                'Hybrid' => t('Hybrid C++/OpenCL'),
+                'C++' => t('C++')
+            )
+        );
+        $form['submode'] = array(
+            '#type' => 'select',
+            '#title' => 'Sub-mode:',
+            '#options' => array(
+                'all' => t('Any'),
+                'GPU' => t('GPU'),
+                'CPU+GPU' => t('CPU+GPU'),
+                'CPU' => t('CPU')
+            )
+        );
+        $form['dev_count'] = array(
+            '#type' => 'select',
+            '#title' => 'Device count:',
+            '#options' => array(
+                'all' => t('Any'),
+                '1' => t('1'),
+                '2' => t('2'),
+                '3' => t('3'),
+                '4' => t('4'),
+                '5' => t('5'),
+                '6' => t('6'),
+                '7' => t('7'),
+                '8' => t('8'),
+                '9' => t('9')
+            )
+        );
+
+        // Extract all possible Platform name + Device name
+        $uniqueNames = array();
+        $uniqueNames['all'] = t('Any');
+        $result = db_query('SELECT DISTINCT field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value FROM node AS n, field_data_field_result_dev_platform_name AS p_name, field_data_field_result_dev_name AS d_name, field_data_field_result_dev_units AS d_units WHERE type = \'luxmark_result\' AND p_name.entity_id = n.nid AND d_name.entity_id = n.nid AND p_name.delta = d_name.delta AND d_units.entity_id = n.nid AND p_name.delta = d_units.delta ORDER BY field_result_dev_platform_name_value, field_result_dev_name_value, field_result_dev_units_value');
+        foreach ($result as $record) {
+            $uniqueNames[
+                $record->field_result_dev_platform_name_value . '_SEPARETOR_' .
+                $record->field_result_dev_name_value . '_SEPARETOR_' .
+                $record->field_result_dev_units_value] =
+                    $record->field_result_dev_platform_name_value . ' - ' .
+                    $record->field_result_dev_name_value  . ' [' .
+                    $record->field_result_dev_units_value . ' units]';
+        }
+        $form['dev_name'] = array(
+            '#type' => 'select',
+            '#title' => 'Device name:',
+            '#options' => $uniqueNames
+        );
+
+        $form['button_group']['submit'] = array(
+			'#type' => 'submit',
+			'#value' => t('Search'),
+			);		
+
+		return $form;
+	} catch (Exception $e) {
+		drupal_set_message(t('Caught exception: @msg', array('@msg' => $e->getMessage())), 'error');
+		return array('#markup' => 'Error');
+	}
+}
+
+function luxmark_web_search_results_form_submit($form, &$form_state) {
+    if ($form_state['values']['dev_name'] == 'all')
+        $devName = 'all';
+    else {
+        $e = explode('_SEPARETOR_', $form_state['values']['dev_name']);
+        $devName = $e[0] . '/' . $e[1] . '/' . $e[2];
+    }
+
+    $form_state['redirect'] = 'view_search_results/' .
+        $form_state['values']['os'] . '/' .
+        $form_state['values']['scene'] . '/' . 
+        $form_state['values']['mode'] . '/' .
+        $form_state['values']['submode'] . '/' .
+        $form_state['values']['dev_count'] . '/' .
+        $devName;
+}
+
+function luxmark_web_symbolic_name_to_scene_path($sceneName) {
+    if ($sceneName == 'LuxBall HDR')
+        return 'scenes/luxball/render.cfg';
+    else
+        return FALSE;
+}
+
+function luxmark_web_scene_path_to_symbolic_name($sceneName) {
+    if ($sceneName == 'scenes/luxball/render.cfg')
+        return 'LuxBall HDR';
+    else
+        return $sceneName;
+}
+
+// Translate a device into its symbolic name
+function luxmark_web_symbolic_name($platformName, $deviceName, $units, $clock) {
+    static $DEVICE_SYMBOLIC_NAMES = array(
+        'Advanced Micro Devices, Inc.' =>
+        array(
+            //----------------------------------------------------------
+            // HD5xxx
+            //----------------------------------------------------------
+            'Cedar' =>
+            array(
+                '2' => 'HD5450'
+            ),
+            'Redwood' =>
+            array(
+                '4' => 'HD5550',
+                '5' => 'HD5x70'
+            ),
+            'Juniper' =>
+            array(
+                '9' => 'HD5750',
+                '10' => 'HD5770'
+            ),
+            'Cypress' =>
+            array(
+                '14' => 'HD5830',
+                '18' => 'HD5850',
+                '20' => 'HD5870'
+            ),
+            'Hemlock' =>
+            array(
+                '20' => 'HD5970'
+            ),
+            //----------------------------------------------------------
+            // HD6xxx
+            //----------------------------------------------------------
+            'Seymour' =>
+            array(
+                '2' => 'HD64x0M'
+            ),
+            'Caicos' =>
+            array(
+                '2' => 'HD6450'
+            ),
+            'Turks' =>
+            array(
+                '6' => 'HD6x70'
+            ),
+            'Whistler' =>
+            array(
+                '6' => 'HD67x0M'
+            ),
+            'Barts' =>
+            array(
+                '10' => 'HD6790',
+                '12' => 'HD6850',
+                '14' => 'HD6870'
+            ),
+            'Blackcomb' =>
+            array(
+                '12' => 'HD69x0M'
+            ),
+            'Cayman' =>
+            array(
+                '22' => 'HD6950',
+                '24' => 'HD6970'
+            ),
+            //----------------------------------------------------------
+            // HD7xxx
+            //----------------------------------------------------------
+            'Tahiti' =>
+            array(
+                '32' => 'HD7970'
+            )
+        )
+    );
+
+    if (isset($DEVICE_SYMBOLIC_NAMES[$platformName][$deviceName][$units])) {
+        return $DEVICE_SYMBOLIC_NAMES[$platformName][$deviceName][$units];
+    } else {
+        if (isset($clock)) {
+            return $deviceName . " [" . $units . " units @ " . $clock . "MHz]";
+        } else {
+            return $deviceName . " [" . $units . " units]";
+        }
+    }
+}
+
+function luxmark_web_symbolic_name_list($result) {
+    if ($result->field_result_dev_count[LANGUAGE_NONE][0]['value'] > 0) {
+        $uniqueDevices = array();
+
+        for ($i = 0; $i < $result->field_result_dev_count[LANGUAGE_NONE][0]['value']; $i++) {
+            $sn = luxmark_web_symbolic_name($result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'],
+                    $result->field_result_dev_name[LANGUAGE_NONE][$i]['value'],
+                    $result->field_result_dev_units[LANGUAGE_NONE][$i]['value'],
+                    $result->field_result_dev_clock[LANGUAGE_NONE][$i]['value']);
+
+            if (!isset($uniqueDevices[$sn])) {
+                $uniqueDevices[$sn] = 1;
+            } else {
+                $uniqueDevices[$sn] += 1;
+            }
+        }
+
+        $first = true;
+        $result = "";
+        foreach (array_keys($uniqueDevices) as $unique_device) {
+            if (!$first)
+                $result .= " + ";
+            else
+                $first = false;
+
+            if ($uniqueDevices[$unique_device] > 1)
+                $result .= $uniqueDevices[$unique_device] . "x";
+
+            $result .= $unique_device;
+        }
+
+        return check_plain($result);
+    } else
+        return t('N/A');
+}
+
+// Used by code in View PHP module
+function luxmark_web_view_php_symbolic_name_list($data) {
+    $devCount = $data->field_field_result_dev_count[0]['raw']['value'];
+
+    if ($devCount > 0) {
+        $uniqueDevices = array();
+
+        for ($i = 0; $i < $devCount; $i++) {
+            $sn = luxmark_web_symbolic_name($data->field_field_result_dev_platform_name[$i]['raw']['value'],
+                    $data->field_field_result_dev_name[$i]['raw']['value'],
+                    $data->field_field_result_dev_units[$i]['raw']['value'],
+                    $data->field_field_result_dev_clock[$i]['raw']['value']);
+
+            if (!isset($uniqueDevices[$sn])) {
+                $uniqueDevices[$sn] = 1;
+            } else {
+                $uniqueDevices[$sn] += 1;
+            }
+        }
+
+        $first = true;
+        $nameList = '';
+        foreach (array_keys($uniqueDevices) as $unique_device) {
+            if (!$first)
+                $nameList .= " + ";
+            else
+                $first = false;
+
+            if ($uniqueDevices[$unique_device] > 1)
+                $nameList .= $uniqueDevices[$unique_device] . "x";
+
+            $nameList .= $unique_device;
+        }
+
+        return check_plain($nameList);
+    } else
+        return t('N/A');
+}
+
+//------------------------------------------------------------------------------
+// LuxMark result custom fields
+//------------------------------------------------------------------------------
+
+function luxmark_web_custom_field_result_id_link($result) {
+    $str = l($result->nid, 'node/' . $result->nid);
+
+    if (node_access('delete', $result))
+        $str .= ' (' . l('Delete this result', 'node/' . $result->nid . '/delete') . ')';
+
+    return $str;
+}
+
+function luxmark_web_custom_field_result_dev_table($result) {
+    if ($result->field_result_dev_count[LANGUAGE_NONE][0]['value'] > 0) {
+        print '<table class="views-table result_dev_table">';
+        print '<thead>' .
+                '<th>' . t('Platform name') . '</th>' .
+                '<th>' . t('Platform version') . '</th>' .
+                '<th>' . t('Symbolic device name') . '</th>' .
+                '<th>' . t('Device name') . '</th>' .
+                '<th>' . t('Device type') . '</th>' .
+                '<th>' . t('Units') . '</th>' .
+                '<th>' . t('Clock') . '</th>' .
+                '<th>' . t('Vector width') . '</th>' .
+                '<th>' . t('Max. global mem.') . '</th>' .
+                '<th>' . t('Local mem.') . '</th>' .
+                '<th>' . t('Constant mem.') . '</th>' .
+                '</thead><tbody>';
+
+        for ($i = 0; $i < $result->field_result_dev_count[LANGUAGE_NONE][0]['value']; $i++) {
+            print '<tr class="' . (($i % 2 == 0) ? 'odd' : 'even') . '">' .
+                    '<td>' . check_plain($result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_platform_ver[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . luxmark_web_symbolic_name($result->field_result_dev_platform_name[LANGUAGE_NONE][$i]['value'],
+                            $result->field_result_dev_name[LANGUAGE_NONE][$i]['value'],
+                            $result->field_result_dev_units[LANGUAGE_NONE][$i]['value'],
+                            $result->field_result_dev_clock[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_name[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_type[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain($result->field_result_dev_units[LANGUAGE_NONE][$i]['value']) . '</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_clock[LANGUAGE_NONE][$i]['value'])) . ' MHz</td>' .
+                    '<td>' . check_plain($result->field_result_dev_native_float_ve[LANGUAGE_NONE][$i]['value'] ). '</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_global_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_local_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
+                    '<td>' . check_plain(number_format($result->field_result_dev_constant_mem[LANGUAGE_NONE][$i]['value'] / 1024)) . ' Kbytes</td>' .
+                    '</tr>';
+        }
+
+        print '</tbody></table>';
+    }
+}
