@@ -4,7 +4,7 @@
 
 html {
 	background: #333;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 body {
@@ -133,6 +133,7 @@ table tbody tr:hover {
 
 #block-user-login,
 #block-system-navigation,
+.region-sidebar-second .block-menu-block,
 #block-views-result-count-block,
 #block-views-devices-count-block,
 #block-views-users-count-block
@@ -146,6 +147,7 @@ table tbody tr:hover {
 
 #block-user-login h2,
 #block-system-navigation h2,
+.region-sidebar-second .block-menu-block h2,
 #block-views-result-count-block h2,
 #block-views-devices-count-block h2,
 #block-views-users-count-block h2
@@ -163,7 +165,9 @@ table tbody tr:hover {
     margin-top: 0;
 }
 
-#block-system-navigation .menu {
+.region-sidebar-second .block-menu-block .menu,
+#block-system-navigation .menu
+{
     color: #DD7F00;
     background: rgb(204, 204, 204);
     margin-top: 0;
