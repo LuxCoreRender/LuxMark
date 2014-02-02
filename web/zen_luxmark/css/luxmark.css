@@ -134,6 +134,7 @@ table tbody tr:hover {
 #block-user-login,
 #block-system-navigation,
 .region-sidebar-second .block-menu-block,
+.region-sidebar-second .block-views,
 #block-views-result-count-block,
 #block-views-devices-count-block,
 #block-views-users-count-block
@@ -148,12 +149,13 @@ table tbody tr:hover {
 #block-user-login h2,
 #block-system-navigation h2,
 .region-sidebar-second .block-menu-block h2,
+.region-sidebar-second .block-views h2,
 #block-views-result-count-block h2,
 #block-views-devices-count-block h2,
 #block-views-users-count-block h2
 {
     text-align: center;
-    font-size: 1.1em;
+    font-size: 1.0em;
 }
 
 #block-user-login #user-login-form {
@@ -166,12 +168,17 @@ table tbody tr:hover {
 }
 
 .region-sidebar-second .block-menu-block .menu,
+.region-sidebar-second .block-views .view,
 #block-system-navigation .menu
 {
     color: #DD7F00;
     background: rgb(204, 204, 204);
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.region-sidebar-second .block-views .view table {
+    width: 100%;
 }
 
 #block-views-devices-count-block .view,
@@ -200,24 +207,20 @@ table tbody tr:hover {
 /* Front page
 /******************************************************************************/
 
-.front #main #content #block-block-1 {
-    overflow: auto;
-}
-
-.front #main #content #block-block-1 h2 {
+.front #main #content #block-nodeblock-27 h2 {
     font-style: italic;
 }
 
-.front #main #content #block-block-1 .luxmark_introduction_img {
+.front #main #content #block-nodeblock-27 .luxmark_introduction_img {
     float: right;
     padding: 6px;
 }
 
-.front #main #content #block-block-1 .luxmark_introduction_img img {
+.front #main #content #block-nodeblock-27 .luxmark_introduction_img img {
     width: 320px;
     height: auto;
 }
-.front #main #content #block-block-1 .luxmark_introduction_txt p {
+.front #main #content #block-nodeblock-27 .luxmark_introduction_txt p {
     text-align: justify;
     margin-top: 0;
     margin-bottom: 6px;
@@ -315,6 +318,21 @@ table tbody tr:hover {
     white-space: -pre-wrap;     /* Opera <7 */   
     white-space: -o-pre-wrap;   /* Opera 7 */    
     word-wrap: break-word;      /* IE */
+}
+
+.node-type-luxmark-result #content .links {
+    margin: 0;
+    padding: 12px;
+    display: block;
+}
+
+.node-type-luxmark-result #content .links li {
+    display: block;
+    margin: 0;
+}
+
+.node-type-luxmark-result #content .links .sharethis-wrapper {
+    text-align: center;
 }
 
 .node-type-luxmark-result #comments {
