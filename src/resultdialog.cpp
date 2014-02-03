@@ -65,10 +65,8 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 
 	ui->resultLCD->display(int(sampleSecs / 1000.0));
 
-	if ((strcmp(sceneName, SCENE_ROOM) != 0) &&
-			(strcmp(sceneName, SCENE_SALA) != 0) &&
-			(strcmp(sceneName, SCENE_LUXBALL_HDR) != 0))
-		ui->submitButton->setEnabled(false);
+    // Re-enabled only after the validation process
+	ui->submitButton->setEnabled(false);
 
 	QObject::connect(this, SIGNAL(sceneValidationLabelChanged(const QString &, const bool)),
 			this, SLOT(setSceneValidationLabel(const QString &, const bool)));
@@ -108,7 +106,6 @@ ResultDialog::~ResultDialog() {
 }
 
 void ResultDialog::submitResult() {
-	// TODO: wait for the end of all pending processes
 	SubmitDialog *dialog = new SubmitDialog(mode, sceneName, sampleSecs, descs);
 	dialog->exec();
 	delete dialog;
@@ -116,9 +113,16 @@ void ResultDialog::submitResult() {
 
 void ResultDialog::setSceneValidationLabel(const QString &text, const bool isOk) {
 	ui->sceneValidation->setText(text);
-	if (isOk)
+	if (isOk) {
 		ui->sceneValidation->setStyleSheet("QLabel { color : green; }");
-	else
+
+        // Check if I can enable submit button
+        if (imageValidation && 
+                ((strcmp(sceneName, SCENE_ROOM) == 0) ||
+                (strcmp(sceneName, SCENE_SALA) == 0) ||
+                (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+            ui->submitButton->setEnabled(true);
+	} else
 		ui->sceneValidation->setStyleSheet("QLabel { color : red; }");
 
 	sceneValidation = isOk;
@@ -126,9 +130,16 @@ void ResultDialog::setSceneValidationLabel(const QString &text, const bool isOk)
 
 void ResultDialog::setImageValidationLabel(const QString &text, const bool isOk) {
 	ui->imageValidation->setText(text);
-	if (isOk)
+	if (isOk) {
 		ui->imageValidation->setStyleSheet("QLabel { color : green; }");
-	else
+
+        // Check if I can enable submit button
+        if (sceneValidation && 
+                ((strcmp(sceneName, SCENE_ROOM) == 0) ||
+                (strcmp(sceneName, SCENE_SALA) == 0) ||
+                (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+            ui->submitButton->setEnabled(true);
+	} else
 		ui->imageValidation->setStyleSheet("QLabel { color : red; }");
 
 	imageValidation = isOk;
@@ -139,15 +150,10 @@ void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
     for (boost::filesystem::directory_iterator it(path); it != boost::filesystem::directory_iterator(); ++it) {
 		const boost::filesystem::path &fileName = it->path();
 
-		if (boost::filesystem::is_directory(fileName)) {
-			// Avoid LuxVR scene directory
-			if (fileName.filename() != "luxvr-scene")
-				AddSceneFiles(resultDialog, files, fileName);
-		} else if (boost::filesystem::is_regular_file(fileName)) {
+		if (boost::filesystem::is_regular_file(fileName)) {
 			// Check if it is one of the scene file extensions
 			const string ext = fileName.extension().generic_string();
-			if ((ext == ".lxs") || (ext == ".lxm") || (ext == ".lxo") || (ext == ".lxv") || (ext == ".ply") ||
-					 (ext == ".jpg") || (ext == ".png") || (ext == ".hdr")) {
+			if ((ext == ".cfg") || (ext == ".scn") || (ext == ".ply") || (ext == ".exr")) {
 				const QString label(("Selecting file [" + fileName.filename().generic_string() + "]").c_str());
 				emit resultDialog->sceneValidationLabelChanged(label, false);
 				files.push_back(fileName);
@@ -184,8 +190,13 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			emit resultDialog->sceneValidationLabelChanged(label, false);
 
 			// Read all file
-			QFile file(Path2QString(fileName));
-			hash.addData(file.readAll());
+            const QString fname = Path2QString(fileName);
+			QFile file(fname);
+            if (!file.open(QIODevice::ReadOnly))
+                throw runtime_error("Internal error in ResultDialog::MD5ThreadImpl(): error while reading file: " + fname.toStdString());
+            QByteArray data = file.readAll();
+            //LM_LOG("Size: " << data.size());
+			hash.addData(data);
 			file.close();
 		}
 
@@ -194,7 +205,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
-			if (md5 == "d41d8cd98f00b204e9800998ecf8427e")
+			if (md5 == "8c85acfbaec60e6a0ba14175551edfc1")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
@@ -226,15 +237,16 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		// Read the reference file
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
 			boost::filesystem::path fileName;
-			// SLG benchmark
 			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
 					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
 					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
-					(resultDialog->mode == BENCHMARK_OCL_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_HYBRID_GPU) ||
-					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_NATIVE)) {
-				fileName = scenePath / "reference.raw";
+					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
+                fileName = scenePath / "reference-opencl.raw";
+            } else if ((resultDialog->mode == BENCHMARK_HYBRID_GPU) ||
+					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM)) {
+				fileName = scenePath / "reference-hybrid.raw";
+            } else if (resultDialog->mode == BENCHMARK_NATIVE) {
+				fileName = scenePath / "reference-native.raw";
 			} else
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
 			LM_LOG("Image validation file name: [" << fileName << "]");
@@ -274,10 +286,13 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		const u_int diffPixelCount = convTest.Test(testImage);
 
 		const float errorPerc =  100.f * diffPixelCount / (float)(resultDialog->frameBufferWidth * resultDialog->frameBufferHeight);
-		stringstream ss;
-		ss << "OK (" << diffPixelCount << " different pixels, " << fixed << setprecision(2) << errorPerc << "%)";
+        const bool isOk = (errorPerc < 5.f);
 
-		emit resultDialog->imageValidationLabelChanged(ss.str().c_str(), true);
+		stringstream ss;
+        ss << (isOk ? "OK" : "Failed");
+        ss << " (" << diffPixelCount << " different pixels, " << fixed << setprecision(2) << errorPerc << "%)";
+
+		emit resultDialog->imageValidationLabelChanged(ss.str().c_str(), isOk);
 	} catch (exception &err) {
 		LM_ERROR("IMAGE VALIDATION ERROR: " << err.what());
 
