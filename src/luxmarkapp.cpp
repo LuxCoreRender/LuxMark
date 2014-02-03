@@ -242,7 +242,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	/*const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
 	LM_LOG("Sample per pixel: " << samlePerPixel);
 	static bool saved = false;
-	if (!saved && samlePerPixel > 400) {
+	if (!saved && samlePerPixel > 5000) {
 		LM_LOG("Saving reference...");
 		const QByteArray data = QByteArray::fromRawData((char *)pixels, width * height * 3);
 		QFile refImage("reference.raw");
@@ -302,7 +302,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 3.0) &&
+	const bool benchmarkDone = (renderingTime > 120.0) &&
 		(mode != STRESSTEST_OCL_GPU) &&
 		(mode != STRESSTEST_OCL_CPUGPU) &&
 		(mode != STRESSTEST_OCL_GPU);
