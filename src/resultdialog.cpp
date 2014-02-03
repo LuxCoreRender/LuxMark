@@ -151,9 +151,9 @@ void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
 		const boost::filesystem::path &fileName = it->path();
 
 		if (boost::filesystem::is_regular_file(fileName)) {
-			// Check if it is one of the scene file extensions
+			// Check if it is one of the scene file extensions or reference images
 			const string ext = fileName.extension().generic_string();
-			if ((ext == ".cfg") || (ext == ".scn") || (ext == ".ply") || (ext == ".exr")) {
+			if ((ext == ".cfg") || (ext == ".scn") || (ext == ".ply") || (ext == ".exr") || (ext == ".raw")) {
 				const QString label(("Selecting file [" + fileName.filename().generic_string() + "]").c_str());
 				emit resultDialog->sceneValidationLabelChanged(label, false);
 				files.push_back(fileName);
@@ -205,7 +205,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
-			if (md5 == "8c85acfbaec60e6a0ba14175551edfc1")
+			if (md5 == "2ff2cc0dfc5e8f222ddf4d797ea372bc")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
