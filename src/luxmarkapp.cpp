@@ -302,7 +302,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 120.0) &&
+	const bool benchmarkDone = (renderingTime > 3.0) &&
 		(mode != STRESSTEST_OCL_GPU) &&
 		(mode != STRESSTEST_OCL_CPUGPU) &&
 		(mode != STRESSTEST_OCL_GPU);
