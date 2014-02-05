@@ -35,6 +35,10 @@ a:active {
     margin: 6px 0;
 }
 
+.fivestar-widget {
+    white-space: nowrap;
+}
+
 /******************************************************************************/
 /* Table                                                                      */
 /******************************************************************************/
@@ -335,8 +339,19 @@ table tbody tr:hover {
     margin: 0;
 }
 
-.node-type-luxmark-result #content .links .sharethis-wrapper {
+.node-type-luxmark-result #content .links .comment-add,
+.node-type-luxmark-result #content .links .sharethis-wrapper
+{
     text-align: center;
+    padding: 3px;
+}
+
+.node-type-luxmark-result #content .field-name-field-is-it-an-interesting-resul,
+.node-type-luxmark-result #content .field-name-field-does-it-look-like-a-legit-
+{
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .node-type-luxmark-result #comments {

@@ -20,7 +20,6 @@
  ***************************************************************************/
 
 #include <QTextEdit>
-#include <QGraphicsSceneMouseEvent>
 #include <QDialogButtonBox>
 #include <QDateTime>
 #include <QTextStream>
