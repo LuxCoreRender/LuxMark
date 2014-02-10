@@ -29,12 +29,23 @@ getenv_path(LuxMark_DEPENDENCIES_DIR)
 # Find threading library
 FIND_PACKAGE(Threads REQUIRED)
 
-# Find FreeImage
-find_package(FreeImage)
+find_package(OpenImageIO REQUIRED)
+include_directories(SYSTEM ${OPENIMAGEIO_INCLUDE_DIR})
+find_package(OpenEXR REQUIRED)
 
-if (FreeImage_FOUND)
-	include_directories(SYSTEM ${FreeImage_INCLUDE_DIRS})
-endif ()
+if(NOT APPLE)
+    # Apple has these available hardcoded and matched in macos repo, see Config_OSX.cmake
+
+    include_directories(SYSTEM ${OPENEXR_INCLUDE_DIRS})
+    find_package(TIFF REQUIRED)
+    include_directories(SYSTEM ${TIFF_INCLUDE_DIR})
+    find_package(JPEG REQUIRED)
+    include_directories(SYSTEM ${JPEG_INCLUDE_DIR})
+    find_package(PNG REQUIRED)
+    include_directories(SYSTEM ${PNG_PNG_INCLUDE_DIR})
+	# Find Python Libraries
+	find_package(PythonLibs)
+endif()
 
 # Find Boost
 set(Boost_USE_STATIC_LIBS       ON)

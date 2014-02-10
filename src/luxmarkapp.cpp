@@ -41,15 +41,6 @@
 
 using namespace luxrays;
 
-static void FreeImageErrorHandler(FREE_IMAGE_FORMAT fif, const char *message) {
-	printf("\n*** ");
-	if(fif != FIF_UNKNOWN)
-		printf("%s Format\n", FreeImage_GetFormatFromFIF(fif));
-
-	printf("%s", message);
-	printf(" ***\n");
-}
-
 static void LuxCoreErrorHandler(const char *msg) {
 	if (strncmp(msg, "[LuxRays]", 9) == 0) {
 		LM_LOG_LUXRAYS(&msg[9]);
@@ -67,11 +58,6 @@ static void LuxCoreErrorHandler(const char *msg) {
 //------------------------------------------------------------------------------
 
 LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
-	// Initialize FreeImage Library, it must be done after QApplication() in
-	// order to avoid a crash
-	FreeImage_Initialise(TRUE);
-	FreeImage_SetOutputMessage(FreeImageErrorHandler);
-
 	// Initialize rand() number generator
 	srand(time(NULL));
 
