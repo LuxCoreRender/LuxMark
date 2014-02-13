@@ -13,14 +13,8 @@ set(OSX_SEARCH_PATH     ${OSX_DEPENDENCY_ROOT})
 
 set(LuxRender_SOURCE	${CMAKE_SOURCE_DIR}/../lux) # The lux source dir
 MESSAGE(STATUS "Using lux source dir (headers): " ${LuxRender_SOURCE})
-set(LuxRender_BUILD	${CMAKE_SOURCE_DIR}/../lux) # the lux build dir, may be named different
+set(LuxRender_BUILD	${CMAKE_SOURCE_DIR}/../lux_build_opt) # the lux build dir, may be named different
 MESSAGE(STATUS "Using lux build dir (liblux): " ${LuxRender_BUILD})
-
-set(FREEIMAGE_SEARCH_PATH "${OSX_SEARCH_PATH}")
-set(FreeImage_INC_SEARCH_PATH "${FREEIMAGE_SEARCH_PATH}/include")
-set(FreeImage_LIB_SEARCH_PATH "${FREEIMAGE_SEARCH_PATH}/lib")
-set(FREEIMAGE_INCLUDE_PATH "${FREEIMAGE_SEARCH_PATH}/include")
-set(FREEIMAGE_LIBRARY "${FREEIMAGE_SEARCH_PATH}/lib/libfreeimage.a")
 
 set(BOOST_SEARCH_PATH         "${OSX_SEARCH_PATH}")
 set(BOOST_LIBRARYDIR          "${BOOST_SEARCH_PATH}/lib")
@@ -38,3 +32,15 @@ set(GLUT_SEARCH_PATH          "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/gl
 set(GLUT_INCLUDE_PATH 		"${GLUT_SEARCH_PATH}/Headers")
 #set(GLUT_LIBRARYDIR           "${GLUT_SEARCH_PATH}")
 
+set(OPENIMAGEIO_ROOT_DIR "${OSX_SEARCH_PATH}")
+SET(OPENEXR_ROOT "${OSX_SEARCH_PATH}")
+
+SET(TIFF_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libtiff.a)
+SET(TIFF_INCLUDE_DIR ${OSX_DEPENDENCY_ROOT}/include/tiff)
+SET(TIFF_FOUND ON)
+SET(JPEG_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libjpeg.a)
+SET(JPEG_INCLUDE_DIR ${OSX_DEPENDENCY_ROOT}/include/jpeg)
+SET(JPEG_FOUND ON)
+SET(PNG_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libpng14.a -lz)
+SET(PNG_INCLUDE_DIR ${OSX_DEPENDENCY_ROOT}/include/png)
+SET(PNG_FOUND ON)
