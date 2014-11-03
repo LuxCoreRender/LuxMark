@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Jan 29 11:25:42 2014
-**      by: Qt User Interface Compiler version 4.8.4
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -42,8 +41,6 @@ public:
     QAction *action_Sala;
     QAction *action_OpenCL_Custom;
     QAction *action_Room;
-    QAction *action_Hybrid_GPUs;
-    QAction *action_Hybrid_Custom;
     QAction *action_Path;
     QAction *action_StressTest_OpenCL_GPUs;
     QAction *action_StressTest_OpenCL_CPUs_GPUs;
@@ -103,10 +100,6 @@ public:
         action_Room = new QAction(MainWindow);
         action_Room->setObjectName(QString::fromUtf8("action_Room"));
         action_Room->setCheckable(true);
-        action_Hybrid_GPUs = new QAction(MainWindow);
-        action_Hybrid_GPUs->setObjectName(QString::fromUtf8("action_Hybrid_GPUs"));
-        action_Hybrid_Custom = new QAction(MainWindow);
-        action_Hybrid_Custom->setObjectName(QString::fromUtf8("action_Hybrid_Custom"));
         action_Path = new QAction(MainWindow);
         action_Path->setObjectName(QString::fromUtf8("action_Path"));
         action_StressTest_OpenCL_GPUs = new QAction(MainWindow);
@@ -201,8 +194,6 @@ public:
         menu_Mode->addAction(action_OpenCL_CPUs_GPUs);
         menu_Mode->addAction(action_OpenCL_CPUs);
         menu_Mode->addAction(action_OpenCL_Custom);
-        menu_Mode->addAction(action_Hybrid_GPUs);
-        menu_Mode->addAction(action_Hybrid_Custom);
         menu_Mode->addAction(action_Path);
         menu_Mode->addSeparator();
         menu_Mode->addAction(action_StressTest_OpenCL_GPUs);
@@ -227,8 +218,6 @@ public:
         QObject::connect(action_Sala, SIGNAL(triggered()), MainWindow, SLOT(setSalaScene()));
         QObject::connect(action_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_OCL_CUSTOM()));
         QObject::connect(action_Room, SIGNAL(triggered()), MainWindow, SLOT(setRoomScene()));
-        QObject::connect(action_Hybrid_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_HYBRID_GPU()));
-        QObject::connect(action_Hybrid_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_HYBRID_CUSTOM()));
         QObject::connect(action_Path, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NATIVE_PATH()));
         QObject::connect(action_StressTest_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_OCL_GPU()));
         QObject::connect(action_StressTest_OpenCL_CPUs_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_STRESSTEST_OCL_CPUGPU()));
@@ -255,8 +244,6 @@ public:
         action_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
         action_Room->setText(QApplication::translate("MainWindow", "&Room (Complex Benchmark: 2016K triangles)", 0, QApplication::UnicodeUTF8));
         action_Room->setShortcut(QApplication::translate("MainWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
-        action_Hybrid_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (Hybrid C++/OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
-        action_Hybrid_Custom->setText(QApplication::translate("MainWindow", "Benchmark (Hybrid C++/OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
         action_Path->setText(QApplication::translate("MainWindow", "Benchmark (Native C++)", 0, QApplication::UnicodeUTF8));
         action_StressTest_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
         action_StressTest_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Stress Test (OpenCL CPUs+GPUs)", 0, QApplication::UnicodeUTF8));

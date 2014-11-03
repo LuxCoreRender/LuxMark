@@ -94,8 +94,6 @@ private slots:
 	void setMode_BENCHMARK_OCL_CPUGPU();
 	void setMode_BENCHMARK_OCL_CPU();
 	void setMode_BENCHMARK_OCL_CUSTOM();
-	void setMode_BENCHMARK_HYBRID_GPU();
-	void setMode_BENCHMARK_HYBRID_CUSTOM();
 	void setMode_BENCHMARK_NATIVE_PATH();
 	void setMode_STRESSTEST_OCL_GPU();
 	void setMode_STRESSTEST_OCL_CPUGPU();

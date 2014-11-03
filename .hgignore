@@ -6,7 +6,7 @@
 ^(Debug|Release|x64)/
 ^nbproject/*
 ^slg4*
-^scenes/luxball/luxvr-scene/*
+^scenes/mic/*
 syntax: glob
 *~
 *CMakeFiles

@@ -87,8 +87,6 @@ int main(int argc, char **argv) {
 				mode = BENCHMARK_OCL_CPUGPU;
 			else if (scene.compare("BENCHMARK_OCL_CPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_OCL_CPU;
-			else if (scene.compare("BENCHMARK_HYBRID_GPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_HYBRID_GPU;
 			else if (scene.compare("BENCHMARK_NATIVE", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_NATIVE;
 			else if (scene.compare("STRESSTEST_OCL_GPU", Qt::CaseInsensitive) == 0)

@@ -242,9 +242,6 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
 					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
                 fileName = scenePath / "reference-opencl.raw";
-            } else if ((resultDialog->mode == BENCHMARK_HYBRID_GPU) ||
-					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM)) {
-				fileName = scenePath / "reference-hybrid.raw";
             } else if (resultDialog->mode == BENCHMARK_NATIVE) {
 				fileName = scenePath / "reference-native.raw";
 			} else

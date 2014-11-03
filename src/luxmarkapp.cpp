@@ -255,9 +255,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		case BENCHMARK_OCL_GPU:
 		case BENCHMARK_OCL_CPUGPU:
 		case BENCHMARK_OCL_CPU:
-		case BENCHMARK_OCL_CUSTOM:
-		case BENCHMARK_HYBRID_GPU:
-		case BENCHMARK_HYBRID_CUSTOM: {
+		case BENCHMARK_OCL_CUSTOM: {
 			triangleCount = stats.Get("stats.dataset.trianglecount").Get<double>();
 
 			// Get each device statistics
@@ -288,7 +286,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 3.0) &&
+	const bool benchmarkDone = (renderingTime > 120.0) &&
 		(mode != STRESSTEST_OCL_GPU) &&
 		(mode != STRESSTEST_OCL_CPUGPU) &&
 		(mode != STRESSTEST_OCL_GPU);
