@@ -205,7 +205,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
-			if (md5 == "be85c015b078c26c2d8fb638043f06bd")
+			if (md5 == "9f24013913e0931356415b21c0adc326")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
