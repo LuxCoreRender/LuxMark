@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	renderScene->addItem(authorLabelBack);
 	authorLabelBack->setBrush(Qt::black);
 	authorLabel = new QGraphicsSimpleTextItem(authorLabelBack->text());
-	authorLabel->setBrush(Qt::blue);
+	authorLabel->setBrush(Qt::white);
 	renderScene->addItem(authorLabel);
 
 	screenLabelBack = renderScene->addRect(0.f, 0.f, 1.f, 1.f, QPen(), Qt::lightGray);
