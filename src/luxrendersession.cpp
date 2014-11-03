@@ -96,27 +96,6 @@ void LuxRenderSession::Start() {
 			}
 			break;
 		}
-		case BENCHMARK_HYBRID_GPU: {
-			props <<
-					Property("opencl.gpu.use")(true) <<
-					Property("opencl.cpu.use")(false) <<
-					Property("renderengine.type")("PATHHYBRID");
-			break;
-		}
-		case BENCHMARK_HYBRID_CUSTOM: {
-			// At the first run, hardwareTreeModel is NULL
-			if (deviceSelection == "") {
-				props <<
-						Property("opencl.gpu.use")(true) <<
-						Property("opencl.cpu.use")(false) <<
-						Property("renderengine.type")("PATHHYBRID");
-			} else {
-				props <<
-						Property("opencl.devices.select")(deviceSelection) <<
-						Property("renderengine.type")("PATHHYBRID");
-			}
-			break;
-		}
 		case BENCHMARK_NATIVE: {
 			props <<
 					Property("renderengine.type")("PATHCPU");

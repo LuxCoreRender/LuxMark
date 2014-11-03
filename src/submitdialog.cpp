@@ -100,10 +100,6 @@ void SubmitDialog::genericButton() {
             case BENCHMARK_OCL_CUSTOM:
                 benchMode = "OpenCL";
                 break;
-            case BENCHMARK_HYBRID_GPU:
-            case BENCHMARK_HYBRID_CUSTOM:
-                benchMode = "Hybrid C++/OpenCL";
-                break;
             case BENCHMARK_NATIVE:
                 benchMode = "C++";
                 break;

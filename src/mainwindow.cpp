@@ -173,16 +173,6 @@ void MainWindow::setMode_BENCHMARK_OCL_CUSTOM() {
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CUSTOM);
 }
 
-void MainWindow::setMode_BENCHMARK_HYBRID_GPU() {
-	LM_LOG("Set mode: BENCHMARK_HYBRID_GPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_GPU);
-}
-
-void MainWindow::setMode_BENCHMARK_HYBRID_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_HYBRID_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_CUSTOM);
-}
-
 void MainWindow::setMode_BENCHMARK_NATIVE_PATH() {
 	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NATIVE);
@@ -244,8 +234,6 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_OCL_CPUGPU);
 	ui->action_OpenCL_CPUs->setChecked(mode == BENCHMARK_OCL_CPU);
 	ui->action_OpenCL_Custom->setChecked(mode == BENCHMARK_OCL_CUSTOM);
-	ui->action_Hybrid_GPUs->setChecked(mode == BENCHMARK_HYBRID_GPU);
-	ui->action_Hybrid_Custom->setChecked(mode == BENCHMARK_HYBRID_CUSTOM);
 	ui->action_Path->setChecked(mode == BENCHMARK_NATIVE);
 
 	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);

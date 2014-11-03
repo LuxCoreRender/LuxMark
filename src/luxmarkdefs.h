@@ -46,8 +46,6 @@ enum LuxMarkAppMode {
 	BENCHMARK_OCL_CPUGPU,
 	BENCHMARK_OCL_CPU,
 	BENCHMARK_OCL_CUSTOM,
-	BENCHMARK_HYBRID_GPU,
-	BENCHMARK_HYBRID_CUSTOM,
 	BENCHMARK_NATIVE,
 	STRESSTEST_OCL_GPU,
 	STRESSTEST_OCL_CPUGPU,
@@ -69,10 +67,6 @@ inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 			return "OpenCL CPUs";
 		case BENCHMARK_OCL_CUSTOM:
 			return "OpenCL Custom";
-		case BENCHMARK_HYBRID_GPU:
-			return "Hybrid C++/OpenCL GPUs";
-		case BENCHMARK_HYBRID_CUSTOM:
-			return "Hybrid C++/OpenCL Custom";
 		case BENCHMARK_NATIVE:
 			return "C++";
 		//----------------------------------------------------------------------

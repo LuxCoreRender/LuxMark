@@ -9,6 +9,7 @@ scene.camera.focaldistance = 0.28457677364349365234375
 scene.camera.fieldofview = 49.13433837890625
 scene.camera.horizontalstereo.enable = 0
 scene.camera.horizontalstereo.oculusrift.barrelpostpro.enable = 0
+scene.camera.autofocus.enable = 1
 scene.lights.infinitelight.type = infinite
 scene.lights.infinitelight.file = scenes/luxball/imagemap-00000.exr
 scene.lights.infinitelight.gain = 1.5 1.5 1.5
