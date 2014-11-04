@@ -124,11 +124,14 @@ ENDIF()
 #  generate with xcode/crosscompile, setting: ( darwin - 10.6 - gcc - g++ - MacOSX10.6.sdk - Find from root, then native system )
 IF(APPLE)
 	IF(COMMAND cmake_policy)
-		IF(CMAKE_VERSION VERSION_LESS 2.8.1)
-			cmake_policy(SET CMP0003 NEW)
-		ELSE(CMAKE_VERSION VERSION_LESS 2.8.1)
-			cmake_policy(SET CMP0015 NEW)
-		ENDIF(CMAKE_VERSION VERSION_LESS 2.8.1)
+		if(${CMAKE_VERSION} VERSION_LESS 3.0)
+			cmake_minimum_required(VERSION 2.8.3) # new requirement for simplification
+			cmake_policy(VERSION 2.8.3)
+		else()
+			# keep until CMake-3.0 is min requirement
+			cmake_policy(VERSION 3.0.0)
+			cmake_policy(SET CMP0043 OLD)
+		endif()
 	ENDIF(COMMAND cmake_policy)
 
 	########## OS and hardware detection ###########
@@ -138,20 +141,34 @@ IF(APPLE)
 		STRING(SUBSTRING ${XCODE_VERS_BUILDNR} 6 3 XCODE_VERSION) # truncate away build-nr
 	endif()	
 
-	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6) # keep this @ 10.6 to archieve bw-compatibility by weak-linking !
-	if(CMAKE_VERSION VERSION_LESS 2.8.1)
-		SET(CMAKE_OSX_ARCHITECTURES i386;x86_64)
-	else(CMAKE_VERSION VERSION_LESS 2.8.1)
-		SET(CMAKE_XCODE_ATTRIBUTE_ARCHS i386\ x86_64)
-	endif(CMAKE_VERSION VERSION_LESS 2.8.1)
-	if(${XCODE_VERSION} VERSION_LESS 4.3)
-		SET(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX10.6.sdk)
-	elseif(${XCODE_VERSION} VERSION_GREATER 4.3)
-		set(CMAKE_XCODE_ATTRIBUTE_SDKROOT macosx10.8) # xcode 4.4-style
+execute_process(COMMAND uname -r OUTPUT_VARIABLE MAC_SYS) # check for actual system-version
+
+	if(${MAC_SYS} MATCHES 14)
+		set(OSX_SYSTEM 10.10)
+		cmake_minimum_required(VERSION 3.0.0) # throw an error here, older cmake cannot handle 2 digit subversion !
+	elseif(${MAC_SYS} MATCHES 13)
+		set(OSX_SYSTEM 10.9)
+	elseif(${MAC_SYS} MATCHES 12)
+		set(OSX_SYSTEM 10.8)
+	elseif(${MAC_SYS} MATCHES 11)
+		set(OSX_SYSTEM 10.7)
+	elseif(${MAC_SYS} MATCHES 10)
+		set(OSX_SYSTEM 10.6)
 	else()
-		SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk)
-	endif()	
-#	INCLUDE_DIRECTORIES( ${OSX_DEPENDENCY_ROOT}/include )
+		set(OSX_SYSTEM unsupported)
+	endif()
+
+	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6) # keep this @ 10.6 to archieve bw-compatibility by weak-linking !
+
+	if(${XCODE_VERSION} VERSION_LESS 4.3)
+		SET(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk)
+	else()
+		SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk)
+		set(CMAKE_XCODE_ATTRIBUTE_SDKROOT macosx) # to silence sdk not found warning, just overrides CMAKE_OSX_SYSROOT, gets alway latest available
+	endif()
+
+	# set a precedence of sdk path over all other default search pathes
+	SET(CMAKE_FIND_ROOT_PATH ${CMAKE_OSX_SYSROOT})
 
 	### options
 
