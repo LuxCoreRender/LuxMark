@@ -29,7 +29,7 @@
 static void PrintCmdLineHelp(const QString &cmd) {
 	cerr << "Usage: " << cmd.toAscii().data() << " [options]" << endl <<
 			" --help (display this help and exit)" << endl <<
-			" --scene=LUXBALL_HDR|SALA|ROOM (select the scene to use)" << endl <<
+			" --scene=LUXBALL_HDR|MICROPHONE|ROOM (select the scene to use)" << endl <<
 			" --mode="
                 "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
                 "BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE|"
@@ -48,10 +48,10 @@ int main(int argc, char **argv) {
 
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
-	QRegExp argScene("--scene=(LUXBALL_HDR|SALA|ROOM)");
+	QRegExp argScene("--scene=(LUXBALL_HDR|MICROPHONE|ROOM)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
-		"BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE|"
+		"BENCHMARK_NATIVE|"
 		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 		"DEMO_LUXVR|PAUSE"
 		")");
@@ -69,8 +69,8 @@ int main(int argc, char **argv) {
             QString scene = argScene.cap(1);
 			if (scene.compare("LUXBALL_HDR", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_LUXBALL_HDR;
-			else if (scene.compare("SALA", Qt::CaseInsensitive) == 0)
-				scnName = SCENE_SALA;
+			else if (scene.compare("MICROPHONE", Qt::CaseInsensitive) == 0)
+				scnName = SCENE_MICROPHONE;
 			else if (scene.compare("ROOM", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_ROOM;
 			else {
@@ -123,9 +123,10 @@ int main(int argc, char **argv) {
 		// Force C locale
 		setlocale(LC_NUMERIC, "C");
 
-		if (app.mainWin != NULL)
+		if (app.mainWin != NULL) {
+			app.mainWin->UpdateSceneLabel(scnName);
 			return app.exec();
-		else
+		} else
 			return EXIT_FAILURE;
 	}
 }

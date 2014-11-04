@@ -88,9 +88,9 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	fbHeight = 0;
 
 	// Setup status bar
-	statusbarLabel = new QLabel(ui->statusbar);
-	statusbarLabel->setText("");
-	ui->statusbar->addWidget(statusbarLabel);
+	statusBarLabel = new QLabel(ui->statusbar);
+	statusBarLabel->setText("");
+	ui->statusbar->addWidget(statusBarLabel);
 
 	// Disable the Complex benchmark if we are running with 32bit address space
 	if (sizeof(size_t) < 8) {
@@ -103,7 +103,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 
 MainWindow::~MainWindow() {
 	delete ui;
-	delete statusbarLabel;
+	delete statusBarLabel;
 	delete authorLabel;
 	delete authorLabelBack;
 	delete screenLabel;
@@ -132,25 +132,41 @@ void MainWindow::showAbout() {
 	dialog->exec();
 }
 
+void MainWindow::UpdateSceneLabel(const char *name) {
+	if (!strcmp(SCENE_ROOM, name)) {
+		authorLabelBack->setText(QString("Scene modeling/texturing by Mourelas Konstantinos \"Moure\" (http://moure-portfolio.blogspot.com/) for LuxMark"));
+		authorLabelBack->setBrush(Qt::black);
+		authorLabel->setText(authorLabelBack->text());
+		authorLabel->setBrush(Qt::white);
+	} else if (!strcmp(SCENE_MICROPHONE, name)) {
+		authorLabelBack->setText(QString("Scene designed by Vlad \"SATtva\" Miller (http://vladmiller.info/blog/index.php?comment=308)"));
+		authorLabelBack->setBrush(Qt::black);
+		authorLabel->setText(authorLabelBack->text());
+		authorLabel->setBrush(Qt::darkGray);
+	} else if (!strcmp(SCENE_LUXBALL_HDR, name)) {
+		authorLabelBack->setText(QString("Scene designed by LuxRender project"));
+		authorLabelBack->setBrush(Qt::black);
+		authorLabel->setText(authorLabelBack->text());
+		authorLabel->setBrush(Qt::white);
+	}
+}
+
 void MainWindow::setLuxBallHDRScene() {
 	LM_LOG("Set LuxBall HDR scene");
-	authorLabelBack->setText(QString("Scene designed by LuxRender project"));
-	authorLabel->setText(authorLabelBack->text());
+	UpdateSceneLabel(SCENE_LUXBALL_HDR);
 	((LuxMarkApp *)qApp)->SetScene(SCENE_LUXBALL_HDR);
+}
+
+void MainWindow::setMicrophoneScene() {
+	LM_LOG("Set Microphone scene");
+	UpdateSceneLabel(SCENE_MICROPHONE);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_MICROPHONE);
 }
 
 void MainWindow::setRoomScene() {
 	LM_LOG("Set Room scene");
-	authorLabelBack->setText(QString("Scene modeling/texturing by Mourelas Konstantinos \"Moure\" (http://moure-portfolio.blogspot.com/) for LuxMark"));
-	authorLabel->setText(authorLabelBack->text());
+	UpdateSceneLabel(SCENE_ROOM);
 	((LuxMarkApp *)qApp)->SetScene(SCENE_ROOM);
-}
-
-void MainWindow::setSalaScene() {
-	LM_LOG("Set Sala scene");
-	authorLabelBack->setText(QString("Scene designed by Daniel \"ZanQdo\" Salazar (http://www.3developer.com)\nand adapted for SLG by Michael \"neo2068\" Klemm"));
-	authorLabel->setText(authorLabelBack->text());
-	((LuxMarkApp *)qApp)->SetScene(SCENE_SALA);
 }
 
 void MainWindow::setMode_BENCHMARK_OCL_GPU() {
@@ -225,7 +241,7 @@ void MainWindow::ShowLogo() {
 		ui->RenderView->centerOn(luxLogo);
 	}
 
-	statusbarLabel->setText("");
+	statusBarLabel->setText("");
 	ui->RenderView->setInteractive(false);
 }
 
@@ -248,15 +264,15 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
 		ui->action_Room->setChecked(true);
-		ui->action_Sala->setChecked(false);
+		ui->action_Microphone->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(false);
 	} else if (index == 1) {
 		ui->action_Room->setChecked(false);
-		ui->action_Sala->setChecked(true);
+		ui->action_Microphone->setChecked(true);
 		ui->action_LuxBall_HDR->setChecked(false);
 	} else if (index == 2) {
 		ui->action_Room->setChecked(false);
-		ui->action_Sala->setChecked(false);
+		ui->action_Microphone->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(true);
 	} else
 		assert(false);
@@ -379,5 +395,5 @@ void MainWindow::UpdateScreenLabel(const char *msg, const bool valid) {
 
 	// Update status bar with the first line of the message
 	QString qMsg(msg);
-	statusbarLabel->setText(qMsg.split(QString("\n"))[0]);
+	statusBarLabel->setText(qMsg.split(QString("\n"))[0]);
 }

@@ -60,6 +60,7 @@ public:
 
 	void SetModeCheck(const LuxMarkAppMode mode);
 	void SetSceneCheck(const int index);
+	void UpdateSceneLabel(const char *name);
 	void UpdateScreenLabel(const char *msg, const bool valid);
 	void SetHardwareTreeModel(HardwareTreeModel *treeModel);
 	void SetLuxApp(LuxMarkApp *la) { luxFrameBuffer->SetLuxApp(la); }
@@ -78,7 +79,7 @@ private:
 	QGraphicsSimpleTextItem *authorLabelBack;
 	QGraphicsSimpleTextItem *screenLabel;
 	QGraphicsRectItem *screenLabelBack;
-	QLabel *statusbarLabel;
+	QLabel *statusBarLabel;
 
 	QGraphicsScene *renderScene;
 
@@ -87,7 +88,7 @@ private slots:
 	void showAbout();
 
 	void setLuxBallHDRScene();
-	void setSalaScene();
+	void setMicrophoneScene();
 	void setRoomScene();
 
 	void setMode_BENCHMARK_OCL_GPU();

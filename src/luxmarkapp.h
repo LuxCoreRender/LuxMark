@@ -39,7 +39,7 @@
 
 // List of supported scenes
 #define SCENE_ROOM "scenes/room/render.cfg"
-#define SCENE_SALA "scenes/sala/render.cfg"
+#define SCENE_MICROPHONE "scenes/mic/render.cfg"
 #define SCENE_LUXBALL_HDR "scenes/luxball/render.cfg"
 
 class LuxMarkApp : public QApplication {

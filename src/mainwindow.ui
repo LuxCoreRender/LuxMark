@@ -149,7 +149,7 @@
      <string>&amp;Scene</string>
     </property>
     <addaction name="action_Room"/>
-    <addaction name="action_Sala"/>
+    <addaction name="action_Microphone"/>
     <addaction name="action_LuxBall_HDR"/>
    </widget>
    <addaction name="menu_File"/>
@@ -184,10 +184,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>LuxBall &amp;HDR (Simple Benchmark: 262K triangles)</string>
+    <string>LuxBall &amp;HDR (Simple Benchmark: 218K triangles)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+C</string>
+    <string>Ctrl+L</string>
    </property>
   </action>
   <action name="action_OpenCL_CPUs_GPUs">
@@ -214,15 +214,15 @@
     <string>Benchmark (OpenCL CPUs)</string>
    </property>
   </action>
-  <action name="action_Sala">
+  <action name="action_Microphone">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Sala (Medium Benchmark: 488K triangles)</string>
+    <string>&amp;Microphone (Medium Benchmark: 1818K triangles)</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+A</string>
+    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="action_OpenCL_Custom">
@@ -236,6 +236,9 @@
   <action name="action_Room">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Room (Complex Benchmark: 2016K triangles)</string>
@@ -387,10 +390,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Sala</sender>
+   <sender>action_Microphone</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setSalaScene()</slot>
+   <slot>setMicrophoneScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -519,7 +522,7 @@
   <slot>exitApp()</slot>
   <slot>showAbout()</slot>
   <slot>setLuxBallHDRScene()</slot>
-  <slot>setSalaScene()</slot>
+  <slot>setMicrophoneScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setRoomScene()</slot>
   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
