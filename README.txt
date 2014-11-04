@@ -1,8 +1,27 @@
 LuxMark
 =======
 
-LuxMark is OpenCL benchmark based on LuxRender (http://www.luxrender.net). You can find
-more information about LuxMark at http://www.luxrender.net/wiki/index.php?title=LuxMark
+LuxMark is OpenCL benchmark based on LuxCore, the new LuxRender (http://www.luxrender.net)
+v2.x API. You can find more information about LuxMark at http://www.luxrender.net/wiki/index.php?title=LuxMark
+
+LuxCore
+=======
+
+LuxCore is the new LuxRender v2.x C++ and Python API. It is released under Apache Public License v2.0
+and can be freely used in open source and commercial applications. You can find more
+information about the API at http://www.luxrender.net/wiki/LuxCore
+
+Donate
+======
+
+LuxRender is now part of the Software Freedom Conservancy (http://sfconservancy.org/), which allows us to receive
+donations to foster the development and cover the expenses of the LuxRender project.
+For each donation you'll do, a small amount will go to the Conservancy so that it can
+benefit all the member projects, and the rest will be made available to LuxRender.
+In the United States, you can benefit from tax deductions according to the
+Conservancy 501(c)(3) not for profit organization status.
+
+You can donate at http://www.luxrender.net/en_GB/donate
 
 Authors
 =======

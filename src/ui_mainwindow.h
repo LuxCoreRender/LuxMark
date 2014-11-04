@@ -38,7 +38,7 @@ public:
     QAction *action_OpenCL_CPUs_GPUs;
     QAction *action_Pause;
     QAction *action_OpenCL_CPUs;
-    QAction *action_Sala;
+    QAction *action_Microphone;
     QAction *action_OpenCL_Custom;
     QAction *action_Room;
     QAction *action_Path;
@@ -91,15 +91,16 @@ public:
         action_OpenCL_CPUs = new QAction(MainWindow);
         action_OpenCL_CPUs->setObjectName(QString::fromUtf8("action_OpenCL_CPUs"));
         action_OpenCL_CPUs->setCheckable(true);
-        action_Sala = new QAction(MainWindow);
-        action_Sala->setObjectName(QString::fromUtf8("action_Sala"));
-        action_Sala->setCheckable(true);
+        action_Microphone = new QAction(MainWindow);
+        action_Microphone->setObjectName(QString::fromUtf8("action_Microphone"));
+        action_Microphone->setCheckable(true);
         action_OpenCL_Custom = new QAction(MainWindow);
         action_OpenCL_Custom->setObjectName(QString::fromUtf8("action_OpenCL_Custom"));
         action_OpenCL_Custom->setCheckable(true);
         action_Room = new QAction(MainWindow);
         action_Room->setObjectName(QString::fromUtf8("action_Room"));
         action_Room->setCheckable(true);
+        action_Room->setEnabled(false);
         action_Path = new QAction(MainWindow);
         action_Path->setObjectName(QString::fromUtf8("action_Path"));
         action_StressTest_OpenCL_GPUs = new QAction(MainWindow);
@@ -204,7 +205,7 @@ public:
         menu_Mode->addSeparator();
         menu_Mode->addAction(action_Pause);
         menu_Scene->addAction(action_Room);
-        menu_Scene->addAction(action_Sala);
+        menu_Scene->addAction(action_Microphone);
         menu_Scene->addAction(action_LuxBall_HDR);
 
         retranslateUi(MainWindow);
@@ -215,7 +216,7 @@ public:
         QObject::connect(action_OpenCL_GPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_OCL_GPU()));
         QObject::connect(action_Pause, SIGNAL(triggered()), MainWindow, SLOT(setMode_PAUSE()));
         QObject::connect(action_OpenCL_CPUs, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_OCL_CPU()));
-        QObject::connect(action_Sala, SIGNAL(triggered()), MainWindow, SLOT(setSalaScene()));
+        QObject::connect(action_Microphone, SIGNAL(triggered()), MainWindow, SLOT(setMicrophoneScene()));
         QObject::connect(action_OpenCL_Custom, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_OCL_CUSTOM()));
         QObject::connect(action_Room, SIGNAL(triggered()), MainWindow, SLOT(setRoomScene()));
         QObject::connect(action_Path, SIGNAL(triggered()), MainWindow, SLOT(setMode_BENCHMARK_NATIVE_PATH()));
@@ -234,13 +235,13 @@ public:
         action_Quit->setShortcut(QApplication::translate("MainWindow", "Ctrl+Q", 0, QApplication::UnicodeUTF8));
         action_About->setText(QApplication::translate("MainWindow", "About", 0, QApplication::UnicodeUTF8));
         action_OpenCL_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL GPUs)", 0, QApplication::UnicodeUTF8));
-        action_LuxBall_HDR->setText(QApplication::translate("MainWindow", "LuxBall &HDR (Simple Benchmark: 262K triangles)", 0, QApplication::UnicodeUTF8));
-        action_LuxBall_HDR->setShortcut(QApplication::translate("MainWindow", "Ctrl+C", 0, QApplication::UnicodeUTF8));
+        action_LuxBall_HDR->setText(QApplication::translate("MainWindow", "LuxBall &HDR (Simple Benchmark: 218K triangles)", 0, QApplication::UnicodeUTF8));
+        action_LuxBall_HDR->setShortcut(QApplication::translate("MainWindow", "Ctrl+L", 0, QApplication::UnicodeUTF8));
         action_OpenCL_CPUs_GPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL CPUs + GPUs)", 0, QApplication::UnicodeUTF8));
         action_Pause->setText(QApplication::translate("MainWindow", "&Pause", 0, QApplication::UnicodeUTF8));
         action_OpenCL_CPUs->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL CPUs)", 0, QApplication::UnicodeUTF8));
-        action_Sala->setText(QApplication::translate("MainWindow", "&Sala (Medium Benchmark: 488K triangles)", 0, QApplication::UnicodeUTF8));
-        action_Sala->setShortcut(QApplication::translate("MainWindow", "Ctrl+A", 0, QApplication::UnicodeUTF8));
+        action_Microphone->setText(QApplication::translate("MainWindow", "&Microphone (Medium Benchmark: 1818K triangles)", 0, QApplication::UnicodeUTF8));
+        action_Microphone->setShortcut(QApplication::translate("MainWindow", "Ctrl+M", 0, QApplication::UnicodeUTF8));
         action_OpenCL_Custom->setText(QApplication::translate("MainWindow", "Benchmark (OpenCL selected devices only)", 0, QApplication::UnicodeUTF8));
         action_Room->setText(QApplication::translate("MainWindow", "&Room (Complex Benchmark: 2016K triangles)", 0, QApplication::UnicodeUTF8));
         action_Room->setShortcut(QApplication::translate("MainWindow", "Ctrl+R", 0, QApplication::UnicodeUTF8));
