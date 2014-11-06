@@ -73,8 +73,9 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 	QObject::connect(this, SIGNAL(imageValidationLabelChanged(const QString &, const bool)),
 			this, SLOT(setImageValidationLabel(const QString &, const bool)));
 
-	// Check if it ione of the official benchmarks
-	if (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0) {
+	// Check if it is one of the official benchmarks
+	if ((strcmp(sceneName, SCENE_LUXBALL_HDR) == 0) ||
+		(strcmp(sceneName, SCENE_MICROPHONE) == 0)) {
 		// Start the md5 validation thread
 		md5Thread = new boost::thread(boost::bind(ResultDialog::MD5ThreadImpl, this));
 
@@ -204,8 +205,13 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		const string md5 = QString(hash.result().toHex()).toStdString();
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
-		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
+		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR)) {
 			if (md5 == "9f24013913e0931356415b21c0adc326")
+				emit resultDialog->sceneValidationLabelChanged("OK", true);
+			else
+				emit resultDialog->sceneValidationLabelChanged("Failed", false);
+		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
+			if (md5 == "b003983841f07b6ddf47712b8cda5480")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
@@ -235,7 +241,8 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		const u_int dataCount = resultDialog->frameBufferWidth * resultDialog->frameBufferHeight * 3;
 
 		// Read the reference file
-		if (strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) == 0) {
+		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) ||
+				!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)){
 			boost::filesystem::path fileName;
 			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
 					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||

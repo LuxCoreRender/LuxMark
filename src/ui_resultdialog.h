@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'resultdialog.ui'
 **
-** Created: Sun Jun 16 17:03:10 2013
-**      by: Qt User Interface Compiler version 4.8.3
+** Created by: Qt User Interface Compiler version 4.8.6
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -46,12 +45,13 @@ public:
     QLabel *sceneValidation;
     QLabel *imageValidationLabel;
     QLabel *imageValidation;
+    QLabel *donationLabel;
 
     void setupUi(QDialog *ResultDialog)
     {
         if (ResultDialog->objectName().isEmpty())
             ResultDialog->setObjectName(QString::fromUtf8("ResultDialog"));
-        ResultDialog->resize(480, 400);
+        ResultDialog->resize(550, 600);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/images/resources/SLG_luxball_sppm_small.png"), QSize(), QIcon::Normal, QIcon::Off);
         ResultDialog->setWindowIcon(icon);
@@ -149,7 +149,7 @@ public:
         gridLayout->addWidget(submitButton, 0, 1, 1, 1);
 
 
-        formLayout->setWidget(9, QFormLayout::SpanningRole, widget);
+        formLayout->setWidget(10, QFormLayout::SpanningRole, widget);
 
         sceneValidationLabel = new QLabel(ResultDialog);
         sceneValidationLabel->setObjectName(QString::fromUtf8("sceneValidationLabel"));
@@ -170,6 +170,18 @@ public:
         imageValidation->setObjectName(QString::fromUtf8("imageValidation"));
 
         formLayout->setWidget(3, QFormLayout::FieldRole, imageValidation);
+
+        donationLabel = new QLabel(ResultDialog);
+        donationLabel->setObjectName(QString::fromUtf8("donationLabel"));
+        QFont font;
+        font.setPointSize(10);
+        donationLabel->setFont(font);
+        donationLabel->setLineWidth(1);
+        donationLabel->setTextFormat(Qt::RichText);
+        donationLabel->setWordWrap(true);
+        donationLabel->setOpenExternalLinks(true);
+
+        formLayout->setWidget(9, QFormLayout::SpanningRole, donationLabel);
 
 
         retranslateUi(ResultDialog);
@@ -194,6 +206,7 @@ public:
         sceneValidation->setText(QString());
         imageValidationLabel->setText(QApplication::translate("ResultDialog", "Image validation:", 0, QApplication::UnicodeUTF8));
         imageValidation->setText(QString());
+        donationLabel->setText(QApplication::translate("ResultDialog", "<html><head/><body><p align=\"justify\">LuxRender is now part of the <a href=\"http://sfconservancy.org\"><span style=\" text-decoration: underline; color:#0000ff;\">Software Freedom Conservancy</span></a>, which allows us to receive donations to foster the development and cover the expenses of the LuxRender project. For each donation you'll do, a small amount will go to the Conservancy so that it can benefit all the member projects, and the rest will be made available to LuxRender.</p><p align=\"justify\">In the United States, you can benefit from tax deductions according to the Conservancy 501(c)(3) not for profit organization status.</p><p align=\"center\">You can donate at <a href=\"http://www.luxrender.net/en_GB/donate\"><span style=\" text-decoration: underline; color:#0000ff;\">here</span></a><a href=\"http://www.luxrender.net/en_GB/donate\"><span style=\" color:#0000ff;\">.</span></a></p></body></html>", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
