@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>480</width>
-    <height>400</height>
+    <width>550</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,7 +128,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="2">
+   <item row="10" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout">
       <property name="margin">
@@ -188,6 +188,30 @@
     <widget class="QLabel" name="imageValidation">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0" colspan="2">
+    <widget class="QLabel" name="donationLabel">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="lineWidth">
+      <number>1</number>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;LuxRender is now part of the &lt;a href=&quot;http://sfconservancy.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Software Freedom Conservancy&lt;/span&gt;&lt;/a&gt;, which allows us to receive donations to foster the development and cover the expenses of the LuxRender project. For each donation you'll do, a small amount will go to the Conservancy so that it can benefit all the member projects, and the rest will be made available to LuxRender.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;In the United States, you can benefit from tax deductions according to the Conservancy 501(c)(3) not for profit organization status.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;You can donate at &lt;a href=&quot;http://www.luxrender.net/en_GB/donate&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;http://www.luxrender.net/en_GB/donate&quot;&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::RichText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
