@@ -213,7 +213,8 @@ function luxmark_web_search_results_form($form, &$form_state) {
             '#type' => 'select',
             '#title' => 'Scene:',
             '#options' => array(
-                'LuxBall HDR' => t('LuxBall HDR')
+                'LuxBall HDR' => t('LuxBall HDR'),
+				'Microphone' => t('Microphone')
             )
         );
         $form['mode'] = array(
@@ -222,7 +223,6 @@ function luxmark_web_search_results_form($form, &$form_state) {
             '#options' => array(
                 'all' => t('Any'),
                 'OpenCL' => t('OpenCL'),
-                'Hybrid' => t('Hybrid C++/OpenCL'),
                 'C++' => t('C++')
             )
         );
@@ -304,14 +304,19 @@ function luxmark_web_search_results_form_submit($form, &$form_state) {
 function luxmark_web_symbolic_name_to_scene_path($sceneName) {
     if ($sceneName == 'LuxBall HDR')
         return 'scenes/luxball/render.cfg';
+    else if ($sceneName == 'Microphone')
+        return 'scenes/mic/render.cfg';
     else
+
         return FALSE;
 }
 
 function luxmark_web_scene_path_to_symbolic_name($sceneName) {
     if ($sceneName == 'scenes/luxball/render.cfg')
         return 'LuxBall HDR';
-    else
+    else if ($sceneName == 'scenes/mic/render.cfg')
+        return 'Microphone';
+
         return $sceneName;
 }
 
