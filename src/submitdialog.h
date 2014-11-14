@@ -22,6 +22,7 @@
 #ifndef _SUBMITDIALOG_H
 #define	_SUBMITDIALOG_H
 
+#ifndef Q_MOC_RUN
 #include <cstddef>
 
 #include <QNetworkAccessManager>
@@ -30,6 +31,8 @@
 
 #include "luxmarkdefs.h"
 #include "hardwaretree.h"
+#endif
+
 #include "ui_submitdialog.h"
 
 class SubmitDialog : public QDialog {

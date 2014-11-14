@@ -22,14 +22,17 @@
 #ifndef _HARDWARETREE_H
 #define _HARDWARETREE_H
 
+#ifndef Q_MOC_RUN
+#include <vector>
+
+#include <boost/thread/thread.hpp>
+
 #include <QVariant>
 #include <QModelIndex>
 #include <QAbstractItemModel>
 
-#include "luxrays/luxrays.h"
-#include "luxrays/core/context.h"
-#include "luxrays/core/oclintersectiondevice.h"
 #include "luxmarkdefs.h"
+#endif
 
 using namespace std;
 

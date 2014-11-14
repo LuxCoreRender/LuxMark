@@ -22,6 +22,8 @@
 #include <QDateTime>
 #include <QTextStream>
 
+#include "luxrays/core/utils.h"
+
 #include "luxmarkcfg.h"
 #include "submitdialog.h"
 

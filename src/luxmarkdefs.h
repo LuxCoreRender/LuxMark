@@ -22,6 +22,7 @@
 #ifndef _LUXMARKDEFS_H
 #define	_LUXMARKDEFS_H
 
+#ifndef Q_MOC_RUN
 #include <cmath>
 #include <sstream>
 #include <fstream>
@@ -38,6 +39,7 @@
 #endif
 
 #include <luxrays/luxrays.h>
+#endif
 			
 using namespace std;
 

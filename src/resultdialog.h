@@ -22,12 +22,14 @@
 #ifndef _RESULTDIALOG_H
 #define	_RESULTDIALOG_H
 
+#ifndef Q_MOC_RUN
 #include <cstddef>
 
 #include <boost/filesystem.hpp>
 
 #include "luxmarkdefs.h"
 #include "hardwaretree.h"
+#endif
 
 #include "ui_resultdialog.h"
 
