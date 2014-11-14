@@ -22,6 +22,7 @@
 #ifndef _LUXMARKAPP_H
 #define _LUXMARKAPP_H
 
+#ifndef Q_MOC_RUN
 #include <QtGui/QApplication>
 #include <QTimer>
 
@@ -32,6 +33,7 @@
 #include "mainwindow.h"
 #include "hardwaretree.h"
 #include "luxrendersession.h"
+#endif
 
 //------------------------------------------------------------------------------
 // LuxMark Qt application

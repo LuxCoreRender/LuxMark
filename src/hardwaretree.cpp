@@ -21,12 +21,11 @@
 
 #include <sstream>
 
-#include <boost/thread/thread.hpp>
 #include <QtCore/qabstractitemmodel.h>
 
+#include "luxrays/core/oclintersectiondevice.h"
 #include "luxrays/core/virtualdevice.h"
 
-#include "luxmarkdefs.h"
 #include "hardwaretree.h"
 #include "mainwindow.h"
 

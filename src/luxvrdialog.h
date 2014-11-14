@@ -22,11 +22,13 @@
 #ifndef _LUXVRDIALOG_H
 #define	_LUXVRDIALOG_H
 
+#ifndef Q_MOC_RUN
 #include <cstddef>
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 
 #include "luxmarkdefs.h"
+#endif
 
 #include "ui_luxvrdialog.h"
 

@@ -22,10 +22,12 @@
 #ifndef LUXRENDERSESSION_H
 #define	LUXRENDERSESSION_H
 
+#ifndef Q_MOC_RUN
 #include <string>
 
 #include "luxcore/luxcore.h"
 #include "luxmarkdefs.h"
+#endif
 
 class LuxRenderSession {
 public:

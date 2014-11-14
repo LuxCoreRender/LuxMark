@@ -22,6 +22,7 @@
 #ifndef _MAINWINDOW_H
 #define	_MAINWINDOW_H
 
+#ifndef Q_MOC_RUN
 #include <cstddef>
 #include <string>
 
@@ -32,6 +33,7 @@
 #include "luxmarkdefs.h"
 
 #include <QGraphicsPixmapItem>
+#endif
 
 class LuxMarkApp;
 
