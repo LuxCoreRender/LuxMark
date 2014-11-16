@@ -120,6 +120,16 @@ int main(int argc, char **argv) {
 	else {
 		app.Init(mode, scnName, singleRun);
 
+		// If current directory doesn't have the "scenes" directory, move
+		// to where the executable is
+		if (!boost::filesystem::exists("./scenes")) {
+			// Look for the directory where LuxMark executable is installed
+			boost::filesystem::path exePath(boost::filesystem::initial_path<boost::filesystem::path>());
+			exePath = boost::filesystem::system_complete(boost::filesystem::path(argv[0])).parent_path();
+			// Set the current directory to where the binary is
+			boost::filesystem::current_path(exePath);
+		}
+	
 		// Force C locale
 		setlocale(LC_NUMERIC, "C");
 
