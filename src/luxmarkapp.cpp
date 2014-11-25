@@ -147,7 +147,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	Stop();
 
-	if (!strcmp(scnName, SCENE_ROOM))
+	if (!strcmp(scnName, SCENE_HOTEL))
 		mainWin->SetSceneCheck(0);
 	else if (!strcmp(scnName, SCENE_MICROPHONE))
 		mainWin->SetSceneCheck(1);

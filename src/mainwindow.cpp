@@ -94,8 +94,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 
 	// Disable the Complex benchmark if we are running with 32bit address space
 	if (sizeof(size_t) < 8) {
-		ui->action_Room->setDisabled(true);
-		ui->action_Room->setText(QString("Complex benchmark not available on 32bit platform"));
+		ui->action_Hotel->setDisabled(true);
+		ui->action_Hotel->setText(QString("Complex benchmark not available on 32bit platform"));
 	}
 
 	ShowLogo();
@@ -133,8 +133,8 @@ void MainWindow::showAbout() {
 }
 
 void MainWindow::UpdateSceneLabel(const char *name) {
-	if (!strcmp(SCENE_ROOM, name)) {
-		authorLabelBack->setText(QString("Scene modeling/texturing by Mourelas Konstantinos \"Moure\" (http://moure-portfolio.blogspot.com/) for LuxMark"));
+	if (!strcmp(SCENE_HOTEL, name)) {
+		authorLabelBack->setText(QString("Scene designed by Peter Sandbacka"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
 		authorLabel->setBrush(Qt::white);
@@ -163,10 +163,10 @@ void MainWindow::setMicrophoneScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_MICROPHONE);
 }
 
-void MainWindow::setRoomScene() {
-	LM_LOG("Set Room scene");
-	UpdateSceneLabel(SCENE_ROOM);
-	((LuxMarkApp *)qApp)->SetScene(SCENE_ROOM);
+void MainWindow::setHotelScene() {
+	LM_LOG("Set Hotel scene");
+	UpdateSceneLabel(SCENE_HOTEL);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_HOTEL);
 }
 
 void MainWindow::setMode_BENCHMARK_OCL_GPU() {
@@ -263,15 +263,15 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 
 void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
-		ui->action_Room->setChecked(true);
+		ui->action_Hotel->setChecked(true);
 		ui->action_Microphone->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(false);
 	} else if (index == 1) {
-		ui->action_Room->setChecked(false);
+		ui->action_Hotel->setChecked(false);
 		ui->action_Microphone->setChecked(true);
 		ui->action_LuxBall_HDR->setChecked(false);
 	} else if (index == 2) {
-		ui->action_Room->setChecked(false);
+		ui->action_Hotel->setChecked(false);
 		ui->action_Microphone->setChecked(false);
 		ui->action_LuxBall_HDR->setChecked(true);
 	} else
