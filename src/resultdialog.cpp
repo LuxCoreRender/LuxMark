@@ -119,7 +119,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text, const bool isOk)
 
         // Check if I can enable submit button
         if (imageValidation && 
-                (/*(strcmp(sceneName, SCENE_ROOM) == 0) ||*/
+                ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
                 (strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
                 (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
             ui->submitButton->setEnabled(true);
@@ -136,7 +136,7 @@ void ResultDialog::setImageValidationLabel(const QString &text, const bool isOk)
 
         // Check if I can enable submit button
         if (sceneValidation && 
-                (/*(strcmp(sceneName, SCENE_ROOM) == 0) ||*/
+                ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
                 (strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
                 (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
             ui->submitButton->setEnabled(true);

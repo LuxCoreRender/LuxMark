@@ -7,6 +7,7 @@
 ^nbproject/*
 ^slg4*
 ^scenes/mic/*
+^scenes/hotel/*
 syntax: glob
 *~
 *CMakeFiles

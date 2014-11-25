@@ -148,7 +148,7 @@
     <property name="title">
      <string>&amp;Scene</string>
     </property>
-    <addaction name="action_Room"/>
+    <addaction name="action_Hotel"/>
     <addaction name="action_Microphone"/>
     <addaction name="action_LuxBall_HDR"/>
    </widget>
@@ -184,7 +184,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>LuxBall &amp;HDR (Simple Benchmark: 218K triangles)</string>
+    <string>LuxBall &amp;HDR (Simple Benchmark: 217K triangles)</string>
+   </property>
+   <property name="toolTip">
+    <string>LuxBall HDR (Simple Benchmark: 217K triangles)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -219,7 +222,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Microphone (Medium Benchmark: 1818K triangles)</string>
+    <string>&amp;Neumann TLM-102 SE (Medium Benchmark: 1769K triangles)</string>
+   </property>
+   <property name="toolTip">
+    <string>Neumann TLM-102 SE (Medium Benchmark: 1769K triangles)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+M</string>
@@ -233,15 +239,18 @@
     <string>Benchmark (OpenCL selected devices only)</string>
    </property>
   </action>
-  <action name="action_Room">
+  <action name="action_Hotel">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Room (Complex Benchmark: 2016K triangles)</string>
+    <string>&amp;Hotel lobby (Complex Benchmark: 4973K triangles)</string>
+   </property>
+   <property name="toolTip">
+    <string>Hotel lobby (Complex Benchmark: 4973K triangles)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
@@ -422,10 +431,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Room</sender>
+   <sender>action_Hotel</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setRoomScene()</slot>
+   <slot>setHotelScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -524,7 +533,7 @@
   <slot>setLuxBallHDRScene()</slot>
   <slot>setMicrophoneScene()</slot>
   <slot>setMode_PAUSE()</slot>
-  <slot>setRoomScene()</slot>
+  <slot>setHotelScene()</slot>
   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CPU()</slot>

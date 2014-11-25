@@ -91,7 +91,7 @@ private slots:
 
 	void setLuxBallHDRScene();
 	void setMicrophoneScene();
-	void setRoomScene();
+	void setHotelScene();
 
 	void setMode_BENCHMARK_OCL_GPU();
 	void setMode_BENCHMARK_OCL_CPUGPU();
