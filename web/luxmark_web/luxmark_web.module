@@ -214,7 +214,8 @@ function luxmark_web_search_results_form($form, &$form_state) {
             '#title' => 'Scene:',
             '#options' => array(
                 'LuxBall HDR' => t('LuxBall HDR'),
-				'Microphone' => t('Microphone')
+				'Microphone' => t('Microphone'),
+				'Hotel' => t('Hotel')
             )
         );
         $form['mode'] = array(
@@ -306,8 +307,9 @@ function luxmark_web_symbolic_name_to_scene_path($sceneName) {
         return 'scenes/luxball/render.cfg';
     else if ($sceneName == 'Microphone')
         return 'scenes/mic/render.cfg';
+    else if ($sceneName == 'Hotel')
+        return 'scenes/hotel/render.cfg';
     else
-
         return FALSE;
 }
 
@@ -316,8 +318,10 @@ function luxmark_web_scene_path_to_symbolic_name($sceneName) {
         return 'LuxBall HDR';
     else if ($sceneName == 'scenes/mic/render.cfg')
         return 'Microphone';
-
-        return $sceneName;
+    else if ($sceneName == 'scenes/hotel/render.cfg')
+        return 'Hotel';
+	else
+		return $sceneName;
 }
 
 // Translate a device into its symbolic name
