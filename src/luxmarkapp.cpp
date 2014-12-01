@@ -83,8 +83,10 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
     boost::filesystem::current_path(bundlePath.parent_path().parent_path()); // LuxMark.app/Contents, where we now have the scenes and slg4 dir
     }
 #endif
+
     // Look for the directory where Lux executables are
-	exePath = boost::filesystem::path(boost::filesystem::initial_path<boost::filesystem::path>());
+	const boost::filesystem::path luxMarkExe(argv[0]);
+	exePath = boost::filesystem::absolute(luxMarkExe).parent_path();
 }
 
 LuxMarkApp::~LuxMarkApp() {
