@@ -20,7 +20,7 @@
 ###########################################################################
 
 set(LUXMARK_VERSION_MAJOR 3)
-set(LUXMARK_VERSION_MINOR 0alpha0)
+set(LUXMARK_VERSION_MINOR 0alpha1)
 
 find_package(Qt4 REQUIRED)
 IF(QT4_FOUND)
@@ -171,9 +171,6 @@ IF(APPLE)
 				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
 				COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
 				COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
-				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/liblux.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle corelib
-				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxvr ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxvr
-				COMMAND cp ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/LuxRender.app/Contents/MacOS/luxconsole ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/ # bundle luxconsole
 				COMMAND ditto ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/SmallluxGPU/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/ # bundle slg
 				COMMAND cp -R ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents
 #				COMMAND macdeployqt ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app ### bundling Qt frameworks ###
