@@ -16,6 +16,7 @@ set(OPENEXR_ROOT                "/usr/local")
 set(OPENCL_SEARCH_PATH        "$ENV{AMDAPPSDKROOT}")
 set(OPENCL_INCLUDEPATH        "${OPENCL_SEARCH_PATH}/include")
 #set(OPENCL_LIBRARYDIR         "${OPENCL_SEARCH_PATH}/lib/x86_64")
+set(EMBREE_SEARCH_PATH           "/home/david/src/embree-bin-2.3.3_linux")
 
 #set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_BUILD_TYPE "Release")
