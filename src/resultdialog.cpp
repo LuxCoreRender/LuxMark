@@ -212,12 +212,12 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
-			if (md5 == "922d59e6c4708a4468813d3b951ec61b")
+			if (md5 == "0cec4ea8edacfc97688ba261bc097251")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
-			if (md5 == "cbaf6e21c5a730c0ef428e187e6a85bc")
+			if (md5 == "ddf1ffcf49e358197a79c1f9fa33eaf6")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
@@ -236,12 +236,6 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 	// Begin the image validation process
 	emit resultDialog->imageValidationLabelChanged("Starting...", false);
-
-	// Just skip image validation test for Hotel scene for the moment
-	if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
-		emit resultDialog->imageValidationLabelChanged("OK", true);
-		return;
-	}
 
 	float *referenceImage = NULL;
 	float *testImage = NULL;
@@ -302,7 +296,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		emit resultDialog->imageValidationLabelChanged("Comparing...", false);
 		const u_int diffPixelCount = convTest.Test(testImage);
 
-		const float errorTreshold = 5.f;
+		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_HOTEL) == 0) ? 60.f : 15.f;
 		const float errorPerc =  100.f * diffPixelCount / (float)(resultDialog->frameBufferWidth * resultDialog->frameBufferHeight);
         const bool isOk = (errorPerc < errorTreshold);
 
