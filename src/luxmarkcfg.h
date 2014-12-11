@@ -25,6 +25,6 @@
 // The configured options and settings for LuxMark
 
 #define LUXMARK_VERSION_MAJOR "3"
-#define LUXMARK_VERSION_MINOR "0alpha1"
+#define LUXMARK_VERSION_MINOR "0beta1"
 
 #endif	/* _LUXMARK_CFG_H */
