@@ -212,7 +212,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
-			if (md5 == "0cec4ea8edacfc97688ba261bc097251")
+			if (md5 == "223186bdd17818c75988b11afbe512a3")
 				emit resultDialog->sceneValidationLabelChanged("OK", true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", false);
