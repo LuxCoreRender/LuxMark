@@ -72,6 +72,54 @@ SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "assure config" FORCE) # m
 
 message(STATUS "Building mode: " ${CMAKE_BUILD_TYPE})
 
+# Use relative paths
+# This is mostly to reduce path size for command-line limits on windows
+if(WIN32)
+  # This seems to break Xcode projects so definitely don't enable on Apple builds
+  set(CMAKE_USE_RELATIVE_PATHS true)
+  set(CMAKE_SUPPRESS_REGENERATION true)
+endif(WIN32)
+
+#
+# Overwrite defaults with Custom Settings
+#
+IF(LUXMARK_CUSTOM_CONFIG)
+	MESSAGE(STATUS "Using custom build config: ${LUXMARK_CUSTOM_CONFIG}")
+	INCLUDE(${LUXMARK_CUSTOM_CONFIG})
+ELSE(LUXMARK_CUSTOM_CONFIG)
+  IF (WIN32)
+    IF(MSVC)
+      # Disable Boost automatic linking
+      ADD_DEFINITIONS(-DBOOST_ALL_NO_LIB)
+
+      MESSAGE(STATUS "Using default WIN32 Configuration settings")
+      IF(DEFINED ENV{LUX_WINDOWS_BUILD_ROOT} AND DEFINED ENV{LIB_DIR})
+        MESSAGE(STATUS "Lux build environment variables found")
+        MESSAGE(STATUS "  LUX_WINDOWS_BUILD_ROOT = $ENV{LUX_WINDOWS_BUILD_ROOT}")
+        MESSAGE(STATUS "  INCLUDE_DIR = $ENV{INCLUDE_DIR}")
+        MESSAGE(STATUS "  LIB_DIR = $ENV{LIB_DIR}")
+
+        SET(OPENIMAGEIO_INCLUDE_DIR   "$ENV{INCLUDE_DIR}/OpenImageIO")
+        SET(OPENEXR_ROOT              "$ENV{INCLUDE_DIR}/OpenEXR")
+        #SET(OPENCL_SEARCH_PATH       "$ENV{LUX_WINDOWS_BUILD_ROOT}/include")
+        SET(BOOST_SEARCH_PATH         "$ENV{INCLUDE_DIR}/Boost")
+        SET(Boost_USE_STATIC_LIBS     ON)
+        SET(BOOST_LIBRARYDIR          "$ENV{LIB_DIR}")
+        SET(QT_HEADERS_DIR            "$ENV{INCLUDE_DIR}/Qt/include")
+        SET(QT_QTCORE_INCLUDE_DIR     "$ENV{INCLUDE_DIR}/Qt/include/QtCore")
+        SET(QT_QTCORE_LIBRARY_RELEASE "$ENV{LIB_DIR}/QtCore4.lib") 
+        SET(QT_QTGUI_INCLUDE_DIR      "$ENV{INCLUDE_DIR}/Qt/include/QtGui")
+        SET(QT_QMAKE_EXECUTABLE       "$ENV{LIB_DIR}/qmake.exe")
+        SET(QT_BINARY_DIR             "$ENV{LIB_DIR}")
+
+        ADD_DEFINITIONS(-DFREEIMAGE_LIB)
+        ADD_DEFINITIONS(-DFREEGLUT_STATIC)
+        ADD_DEFINITIONS(-DGLEW_STATIC)
+      ENDIF()
+    ENDIF(MSVC)
+  ENDIF(WIN32)
+ENDIF(LUXMARK_CUSTOM_CONFIG)
+
 # Find dependencies
 include(Dependencies)
 
