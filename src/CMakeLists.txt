@@ -126,15 +126,19 @@ set(LUXMARK_RCS
 
 QT4_ADD_RESOURCES(LUXMARK_RC_SRCS ${LUXMARK_RCS})
 QT4_WRAP_UI(LUXMARK_UI_HDRS ${LUXMARK_UIS})
-QT4_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC})
+# The next OPTIONS directive prevent the moc to include some boost files
+# because qt 4 moc parser fails on some complexes macro definiton in boost >=
+# 1.53.
+QT4_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 include_directories(".")
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 set(LUXMARK_SRCS
 	${LUXMARK_SRCS}
-	${LUXMARK_MOC_SRCS}
-	${LUXMARK_RC_SRCS}
 	${LUXMARK_UI_HDRS}
+	${LUXMARK_RC_SRCS}
+	${LUXMARK_MOC_SRCS}
 	)
 
 #############################################################################
