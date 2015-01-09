@@ -22,7 +22,7 @@
 set(LUXMARK_VERSION_MAJOR 3)
 set(LUXMARK_VERSION_MINOR 0beta2)
 
-find_package(Qt4 REQUIRED)
+FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtMain)
 IF(QT4_FOUND)
   include(${QT_USE_FILE})
   include_directories(${QT_INCLUDES} ${QT_QTNETWORK_INCLUDE_DIR})
@@ -186,4 +186,13 @@ ELSE(APPLE)
 	
 	# This instructs FREEGLUT to emit a pragma for the static version
 	SET_TARGET_PROPERTIES(luxmark PROPERTIES COMPILE_DEFINITIONS FREEGLUT_STATIC)
+
+	if(WIN32)
+		set_target_properties(luxmark PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+		set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
+		set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
+		set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
+		set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+		set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+	endif(WIN32)
 ENDIF(APPLE)
