@@ -40,6 +40,12 @@ static void PrintCmdLineHelp(const QString &cmd) {
 }
 
 int main(int argc, char **argv) {
+	
+//#if defined(__APPLE__) // for since OSX 10.9 changed default font
+//	QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
+//	QFont::insertSubstitution(".Helvetica Neue DeskInterface", "Lucida Grande");
+//#endif
+	
 	LuxMarkApp app(argc, argv);
 
 	// Get the arguments into a list
