@@ -170,15 +170,18 @@ IF(APPLE)
 
 	set_target_properties(LuxMark PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/Info.plist)
 	ADD_CUSTOM_COMMAND(
-			TARGET LuxMark POST_BUILD
-				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/scenes
-				COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
-				COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
-				COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
-				COMMAND ditto ${LuxRender_BUILD}/${CMAKE_BUILD_TYPE}/SmallluxGPU/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/ # bundle slg
-				COMMAND cp -R ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents
-#				COMMAND macdeployqt ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app ### bundling Qt frameworks ###
-				)
+		TARGET LuxMark POST_BUILD
+			COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/scenes
+			COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
+			COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
+			COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
+			COMMAND ditto /Volumes/Workdata/LuxRender/Development/luxrays_microkernels/bin/Release/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/ # bundle slg
+			COMMAND install_name_tool -change @loader_path/libembree.2.4.0.dylib @loader_path/../Library/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/slg4
+			COMMAND install_name_tool -change @loader_path/libembree.2.4.0.dylib @loader_path/../Library/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS/LuxMark
+			COMMAND ditto /Volumes/Workdata/LuxRender/Development/luxrays_microkernels/bin/Release/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Library/ # bundle embree
+			COMMAND install_name_tool -id @loader_path/../Library/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Library/libembree.2.4.0.dylib
+			COMMAND cp -R ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents
+)
 ELSE(APPLE)
 	ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
 
