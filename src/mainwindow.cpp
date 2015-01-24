@@ -92,6 +92,10 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	statusBarLabel->setText("");
 	ui->statusbar->addWidget(statusBarLabel);
 
+#if defined(__APPLE__)
+	setFont(QFont  ("Lucida Grande", 11)); // todo: find best size			
+#endif
+
 	// Disable the Complex benchmark if we are running with 32bit address space
 	if (sizeof(size_t) < 8) {
 		ui->action_Hotel->setDisabled(true);
