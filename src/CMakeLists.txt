@@ -179,9 +179,7 @@ IF(APPLE)
 			COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
 			COMMAND cp ${OSX_DEPENDENCY_ROOT}/bin/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/ # bundle slg
 			COMMAND install_name_tool -change @loader_path/libembree.2.4.0.dylib @loader_path/../MacOS/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/slg4
-			COMMAND install_name_tool -change @loader_path/libluxcore.dylib @loader_path/../MacOS/libluxcore.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/slg4
 			COMMAND cp ${OSX_DEPENDENCY_ROOT}/lib/embree2/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS # bundle embree
-			COMMAND cp ${OSX_DEPENDENCY_ROOT}/lib/LuxRays/libluxcore.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS # bundle luxcore
 			COMMAND cp -R ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents
 )
 ELSE(APPLE)

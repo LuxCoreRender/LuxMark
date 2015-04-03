@@ -11,11 +11,6 @@ set(OSX_DEPENDENCY_ROOT ${CMAKE_SOURCE_DIR}/../macos) # can be macos or usr/loca
 MESSAGE(STATUS "OSX_DEPENDENCY_ROOT_PATH : " ${OSX_DEPENDENCY_ROOT})
 set(OSX_SEARCH_PATH     ${OSX_DEPENDENCY_ROOT})
 
-set(LuxRender_SOURCE	${CMAKE_SOURCE_DIR}/../lux) # The lux source dir
-MESSAGE(STATUS "Using lux source dir (headers): " ${LuxRender_SOURCE})
-set(LuxRender_BUILD	${CMAKE_SOURCE_DIR}/../lux_build_opt) # the lux build dir, may be named different
-MESSAGE(STATUS "Using lux build dir (liblux): " ${LuxRender_BUILD})
-
 set(BOOST_SEARCH_PATH         "${OSX_SEARCH_PATH}")
 set(BOOST_LIBRARYDIR          "${BOOST_SEARCH_PATH}/lib")
 
@@ -41,7 +36,7 @@ SET(TIFF_FOUND ON)
 SET(JPEG_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libjpeg.a)
 SET(JPEG_INCLUDE_DIR ${OSX_DEPENDENCY_ROOT}/include/jpeg)
 SET(JPEG_FOUND ON)
-SET(PNG_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libpng14.a -lz)
+SET(PNG_LIBRARIES ${OSX_DEPENDENCY_ROOT}/lib/libpng.a -lz)
 SET(PNG_INCLUDE_DIR ${OSX_DEPENDENCY_ROOT}/include/png)
 SET(PNG_FOUND ON)
 SET(EMBREE_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/embree2/libembree.2.4.0.dylib)
