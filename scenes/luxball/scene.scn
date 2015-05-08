@@ -15,6 +15,7 @@ scene.lights.infinitelight.file = scenes/luxball/imagemap-00000.exr
 scene.lights.infinitelight.gain = 1.5 1.5 1.5
 scene.lights.infinitelight.shift = 0 0
 scene.lights.infinitelight.transformation = -1 0 0 0 0 1 0 0 0 0 1 0 0.49544811248779296875 0.50054323673248291015625 0.6312587261199951171875 1
+scene.lights.infinitelight.storage = float
 scene.textures.texture-0x7f4e0b479080.type = imagemap
 scene.textures.texture-0x7f4e0b479080.file = scenes/luxball/imagemap-00001.exr
 scene.textures.texture-0x7f4e0b479080.gamma = 1.0
