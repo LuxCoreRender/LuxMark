@@ -40,52 +40,6 @@ configure_file(
 
 #############################################################################
 #
-# LuxMark Docs
-#
-#############################################################################
-
-find_package(Doxygen)
-
-if(DOXYGEN_FOUND)
-	message(STATUS "Found Doxygen and generating LuxMark documentation")
-
-	# Generate doxygen.template
-	set(DOXYGEN_LUXMARK_TEMPLATE ${CMAKE_CURRENT_SOURCE_DIR}/../doxygen/luxmark.template)
-	configure_file(
-	  "${DOXYGEN_LUXMARK_TEMPLATE}.in"
-	  "${DOXYGEN_LUXMARK_TEMPLATE}"
-	  )
-
-	set(DOXYGEN_LUXMARK_INPUT ${CMAKE_CURRENT_BINARY_DIR}/../doxygen-luxmark.conf)
-	set(DOXYGEN_LUXMARK_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/../doc/luxmark)
-	set(DOXYGEN_LUXMARK_OUTPUT ${DOXYGEN_OUTPUT_DIR}/luxmark/html/index.html)
-
-	message(STATUS "Doxygen LuxMark output: " ${DOXYGEN_LUXMARK_OUTPUT})
-
-	if(DOXYGEN_DOT_FOUND)
-			message(STATUS "Found dot")
-			set(DOXYGEN_DOT_CONF "HAVE_DOT = YES")
-	endif(DOXYGEN_DOT_FOUND)
-
-	add_custom_command(
-		OUTPUT ${DOXYGEN_LUXMARK_OUTPUT}
-		# Creating custom doxygen-luxmark.conf
-		COMMAND mkdir -p ${DOXYGEN_LUXMARK_OUTPUT_DIR}
-		COMMAND cp ${DOXYGEN_LUXMARK_TEMPLATE} ${DOXYGEN_LUXMARK_INPUT}
-		COMMAND echo "INPUT = " ${CMAKE_CURRENT_SOURCE_DIR} >> ${DOXYGEN_LUXMARK_INPUT}
-		COMMAND echo "OUTPUT_DIRECTORY = " ${DOXYGEN_LUXMARK_OUTPUT_DIR} >> ${DOXYGEN_LUXMARK_INPUT}
-		COMMAND echo ${DOXYGEN_DOT_CONF} >> ${DOXYGEN_LUXMARK_INPUT}
-		# Launch doxygen
-		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_LUXMARK_INPUT}
-		DEPENDS ${DOXYGEN_LUXMARK_TEMPLATE}
-		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-	)
-
-	add_custom_target(apidoc_luxmark DEPENDS ${DOXYGEN_LUXMARK_OUTPUT})
-endif(DOXYGEN_FOUND)
-
-#############################################################################
-#
 # LuxMark binary
 #
 #############################################################################
