@@ -32,9 +32,9 @@ static void PrintCmdLineHelp(const QString &cmd) {
 			" --scene=LUXBALL_HDR|MICROPHONE|HOTEL (select the scene to use)" << endl <<
 			" --mode="
                 "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
-                "BENCHMARK_HYBRID_GPU|BENCHMARK_NATIVE|"
-                "STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
-                "DEMO_LUXVR|PAUSE"
+				"BENCHMARK_NATIVE|"
+				"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
+				"DEMO_LUXVR|PAUSE"
 				" (select the mode to use)" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl;
 }
