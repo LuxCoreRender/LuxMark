@@ -36,7 +36,8 @@ static void PrintCmdLineHelp(const QString &cmd) {
 				"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 				"DEMO_LUXVR|PAUSE"
 				" (select the mode to use)" << endl <<
-			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl;
+			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl <<
+			" --ext-info (print scene and image verification too with --single-run)" <<endl;
 }
 
 int main(int argc, char **argv) {
@@ -51,6 +52,7 @@ int main(int argc, char **argv) {
 	// Get the arguments into a list
 	bool exit = false;
 	bool singleRun = false;
+	bool singleRunExtInfo = false;
 
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
@@ -62,6 +64,7 @@ int main(int argc, char **argv) {
 		"DEMO_LUXVR|PAUSE"
 		")");
 	QRegExp argSingleRun("--single-run");
+	QRegExp argSingleRunExtInfo("--ext-info");
 
 	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
 	// Remember to change the default label in mainwindow.cpp too
@@ -113,6 +116,8 @@ int main(int argc, char **argv) {
 			}
 		} else if (argSingleRun.indexIn(argsList.at(i)) != -1 ) {   
 			singleRun = true;
+		} else if (argSingleRunExtInfo.indexIn(argsList.at(i)) != -1 ) {   
+			singleRunExtInfo = true;
         } else {
             cerr << "Unknown argument: " << argsList.at(i).toAscii().data() << endl;
 			PrintCmdLineHelp(argsList.at(0));
@@ -121,10 +126,15 @@ int main(int argc, char **argv) {
         }
     }
 
+	if (!singleRun && singleRunExtInfo) {
+		cerr << "Option --ext-info must be used with --single-run" << endl;
+		exit = true;
+	}
+
 	if (exit)
 		return EXIT_SUCCESS;
 	else {
-		app.Init(mode, scnName, singleRun);
+		app.Init(mode, scnName, singleRun, singleRunExtInfo);
 
 		// If current directory doesn't have the "scenes" directory, move
 		// to where the executable is
