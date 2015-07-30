@@ -102,13 +102,15 @@ LuxMarkApp::~LuxMarkApp() {
 	delete hardwareTreeModel;
 }
 
-void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName, const bool single) {
+void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName,
+		const bool single, const bool extInfo) {
 	mainWin = new MainWindow();
 	mainWin->setWindowTitle("LuxMark v" LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
 	mainWin->show();
 	mainWin->SetLuxApp(this);
 	LogWindow = mainWin;
 	singleRun = single;
+	singleRunExtInfo = extInfo;
 
 	LM_LOG("<FONT COLOR=\"#0000ff\">LuxMark v" << LUXMARK_VERSION_MAJOR << "." << LUXMARK_VERSION_MINOR << "</FONT>");
 	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxCore v" << LUXCORE_VERSION_MAJOR << "." << LUXCORE_VERSION_MINOR << "</FONT>");
@@ -290,7 +292,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 120.0) &&
+	const bool benchmarkDone = (renderingTime > 5.0) &&
 		(mode != STRESSTEST_OCL_GPU) &&
 		(mode != STRESSTEST_OCL_CPUGPU) &&
 		(mode != STRESSTEST_OCL_GPU);
@@ -340,7 +342,8 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	if (benchmarkDone) {
 		// Check if I'm in single run mode
-		if (singleRun) {
+		if (singleRun && !singleRunExtInfo) {
+			// The case (singleRun && singleRunExtInfo) is handled inside ResultDialog()
 			cout << "Score: " << int(sampleSec / 1000.0) << endl;
 
 			exit(EXIT_SUCCESS);
@@ -349,7 +352,8 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
             vector<BenchmarkDeviceDescription> descs = hardwareTreeModel->getSelectedDeviceDescs(mode);
 			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec,
-                    descs, pixels, width, height);
+                    descs, pixels, width, height,
+					singleRun && singleRunExtInfo);
 			dialog->exec();
 			delete dialog;
 

@@ -33,19 +33,23 @@ static QString Path2QString(const boost::filesystem::path &fileName) {
 }
 
 ResultDialog::ResultDialog(const LuxMarkAppMode m,
-		const char *scnName, const double sampSecs,
+		const char *scnName, const double sampSec,
 		const vector<BenchmarkDeviceDescription> ds,
 		const unsigned char *fb,
 		const u_int width, const u_int height,
+		const bool singleRun,
 		QWidget *parent) : QDialog(parent),
 		ui(new Ui::ResultDialog), mode(m), descs(ds) {
 	sceneName = scnName;
-	sampleSecs = sampSecs;
+	sampleSec = sampSec;
 	frameBuffer = fb;
 	frameBufferWidth = width;
 	frameBufferHeight = height;
-	sceneValidation = false;
-	imageValidation = false;
+	sceneValidationDone = false;
+	sceneValidationOk = false;
+	imageValidationDone = false;
+	imageValidationOk = false;
+	singleRunExtInfo = singleRun;
 
 	ui->setupUi(this);
 
@@ -63,15 +67,15 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
         ui->deviceListView->setVisible(false);
     }
 
-	ui->resultLCD->display(int(sampleSecs / 1000.0));
+	ui->resultLCD->display(int(sampleSec / 1000.0));
 
     // Re-enabled only after the validation process
 	ui->submitButton->setEnabled(false);
 
-	QObject::connect(this, SIGNAL(sceneValidationLabelChanged(const QString &, const bool)),
-			this, SLOT(setSceneValidationLabel(const QString &, const bool)));
-	QObject::connect(this, SIGNAL(imageValidationLabelChanged(const QString &, const bool)),
-			this, SLOT(setImageValidationLabel(const QString &, const bool)));
+	QObject::connect(this, SIGNAL(sceneValidationLabelChanged(const QString &, const bool, const bool)),
+			this, SLOT(setSceneValidationLabel(const QString &, const bool, const bool)));
+	QObject::connect(this, SIGNAL(imageValidationLabelChanged(const QString &, const bool, const bool)),
+			this, SLOT(setImageValidationLabel(const QString &, const bool, const bool)));
 
 	// Check if it is one of the official benchmarks
 	if ((strcmp(sceneName, SCENE_LUXBALL_HDR) == 0) ||
@@ -107,44 +111,63 @@ ResultDialog::~ResultDialog() {
 	delete deviceListModel;
 }
 
+void ResultDialog::PrintExtInfoAndExit() {
+	cout << "Score: " << int(sampleSec / 1000.0) << endl;
+	cout << "Scene validation: " << (sceneValidationOk ? "Ok" : "Failed") << endl;
+	cout << "Image validation: " << (imageValidationOk ? "Ok" : "Failed") << endl;
+
+	exit(EXIT_SUCCESS);
+}
+
 void ResultDialog::submitResult() {
-	SubmitDialog *dialog = new SubmitDialog(mode, sceneName, sampleSecs, descs);
+	SubmitDialog *dialog = new SubmitDialog(mode, sceneName, sampleSec, descs);
 	dialog->exec();
 	delete dialog;
 }
 
-void ResultDialog::setSceneValidationLabel(const QString &text, const bool isOk) {
+void ResultDialog::setSceneValidationLabel(const QString &text,
+		const bool isDone, const bool isOk) {
 	ui->sceneValidation->setText(text);
 	if (isOk) {
 		ui->sceneValidation->setStyleSheet("QLabel { color : green; }");
 
-        // Check if I can enable submit button
-        if (imageValidation && 
-                ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
-                (strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
-                (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
-            ui->submitButton->setEnabled(true);
+		// Check if I can enable submit button
+		if (imageValidationOk && ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
+				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
+				(strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+			ui->submitButton->setEnabled(true);
 	} else
 		ui->sceneValidation->setStyleSheet("QLabel { color : red; }");
 
-	sceneValidation = isOk;
+	sceneValidationDone = isDone;
+	sceneValidationOk = isOk;
+	
+	// Check if I'm in single run mode
+	if (sceneValidationDone && imageValidationDone)
+		PrintExtInfoAndExit();
 }
 
-void ResultDialog::setImageValidationLabel(const QString &text, const bool isOk) {
+void ResultDialog::setImageValidationLabel(const QString &text,
+		const bool isDone, const bool isOk) {
 	ui->imageValidation->setText(text);
 	if (isOk) {
 		ui->imageValidation->setStyleSheet("QLabel { color : green; }");
 
-        // Check if I can enable submit button
-        if (sceneValidation && 
+		// Check if I can enable submit button
+        if (sceneValidationOk &&
                 ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
-                (strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
-                (strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
-            ui->submitButton->setEnabled(true);
+				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
+				(strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+			ui->submitButton->setEnabled(true);
 	} else
 		ui->imageValidation->setStyleSheet("QLabel { color : red; }");
 
-	imageValidation = isOk;
+	imageValidationDone = isDone;
+	imageValidationOk = isOk;
+
+	// Check if I'm in single run mode
+	if (sceneValidationDone && imageValidationDone)
+		PrintExtInfoAndExit();
 }
 
 void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
@@ -157,7 +180,7 @@ void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
 			const string ext = fileName.extension().generic_string();
 			if ((ext == ".cfg") || (ext == ".scn") || (ext == ".ply") || (ext == ".exr") || (ext == ".raw")) {
 				const QString label(("Selecting file [" + fileName.filename().generic_string() + "]").c_str());
-				emit resultDialog->sceneValidationLabelChanged(label, false);
+				emit resultDialog->sceneValidationLabelChanged(label, false, false);
 				files.push_back(fileName);
 			}
 		}
@@ -166,7 +189,7 @@ void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
 
 void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 	// Begin the md5 scene validation process
-	emit resultDialog->sceneValidationLabelChanged("Starting...", false);
+	emit resultDialog->sceneValidationLabelChanged("Starting...", false, false);
 
 	try {
 		// Extract the scene directory name
@@ -189,7 +212,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			LM_LOG("  [" << fileName << "]");
 
 			const QString label(("Validating file [" + fileName.filename().generic_string() + "]").c_str());
-			emit resultDialog->sceneValidationLabelChanged(label, false);
+			emit resultDialog->sceneValidationLabelChanged(label, false, false);
 
 			// Read all file
             const QString fname = Path2QString(fileName);
@@ -208,34 +231,34 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 
 		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR)) {
 			if (md5 == "f4d99d9deb8add29ec9ea7ab73eeb5f6")
-				emit resultDialog->sceneValidationLabelChanged("OK", true);
+				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
-				emit resultDialog->sceneValidationLabelChanged("Failed", false);
+				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
 			if (md5 == "b9ab82594b1410744a7b33c047166b90")
-				emit resultDialog->sceneValidationLabelChanged("OK", true);
+				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
-				emit resultDialog->sceneValidationLabelChanged("Failed", false);
+				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
 			if (md5 == "ddf1ffcf49e358197a79c1f9fa33eaf6")
-				emit resultDialog->sceneValidationLabelChanged("OK", true);
+				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
-				emit resultDialog->sceneValidationLabelChanged("Failed", false);
+				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else {
 			// This should never happen, the thread should have not been started at all
 			LM_LOG("Internal error in ResultDialog::MD5ThreadImpl()");
-			emit resultDialog->sceneValidationLabelChanged("Failed", false);
+			emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		}
 	} catch (exception &err) {
 		LM_ERROR("SCENE VALIDATION ERROR: " << err.what());
 
-		emit resultDialog->sceneValidationLabelChanged("Error", false);
+		emit resultDialog->sceneValidationLabelChanged("Error", true, false);
 	}
 }
 
 void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 	// Begin the image validation process
-	emit resultDialog->imageValidationLabelChanged("Starting...", false);
+	emit resultDialog->imageValidationLabelChanged("Starting...", false, false);
 
 	float *referenceImage = NULL;
 	float *testImage = NULL;
@@ -293,7 +316,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		convTest.Test(referenceImage);
 
 		// Test image
-		emit resultDialog->imageValidationLabelChanged("Comparing...", false);
+		emit resultDialog->imageValidationLabelChanged("Comparing...", false, false);
 		const u_int diffPixelCount = convTest.Test(testImage);
 
 		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_HOTEL) == 0) ? 60.f : 15.f;
@@ -304,11 +327,11 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
         ss << (isOk ? "OK" : "Failed");
         ss << " (" << diffPixelCount << " different pixels, " << fixed << setprecision(2) << errorPerc << "%)";
 
-		emit resultDialog->imageValidationLabelChanged(ss.str().c_str(), isOk);
+		emit resultDialog->imageValidationLabelChanged(ss.str().c_str(), true, isOk);
 	} catch (exception &err) {
 		LM_ERROR("IMAGE VALIDATION ERROR: " << err.what());
 
-		emit resultDialog->imageValidationLabelChanged("Error", false);
+		emit resultDialog->imageValidationLabelChanged("Error", true, false);
 	}
 	
 	delete[] testImage;
