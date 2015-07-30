@@ -143,7 +143,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text,
 	sceneValidationOk = isOk;
 	
 	// Check if I'm in single run mode
-	if (sceneValidationDone && imageValidationDone)
+	if (singleRunExtInfo && sceneValidationDone && imageValidationDone)
 		PrintExtInfoAndExit();
 }
 
@@ -166,7 +166,7 @@ void ResultDialog::setImageValidationLabel(const QString &text,
 	imageValidationOk = isOk;
 
 	// Check if I'm in single run mode
-	if (sceneValidationDone && imageValidationDone)
+	if (singleRunExtInfo && sceneValidationDone && imageValidationDone)
 		PrintExtInfoAndExit();
 }
 
