@@ -230,17 +230,17 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR)) {
-			if (md5 == "f4d99d9deb8add29ec9ea7ab73eeb5f6")
+			if (md5 == "e9cbb80c9bd5af6bf71944aa0eba9ccd")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
-			if (md5 == "b9ab82594b1410744a7b33c047166b90")
+			if (md5 == "e31bbf599a485b5f5face262a0c3f4b5")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
-			if (md5 == "ddf1ffcf49e358197a79c1f9fa33eaf6")
+			if (md5 == "b962a6b8c72990b4a3c6297144d30d8b")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
