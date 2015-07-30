@@ -65,6 +65,7 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	luxcore::Init(LuxCoreErrorHandler);
 
 	singleRun = false;
+	singleRunExtInfo = false;
 
 	mainWin = NULL;
 	engineInitThread = NULL;
