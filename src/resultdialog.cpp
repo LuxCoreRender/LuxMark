@@ -1,14 +1,14 @@
  /***************************************************************************
  *   Copyright (C) 1998-2013 by authors (see AUTHORS.txt)                  *
  *                                                                         *
- *   This file is part of LuxRays.                                         *
+ *   This file is part of LuxMark.                                         *
  *                                                                         *
- *   LuxRays is free software; you can redistribute it and/or modify       *
+ *   LuxMark is free software; you can redistribute it and/or modify       *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- *   LuxRays is distributed in the hope that it will be useful,            *
+ *   LuxMark is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
@@ -16,7 +16,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  *                                                                         *
- *   LuxRays website: http://www.luxrender.net                             *
+ *   LuxMark website: http://www.luxrender.net                             *
  ***************************************************************************/
 
 #include <QFile>
@@ -230,17 +230,17 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR)) {
-			if (md5 == "e9cbb80c9bd5af6bf71944aa0eba9ccd")
+			if (md5 == "f4d99d9deb8add29ec9ea7ab73eeb5f6")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
-			if (md5 == "e31bbf599a485b5f5face262a0c3f4b5")
+			if (md5 == "885de1a27b6bfa86c114b4810d323e97")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
-			if (md5 == "b962a6b8c72990b4a3c6297144d30d8b")
+			if (md5 == "901b621dee6c0a032b0c521dc3ea13fc")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);

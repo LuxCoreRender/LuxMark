@@ -32,7 +32,7 @@
 class LuxRenderSession {
 public:
 	LuxRenderSession(const string &sceneFileName, const LuxMarkAppMode mode,
-			const string &devSel);
+			const string &devSel, const string &oclCompOpts);
 	~LuxRenderSession();
 
 	void Start();
@@ -50,6 +50,7 @@ private:
 	std::string sceneFileName;
 	LuxMarkAppMode renderMode;
 	string deviceSelection;
+	string oclCompilerOpts;
 
 	luxcore::RenderConfig *config;
 	luxcore::RenderSession *session;

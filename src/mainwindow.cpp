@@ -1,14 +1,14 @@
  /***************************************************************************
  *   Copyright (C) 1998-2013 by authors (see AUTHORS.txt)                  *
  *                                                                         *
- *   This file is part of LuxRays.                                         *
+ *   This file is part of LuxMark.                                         *
  *                                                                         *
- *   LuxRays is free software; you can redistribute it and/or modify       *
+ *   LuxMark is free software; you can redistribute it and/or modify       *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- *   LuxRays is distributed in the hope that it will be useful,            *
+ *   LuxMark is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
@@ -16,7 +16,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  *                                                                         *
- *   LuxRays website: http://www.luxrender.net                             *
+ *   LuxMark website: http://www.luxrender.net                             *
  ***************************************************************************/
 
 #include <QTextEdit>
@@ -221,6 +221,30 @@ void MainWindow::setMode_DEMO_LUXVR() {
 void MainWindow::setMode_PAUSE() {
 	LM_LOG("Set Pause mode");
 	((LuxMarkApp *)qApp)->SetMode(PAUSE);
+}
+
+void MainWindow::setOCLOpts_cl_fast_relaxed_math(bool enable) {
+	LM_LOG("Toggle OpenCL compiler option: -cl-fast-relaxed-math");
+	((LuxMarkApp *)qApp)->SetMode(PAUSE);
+	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(FAST_RELAXED_MATH, enable);
+}
+
+void MainWindow::setOCLOpts_cl_mad_enable(bool enable) {
+	LM_LOG("Toggle OpenCL compiler option: -cl-mad-enabled");
+	((LuxMarkApp *)qApp)->SetMode(PAUSE);
+	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(MAD_ENABLED, enable);
+}
+
+void MainWindow::setOCLOpts_cl_strict_aliasing(bool enable) {
+	LM_LOG("Toggle OpenCL compiler option: -cl-strict-aliasing");
+	((LuxMarkApp *)qApp)->SetMode(PAUSE);
+	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(STRICT_ALIASING, enable);
+}
+
+void MainWindow::setOCLOpts_cl_no_signed_zeros(bool enable) {
+	LM_LOG("Toggle OpenCL compiler option: -cl-no-signed-zeros");
+	((LuxMarkApp *)qApp)->SetMode(PAUSE);
+	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(NO_SIGNED_ZEROS, enable);	
 }
 
 //------------------------------------------------------------------------------
