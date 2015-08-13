@@ -1,14 +1,14 @@
 /***************************************************************************
  *   Copyright (C) 1998-2013 by authors (see AUTHORS.txt)                  *
  *                                                                         *
- *   This file is part of LuxRays.                                         *
+ *   This file is part of LuxMark.                                         *
  *                                                                         *
- *   LuxRays is free software; you can redistribute it and/or modify       *
+ *   LuxMark is free software; you can redistribute it and/or modify       *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 3 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- *   LuxRays is distributed in the hope that it will be useful,            *
+ *   LuxMark is distributed in the hope that it will be useful,            *
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
  *   GNU General Public License for more details.                          *
@@ -16,7 +16,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  *                                                                         *
- *   LuxRays website: http://www.luxrender.net                             *
+ *   LuxMark website: http://www.luxrender.net                             *
  ***************************************************************************/
 
 #include <limits>
@@ -66,6 +66,11 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 
 	singleRun = false;
 	singleRunExtInfo = false;
+
+	oclOptFastRelaxedMath = true;
+	oclOptMadEnabled = true;
+	oclOptStrictAliasing = false;
+	oclOptNoSignedZeros = true;
 
 	mainWin = NULL;
 	engineInitThread = NULL;
@@ -129,6 +134,26 @@ void LuxMarkApp::SetMode(LuxMarkAppMode m) {
 
 void LuxMarkApp::SetScene(const char *name) {
 	InitRendering(mode, name);
+}
+
+void  LuxMarkApp::SetOpenCLCompilerOpts(const OCLCompilerOpts opt, const bool enable) {
+	switch (opt) {
+		case FAST_RELAXED_MATH:
+			oclOptFastRelaxedMath = enable;
+			break;
+		case MAD_ENABLED:
+			oclOptMadEnabled = enable;
+			break;
+		case STRICT_ALIASING:
+			oclOptStrictAliasing = enable;
+			break;
+		case NO_SIGNED_ZEROS:
+			oclOptNoSignedZeros = enable;
+			break;
+		default:
+			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown OpenCL compiler option in LuxMarkApp::SetOpenCLCompilerOpts(): " << opt << "</FONT>");
+			break;
+	}
 }
 
 void LuxMarkApp::Stop() {
@@ -198,10 +223,35 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 	try {
 		// Initialize the new mode
 		string sname(app->sceneName); 
+
 		// At the first run, hardwareTreeModel is NULL
 		const string deviceSelection = (app->hardwareTreeModel) ?
 			(app->hardwareTreeModel->getDeviceSelectionString()) : "";
-		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection);
+
+		// Set OpenCL compiler options
+		string oclCompilerOpts = "";
+		if (app->oclOptFastRelaxedMath) {
+			if (oclCompilerOpts != "")
+				oclCompilerOpts += " ";
+			oclCompilerOpts += "-cl-fast-relaxed-math";
+		}
+		if (app->oclOptMadEnabled) {
+			if (oclCompilerOpts != "")
+				oclCompilerOpts += " ";
+			oclCompilerOpts += "-cl-mad-enable";
+		}
+		if (app->oclOptStrictAliasing) {
+			if (oclCompilerOpts != "")
+				oclCompilerOpts += " ";
+			oclCompilerOpts += "-cl-strict-aliasing";
+		}
+		if (app->oclOptNoSignedZeros) {
+			if (oclCompilerOpts != "")
+				oclCompilerOpts += " ";
+			oclCompilerOpts += "-cl-no-signed-zeros";
+		}
+
+		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection, oclCompilerOpts);
 
 		// Start the rendering
 		app->luxSession->Start();
@@ -285,10 +335,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		}
 		case BENCHMARK_NATIVE:
 			break;
-		default: {
+		default:
 			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");
 			break;
-		}
 	}
 
 	// Get the list of device names

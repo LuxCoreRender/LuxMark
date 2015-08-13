@@ -29,11 +29,12 @@ using namespace luxrays;
 using namespace luxcore;
 
 LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
-		const string &devSel) {
+		const string &devSel, const string &oclCompOpts) {
     renderMode = mode;
     
     sceneFileName = fileName;
     deviceSelection = devSel;
+	oclCompilerOpts = oclCompOpts;
 
 	config = NULL;
 	session = NULL;
@@ -63,6 +64,7 @@ void LuxRenderSession::Start() {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(false) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
@@ -71,6 +73,7 @@ void LuxRenderSession::Start() {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(true) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
@@ -79,6 +82,7 @@ void LuxRenderSession::Start() {
 			props <<
 					Property("opencl.gpu.use")(false) <<
 					Property("opencl.cpu.use")(true) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
@@ -88,10 +92,12 @@ void LuxRenderSession::Start() {
 				props <<
 						Property("opencl.gpu.use")(true) <<
 						Property("opencl.cpu.use")(false) <<
+						Property("opencl.kernel.options")(oclCompilerOpts) <<
 						Property("renderengine.type")("PATHOCL");
 			} else {
 				props <<
 						Property("opencl.devices.select")(deviceSelection) <<
+						Property("opencl.kernel.options")(oclCompilerOpts) <<
 						Property("renderengine.type")("PATHOCL");
 			}
 			break;

@@ -152,9 +152,19 @@
     <addaction name="action_Microphone"/>
     <addaction name="action_LuxBall_HDR"/>
    </widget>
+   <widget class="QMenu" name="menuOpenCL_Compiler_Opts">
+    <property name="title">
+     <string>OpenCL Compiler Options</string>
+    </property>
+    <addaction name="action_cl_fast_relaxed_math"/>
+    <addaction name="action_cl_mad_enable"/>
+    <addaction name="action_cl_no_signed_zeros"/>
+    <addaction name="action_cl_strict_aliasing"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Mode"/>
    <addaction name="menu_Scene"/>
+   <addaction name="menuOpenCL_Compiler_Opts"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -279,6 +289,50 @@
   <action name="action_LuxVR">
    <property name="text">
     <string>LuxVR (OpenCL GPUs)</string>
+   </property>
+  </action>
+  <action name="action_cl_fast_relaxed_math">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>-cl-fast-relaxed-math</string>
+   </property>
+  </action>
+  <action name="action_cl_mad_enable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>-cl-mad-enable</string>
+   </property>
+  </action>
+  <action name="action_cl_strict_aliasing">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>-cl-strict-aliasing</string>
+   </property>
+  </action>
+  <action name="action_cl_no_signed_zeros">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>-cl-no-signed-zeros</string>
    </property>
   </action>
  </widget>
@@ -526,6 +580,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_cl_fast_relaxed_math</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_cl_mad_enable</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setOCLOpts_cl_mad_enable(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_cl_strict_aliasing</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setOCLOpts_cl_strict_aliasing(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_cl_no_signed_zeros</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setOCLOpts_cl_no_signed_zeros(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitApp()</slot>
@@ -545,5 +663,9 @@
   <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
   <slot>setMode_DEMO_LUXVR()</slot>
+  <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
+  <slot>setOCLOpts_cl_mad_enable(bool)</slot>
+  <slot>setOCLOpts_cl_strict_aliasing(bool)</slot>
+  <slot>setOCLOpts_cl_no_signed_zeros(bool)</slot>
  </slots>
 </ui>
