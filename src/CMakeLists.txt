@@ -20,7 +20,7 @@
 ###########################################################################
 
 set(LUXMARK_VERSION_MAJOR 3)
-set(LUXMARK_VERSION_MINOR 1beta3)
+set(LUXMARK_VERSION_MINOR 1)
 
 FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtMain)
 IF(QT4_FOUND)
