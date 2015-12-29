@@ -26,7 +26,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "slg/film/film.h"
-#include "slg/renderengine.h"
+#include "slg/engines/renderengine.h"
 #include "slg/engines/pathocl/pathocl.h"
 
 #include "luxmarkcfg.h"
