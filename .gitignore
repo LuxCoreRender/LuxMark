@@ -1,14 +1,13 @@
-^doxygen-luxmark.conf
-^doxygen/luxmark.template
-^bin/*
-^doc/*
-^src/(Debug|Release)/
-^(Debug|Release|x64)/
-^nbproject/*
-^slg4*
-^scenes/mic/*
-^scenes/hotel/*
-syntax: glob
+doxygen-luxmark.conf
+doxygen/luxmark.template
+bin/*
+doc/*
+src/(Debug|Release)/
+(Debug|Release|x64)/
+nbproject/*
+slg4*
+scenes/mic/*
+scenes/hotel/*
 *~
 *CMakeFiles
 *CMakeCache.txt

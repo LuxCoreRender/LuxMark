@@ -113,8 +113,8 @@ void LuxRenderSession::Start() {
 		}
 	}
 
-	config = new RenderConfig(props);
-	session = new RenderSession(config);
+	config = RenderConfig::Create(props);
+	session = RenderSession::Create(config);
 
 	session->Start();
 }
@@ -127,7 +127,7 @@ void LuxRenderSession::Stop() {
 }
 
 const float *LuxRenderSession::GetFrameBuffer() const {
-	return session->GetFilm().GetChannel<float>(Film::CHANNEL_RGB_TONEMAPPED);
+	return session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE);
 }
 
 u_int LuxRenderSession::GetFrameBufferWidth() const {

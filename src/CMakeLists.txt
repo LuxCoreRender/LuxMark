@@ -57,6 +57,9 @@ set(LUXMARK_SRCS
     resultdialog.cpp
 	submitdialog.cpp
 	luxrendersession.cpp
+	convtest/convtest.cpp
+	convtest/pdiff/lpyramid.cpp
+	convtest/pdiff/metric.cpp
 	)
 set(LUXMARK_MOC
 	aboutdialog.h

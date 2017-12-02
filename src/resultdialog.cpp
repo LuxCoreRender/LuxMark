@@ -22,7 +22,9 @@
 #include <QFile>
 #include <QCryptographicHash>
 
-#include "slg/utils/convtest/convtest.h"
+#include <boost/foreach.hpp>
+
+#include "convtest/convtest.h"
 #include "luxmarkcfg.h"
 #include "resultdialog.h"
 #include "submitdialog.h"
@@ -310,7 +312,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 			testImage[i] = resultDialog->frameBuffer[i] / 255.f;
 
 		// Run the image comparison
-		slg::ConvergenceTest convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
+		lux::ConvergenceTest convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
 
 		// Reference image
 		convTest.Test(referenceImage);
