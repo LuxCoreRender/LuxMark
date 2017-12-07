@@ -139,14 +139,6 @@ if (NOT OPENGL_FOUND)
 	MESSAGE(FATAL_ERROR "--> Could not locate required OpenGL files")
 endif()
 
-if (NOT GLEW_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required GLEW files, disabling samples build - Please check ${GLEW_SEARCH_PATH}")
-endif()
-
-if (NOT GLUT_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required GLUT files, disabling samples build - Please check ${GLUT_SEARCH_PATH}")
-endif()
-
 if(NOT WIN32)
 	ADD_DEFINITIONS(-msse2 -mfpmath=sse -ftree-vectorize -funroll-loops -Wall -fPIC -DHAVE_PTHREAD_H)
 endif()
