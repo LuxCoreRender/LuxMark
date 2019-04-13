@@ -1,23 +1,20 @@
-###########################################################################
-#   Copyright (C) 1998-2013 by authors (see AUTHORS.txt)                  #
-#                                                                         #
-#   This file is part of Lux.                                             #
-#                                                                         #
-#   Lux is free software; you can redistribute it and/or modify           #
-#   it under the terms of the GNU General Public License as published by  #
-#   the Free Software Foundation; either version 3 of the License, or     #
-#   (at your option) any later version.                                   #
-#                                                                         #
-#   Lux is distributed in the hope that it will be useful,                #
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of        #
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #
-#   GNU General Public License for more details.                          #
-#                                                                         #
-#   You should have received a copy of the GNU General Public License     #
-#   along with this program.  If not, see <http://www.gnu.org/licenses/>. #
-#                                                                         #
-#   Lux website: http://www.luxrender.net                                 #
-###########################################################################
+################################################################################
+# Copyright 1998-2018 by authors (see AUTHORS.txt)
+#
+#   This file is part of LuxCoreRender.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+################################################################################
 
 # Try to find OpenCL library and include path.
 # Once done this will define
@@ -36,16 +33,20 @@ FIND_PATH(OPENCL_INCLUDE_DIR
 	DOC "The directory where CL/cl.hpp resides")
 FIND_PATH(OPENCL_INCLUDE_DIR
 	NAMES CL/cl.hpp OpenCL/cl.hpp
-	PATHS /usr /usr/local /sw /opt/local $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT}
+	PATHS /usr /usr/local /sw /opt/local $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT} $ENV{OCL_ROOT}
 	PATH_SUFFIXES ${OPENCL_INC_SUFFIXES}
 	DOC "The directory where CL/cl.hpp resides")
 FIND_PATH(OPENCL_C_INCLUDE_DIR
 	NAMES CL/opencl.h OpenCL/opencl.h
-	PATHS $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT}
+	PATHS $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT} $ENV{OCL_ROOT}
 	PATH_SUFFIXES ${OPENCL_INC_SUFFIXES}
 	DOC "The directory where CL/opencl.h resides")
 SET(OPENCL_NAMES_REL opencl OpenCL)
-SET(OPENCL_LIB_SUFFIXES "" lib/x86_64 lib/x86 lib64 lib Lib lib/opencl Libs Dist Release Debug lib/x64 lib/Win32)
+IF ( OPENCL_X86 )
+  SET(OPENCL_LIB_SUFFIXES "" lib/x86 lib Lib lib/opencl Libs Dist Release Debug lib/Win32)
+ELSE()
+  SET(OPENCL_LIB_SUFFIXES "" lib/x86_64 lib64 lib Lib lib/opencl Libs Dist Release Debug lib/x64)
+ENDIF()
 SET(OPENCL_LIB_SUFFIXES_REL)
 SET(OPENCL_LIB_SUFFIXES_DBG)
 FOREACH(i ${OPENCL_LIB_SUFFIXES})
@@ -67,7 +68,7 @@ FIND_LIBRARY(OPENCL_LIBRARY_REL
 )
 FIND_LIBRARY(OPENCL_LIBRARY_REL
 	NAMES ${OPENCL_NAMES_REL}
-	PATHS /usr/local /usr /sw /opt/local /opt/csw /opt $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT}
+	PATHS /usr/local /usr /sw /opt/local /opt/csw /opt $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT} $ENV{OCL_ROOT}
 	PATH_SUFFIXES ${OPENCL_LIB_SUFFIXES_REL}
 	DOC "The OpenCL release library"
 )
@@ -80,7 +81,7 @@ FIND_LIBRARY(OPENCL_LIBRARY_DBG
 )
 FIND_LIBRARY(OPENCL_LIBRARY_DBG
 	NAMES ${OPENCL_NAMES_DBG}
-	PATHS /usr/local /usr /sw /opt/local /opt/csw /opt $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT}
+	PATHS /usr/local /usr /sw /opt/local /opt/csw /opt $ENV{ATISTREAMSDKROOT} $ENV{AMDAPPSDKROOT} $ENV{CUDA_PATH} $ENV{INTELOCLSDKROOT} $ENV{OCL_ROOT}
 	PATH_SUFFIXES ${OPENCL_LIB_SUFFIXES_DBG}
 	DOC "The OpenCL debug library"
 )

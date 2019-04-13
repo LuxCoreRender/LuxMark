@@ -9,13 +9,16 @@
 
 MESSAGE(STATUS "Using Dade's Linux Configuration settings")
 
-SET(BOOST_SEARCH_PATH		"/home/david/projects/luxcorerender/boost_1_56_0-bin")
-SET(OPENIMAGEIO_ROOT_DIR	"/home/david/projects/luxcorerender/oiio/dist/linux64")
+SET(BOOST_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(OPENIMAGEIO_ROOT_DIR	"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(EMBREE_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(OIDN_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
 
-SET(OPENCL_SEARCH_PATH	"$ENV{AMDAPPSDKROOT}")
-SET(OPENCL_INCLUDEPATH	"${OPENCL_SEARCH_PATH}/include")
+SET(OPENCL_SEARCH_PATH		"$ENV{AMDAPPSDKROOT}")
 
-SET(EMBREE_SEARCH_PATH	"/home/david/projects/luxcorerender/embree-dade")
+SET(BLOSC_SEARCH_PATH       "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(TBB_SEARCH_PATH         "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(ENV{QTDIR}				"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2/bin")
 
 SET(LuxRays_HOME		"/home/david/projects/luxcorerender/LuxCore")
 

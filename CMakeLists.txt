@@ -111,10 +111,6 @@ ELSE(LUXMARK_CUSTOM_CONFIG)
         SET(QT_QTGUI_INCLUDE_DIR      "$ENV{INCLUDE_DIR}/Qt/include/QtGui")
         SET(QT_QMAKE_EXECUTABLE       "$ENV{LIB_DIR}/qmake.exe")
         SET(QT_BINARY_DIR             "$ENV{LIB_DIR}")
-
-        ADD_DEFINITIONS(-DFREEIMAGE_LIB)
-        ADD_DEFINITIONS(-DFREEGLUT_STATIC)
-        ADD_DEFINITIONS(-DGLEW_STATIC)
       ENDIF()
     ENDIF(MSVC)
   ENDIF(WIN32)
@@ -131,24 +127,30 @@ if (NOT OPENIMAGEIO_FOUND)
 	MESSAGE(FATAL_ERROR "--> Could not locate required OpenImageIO files - Please check ${OPENIMAGEIO_SEARCH_PATH}")
 endif()
 
-if (NOT OPENCL_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required OpenCL files - Please check ${OPENCL_SEARCH_PATH}")
+if (NOT OPENCL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
+	MESSAGE(ERROR "--> Could not locate required OpenCL files, disabling OpenCL support - Please check ${OPENCL_SEARCH_PATH}")
+	SET(LUXRAYS_DISABLE_OPENCL 1)
 endif()
 
-if (NOT OPENGL_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required OpenGL files")
+if (NOT OPENGL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
+	MESSAGE(ERROR "--> Could not locate required OpenGL files, disabling OpenCL support, disabling samples build")
+	SET(LUXRAYS_DISABLE_OPENCL 1)
 endif()
 
-if (NOT GLEW_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required GLEW files, disabling samples build - Please check ${GLEW_SEARCH_PATH}")
+if (NOT EMBREE_FOUND)
+	MESSAGE(FATAL_ERROR "--> Could not locate required Intel Embree files - Please check ${EMBREE_SEARCH_PATH}")
 endif()
 
-if (NOT GLUT_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required GLUT files, disabling samples build - Please check ${GLUT_SEARCH_PATH}")
+if (NOT OIDN_FOUND)
+	MESSAGE(FATAL_ERROR "--> Could not locate required Intel Oidn files - Please check ${OIDN_SEARCH_PATH}")
 endif()
 
-if(NOT WIN32)
-	ADD_DEFINITIONS(-msse2 -mfpmath=sse -ftree-vectorize -funroll-loops -Wall -fPIC -DHAVE_PTHREAD_H)
+if (NOT TBB_FOUND)
+	MESSAGE(FATAL_ERROR "--> Could not locate required Intel TBB files - Please check ${TBB_SEARCH_PATH}")
+endif()
+
+if (NOT BLOSC_FOUND)
+	MESSAGE(FATAL_ERROR "--> Could not locate required C-BLOSC files - Please check ${BLOSC_SEARCH_PATH}")
 endif()
 
 
@@ -157,6 +159,9 @@ endif()
 # LuxMark
 #
 ###########################################################################
+
+set(LuxRays_GENERATED_INCLUDE_DIR "${LUXRAYS_INCLUDE_DIRS}/../generated/include")
+include_directories(${LuxRays_GENERATED_INCLUDE_DIR})
 
 add_subdirectory(src)
 

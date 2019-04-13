@@ -25,9 +25,15 @@
 #include <QFile>
 #include <QGraphicsSceneMouseEvent>
 
-#include "slg/film/film.h"
-#include "slg/engines/renderengine.h"
-#include "slg/engines/pathocl/pathocl.h"
+// To avoid reference to OpenCL 1.2 symbols in cl.hpp file
+#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
+#define __CL_ENABLE_EXCEPTIONS
+
+#if defined(__APPLE__)
+#include <OpenCL/cl.hpp>
+#else
+#include <CL/cl.hpp>
+#endif
 
 #include "luxmarkcfg.h"
 #include "luxmarkapp.h"

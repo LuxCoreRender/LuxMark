@@ -27,104 +27,119 @@ getenv_path(LuxMark_DEPENDENCIES_DIR)
 #######################################################################
 
 # Find threading library
-FIND_PACKAGE(Threads REQUIRED)
+find_package(Threads REQUIRED)
 
 find_package(OpenImageIO REQUIRED)
-include_directories(SYSTEM ${OPENIMAGEIO_INCLUDE_DIR})
+include_directories(BEFORE SYSTEM ${OPENIMAGEIO_INCLUDE_DIR})
 find_package(OpenEXR REQUIRED)
 
-if(NOT APPLE)
-    # Apple has these available hardcoded and matched in macos repo, see Config_OSX.cmake
-
-    include_directories(SYSTEM ${OPENEXR_INCLUDE_DIRS})
-    find_package(TIFF REQUIRED)
-    include_directories(SYSTEM ${TIFF_INCLUDE_DIR})
-    find_package(JPEG REQUIRED)
-    include_directories(SYSTEM ${JPEG_INCLUDE_DIR})
-    find_package(PNG REQUIRED)
-    include_directories(SYSTEM ${PNG_PNG_INCLUDE_DIR})
-	# Find Python Libraries
-	find_package(PythonLibs)
+include_directories(BEFORE SYSTEM ${OPENEXR_INCLUDE_DIRS})
+find_package(TIFF REQUIRED)
+include_directories(BEFORE SYSTEM ${TIFF_INCLUDE_DIR})
+find_package(JPEG REQUIRED)
+include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR})
+find_package(PNG REQUIRED)
+include_directories(BEFORE SYSTEM ${PNG_PNG_INCLUDE_DIR})
+# Find Python Libraries
+if("${PYTHON_V}" EQUAL "27")
+	find_package(PythonLibs 2.7)
+else()
+	find_package(PythonLibs 3.4)
 endif()
 
+include_directories(${PYTHON_INCLUDE_DIRS})
+
 # Find Boost
-set(Boost_USE_STATIC_LIBS       ON)
+set(Boost_USE_STATIC_LIBS       OFF)
 set(Boost_USE_MULTITHREADED     ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 set(BOOST_ROOT                  "${BOOST_SEARCH_PATH}")
 #set(Boost_DEBUG                 ON)
-set(Boost_MINIMUM_VERSION       "1.44.0")
+set(Boost_MINIMUM_VERSION       "1.56.0")
 
-set(Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.1" "1.46" "1.46.0" "1.45" "1.45.0" "1.44" "1.44.0")
-
-set(LUXMARK_BOOST_COMPONENTS  thread program_options filesystem serialization iostreams regex system)
-find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS ${LUXMARK_BOOST_COMPONENTS})
+# For Windows builds, PYTHON_V must be defined as "3x" (x=Python minor version, e.g. "35")
+# For other platforms, specifying python minor version is not needed
+set(LUXRAYS_BOOST_COMPONENTS thread program_options filesystem serialization iostreams regex system python${PYTHON_V} chrono serialization numpy${PYTHON_V})
+find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS ${LUXRAYS_BOOST_COMPONENTS})
 if (NOT Boost_FOUND)
         # Try again with the other type of libs
         if(Boost_USE_STATIC_LIBS)
-                set(Boost_USE_STATIC_LIBS)
-        else()
                 set(Boost_USE_STATIC_LIBS OFF)
+        else()
+                set(Boost_USE_STATIC_LIBS ON)
         endif()
-        find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS ${LUXMARK_BOOST_COMPONENTS})
+		message(STATUS "Re-trying with link static = ${Boost_USE_STATIC_LIBS}")
+        find_package(Boost ${Boost_MINIMUM_VERSION} COMPONENTS ${LUXRAYS_BOOST_COMPONENTS})
 endif()
 
 if (Boost_FOUND)
-	include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+	include_directories(BEFORE SYSTEM ${Boost_INCLUDE_DIRS})
 	link_directories(${Boost_LIBRARY_DIRS})
 	# Don't use old boost versions interfaces
 	ADD_DEFINITIONS(-DBOOST_FILESYSTEM_NO_DEPRECATED)
+	if (Boost_USE_STATIC_LIBS)
+		ADD_DEFINITIONS(-DBOOST_STATIC_LIB)
+		ADD_DEFINITIONS(-DBOOST_PYTHON_STATIC_LIB)
+	endif()
 endif ()
 
 
+# OpenGL
 find_package(OpenGL)
 
 if (OPENGL_FOUND)
-	include_directories(SYSTEM ${OPENGL_INCLUDE_PATH})
+	include_directories(BEFORE SYSTEM ${OPENGL_INCLUDE_PATH})
 endif()
 
-# GLEW
-set(GLEW_ROOT                  "${GLEW_SEARCH_PATH}")
-if(NOT APPLE)
-	find_package(GLEW)
-endif()
-if (GLEW_FOUND)
-	include_directories(SYSTEM ${GLEW_INCLUDE_PATH})
-endif ()
-
-# GLUT
-set(GLUT_ROOT                  "${GLUT_SEARCH_PATH}")
-find_package(GLUT)
-if (GLUT_FOUND)
-	include_directories(SYSTEM ${GLUT_INCLUDE_PATH})
-endif ()
-
-set(OPENCL_ROOT                  "${OPENCL_SEARCH_PATH}")
-find_package(OpenCL)
 # OpenCL
+set(OPENCL_ROOT                "${OPENCL_SEARCH_PATH}")
+find_package(OpenCL)
+
 if (OPENCL_FOUND)
-	include_directories(SYSTEM ${OPENCL_INCLUDE_DIR} ${OPENCL_C_INCLUDE_DIR})
+	include_directories(BEFORE SYSTEM ${OPENCL_INCLUDE_DIR} ${OPENCL_C_INCLUDE_DIR})
 endif ()
 
 # Intel Embree
 set(EMBREE_ROOT                "${EMBREE_SEARCH_PATH}")
-find_package(Embree)
+find_package(Embree REQUIRED)
 
 if (EMBREE_FOUND)
-	include_directories(SYSTEM ${EMBREE_INCLUDE_PATH})
+	include_directories(BEFORE SYSTEM ${EMBREE_INCLUDE_PATH})
+endif ()
+
+# Intel Oidn
+set(OIDN_ROOT                "${OIDN_SEARCH_PATH}")
+find_package(Oidn REQUIRED)
+
+if (OIDN_FOUND)
+	include_directories(BEFORE SYSTEM ${ODIN_INCLUDE_PATH})
+endif ()
+
+# Intel TBB
+set(TBB_ROOT                   "${TBB_SEARCH_PATH}")
+find_package(TBB REQUIRED)
+
+if (TBB_FOUND)
+	include_directories(BEFORE SYSTEM ${TBB_INCLUDE_PATH})
+endif ()
+
+# Blosc
+set(BLOSC_ROOT                   "${BLOSC_SEARCH_PATH}")
+find_package(Blosc REQUIRED)
+
+if (BLOSC_FOUND)
+	include_directories(BEFORE SYSTEM ${BLOSC_INCLUDE_PATH})
 endif ()
 
 # OpenMP
-if(NOT APPLE)
-	find_package(OpenMP)
-	if (OPENMP_FOUND)
-		MESSAGE(STATUS "OpenMP found - compiling with")
-	    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-	    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-	else()
-		MESSAGE(WARNING "OpenMP not found - compiling without")
-	endif()
-endif(NOT APPLE)
+find_package(OpenMP)
+if (OPENMP_FOUND)
+	MESSAGE(STATUS "OpenMP found - compiling with")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+else()
+	MESSAGE(WARNING "OpenMP not found - compiling without")
+endif()
 
 #############################################################################
 #############################################################################
@@ -132,13 +147,8 @@ endif(NOT APPLE)
 #############################################################################
 #############################################################################
 
-IF(APPLE)
-	FIND_PATH(LUXRAYS_INCLUDE_DIRS NAMES luxrays/luxrays.h PATHS ${OSX_DEPENDENCY_ROOT}/include/LuxRays)
-	FIND_LIBRARY(LUXRAYS_LIBRARY libluxrays.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
-ELSE(APPLE)
-	FIND_PATH(LUXRAYS_INCLUDE_DIRS NAMES luxrays/luxrays.h PATHS ../luxrays/include ${LuxRays_HOME}/include )
-	FIND_LIBRARY(LUXRAYS_LIBRARY luxrays PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-ENDIF(APPLE)
+FIND_PATH(LUXRAYS_INCLUDE_DIRS NAMES luxrays/luxrays.h PATHS ../luxrays/include ${LuxRays_HOME}/include )
+FIND_LIBRARY(LUXRAYS_LIBRARY luxrays PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
 
 IF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 	MESSAGE(STATUS "LuxRays include directory: " ${LUXRAYS_INCLUDE_DIRS})
@@ -155,37 +165,24 @@ ENDIF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 #############################################################################
 #############################################################################
 
-IF(APPLE)
-	FIND_PATH(SLG_INCLUDE_DIRS NAMES slg/slg.h PATHS ${OSX_DEPENDENCY_ROOT}/include/LuxRays)
-	FIND_LIBRARY(SLG_LIBRARY_CORE libslg-core.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
-	FIND_LIBRARY(SLG_LIBRARY_FILM libslg-film.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
-	FIND_LIBRARY(SLG_LIBRARY_KERNELS libslg-kernels.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
-	FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ${OSX_DEPENDENCY_ROOT}/include/LuxRays)
-	FIND_LIBRARY(LUXCORE_LIBRARY libluxcore.a ${OSX_DEPENDENCY_ROOT}/lib/LuxRays)
-ELSE(APPLE)
-	FIND_PATH(SLG_INCLUDE_DIRS NAMES slg/slg.h PATHS ../luxrays/include ${LuxRays_HOME}/include)
-	FIND_LIBRARY(SLG_LIBRARY_CORE slg-core PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-	FIND_LIBRARY(SLG_LIBRARY_FILM slg-film PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-	FIND_LIBRARY(SLG_LIBRARY_KERNELS slg-kernels PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-	FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ../luxrays/include ${LuxRays_HOME}/include)
-	FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-ENDIF(APPLE)
-
-IF (SLG_INCLUDE_DIRS AND SLG_LIBRARY_CORE AND SLG_LIBRARY_FILM AND SLG_LIBRARY_KERNELS)
-	SET(SLG_LIBRARY ${SLG_LIBRARY_CORE};${SLG_LIBRARY_FILM};${SLG_LIBRARY_KERNELS})
-	MESSAGE(STATUS "SLG include directory: " ${SLG_INCLUDE_DIRS})
-	MESSAGE(STATUS "SLG library directory: " ${SLG_LIBRARY})
-	INCLUDE_DIRECTORIES(SYSTEM ${SLG_INCLUDE_DIRS})
-ELSE (SLG_INCLUDE_DIRS AND SLG_LIBRARY_CORE AND SLG_LIBRARY_FILM AND SLG_LIBRARY_KERNELS)
-	MESSAGE(FATAL_ERROR "SLG Library not found.")
-ENDIF (SLG_INCLUDE_DIRS AND SLG_LIBRARY_CORE AND SLG_LIBRARY_FILM AND SLG_LIBRARY_KERNELS)
+FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ../luxrays/include ${LuxRays_HOME}/include)
+FIND_LIBRARY(OPENVDB_LIBRARY openvdb PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(BCD_LIBRARY bcd PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(SLG_LIBRARY_CORE slg-core PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(SLG_LIBRARY_FILM slg-film PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(SLG_LIBRARY_KERNELS slg-kernels PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 
 IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
+	SET(ALL_LUXCORE_LIBRARIES ${LUXCORE_LIBRARY} ${SLG_LIBRARY_CORE} ${SLG_LIBRARY_FILM} ${SLG_LIBRARY_KERNELS} ${LUXRAYS_LIBRARY}
+		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENIMAGEIO_LIBRARIES}
+		${BLOSC_LIBRARIES} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARIES} ${TIFF_LIBRARIES}
+		${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES})
+
 	MESSAGE(STATUS "LuxCore include directory: " ${LUXCORE_INCLUDE_DIRS})
 	MESSAGE(STATUS "LuxCore library directory: " ${LUXCORE_LIBRARY})
+	MESSAGE(STATUS "LuxCore all libraries: " ${ALL_LUXCORE_LIBRARIES})
 	INCLUDE_DIRECTORIES(SYSTEM ${LUXCORE_INCLUDE_DIRS})
 ELSE (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	MESSAGE(FATAL_ERROR "LuxCore Library not found.")
 ENDIF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
-
-INCLUDE_DIRECTORIES(SYSTEM "${LUXCORE_INCLUDE_DIRS}/../deps/eos_portable_archive-v5.1")

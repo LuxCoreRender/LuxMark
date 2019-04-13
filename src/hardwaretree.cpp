@@ -23,9 +23,6 @@
 
 #include <QtCore/qabstractitemmodel.h>
 
-#include "luxrays/core/oclintersectiondevice.h"
-#include "luxrays/core/virtualdevice.h"
-
 #include "hardwaretree.h"
 #include "mainwindow.h"
 
@@ -92,120 +89,120 @@ int HardwareTreeItem::row() const {
 // HardwareTreeModel
 //------------------------------------------------------------------------------
 
-static void LuxRaysErrorHandler(const char *msg) {
-	LM_LOG_LUXRAYS(msg);
-}
+//static void LuxRaysErrorHandler(const char *msg) {
+//	LM_LOG_LUXRAYS(msg);
+//}
 
 HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
-	// Retrieve the hardware information with LuxRays
-	Context *ctx = new Context(LuxRaysErrorHandler);
-	const vector<DeviceDescription *> devDescs = ctx->GetAvailableDeviceDescriptions();
-
-	// Build the gui
-	win = w;
-
-	rootItem = new HardwareTreeItem("Hardware");
-
-	// OpenCL devices
-	HardwareTreeItem *oclDev = new HardwareTreeItem("OpenCL");
-	rootItem->appendChild(oclDev);
-
-	HardwareTreeItem *oclCPUDev = new HardwareTreeItem("CPUs");
-	oclDev->appendChild(oclCPUDev);
-	HardwareTreeItem *oclGPUDev = new HardwareTreeItem("GPUs and Accelerators");
-	oclDev->appendChild(oclGPUDev);
-
-	int index = 0;
-	for (size_t i = 0; i < devDescs.size(); ++i) {
-		DeviceDescription *devDesc = devDescs[i];
-
-		if (devDesc->GetType() &  DEVICE_TYPE_OPENCL_ALL) {
-            BenchmarkDeviceDescription deviceDesc;
-            const OpenCLDeviceDescription *odevDesc = (OpenCLDeviceDescription *)devDesc;
-
-            deviceDesc.deviceName = odevDesc->GetName();
-			HardwareTreeItem *newNode = new HardwareTreeItem(index++, deviceDesc.deviceName.c_str());
-
-			stringstream ss;
-			cl::Platform platform = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_PLATFORM>();
-            deviceDesc.platformName = platform.getInfo<CL_PLATFORM_VENDOR>();
-			ss << "Platform: " << deviceDesc.platformName;
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-           
-			ss.str("");
-            deviceDesc.platformVersion = platform.getInfo<CL_PLATFORM_VERSION>();
-			ss << "Platform Version: " << deviceDesc.platformVersion;
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-			ss << "Type: ";
-			switch (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_TYPE>()) {
-				case CL_DEVICE_TYPE_CPU:
-                    deviceDesc.deviceType = "CPU";
-					ss << "CPU";
-					break;
-				case CL_DEVICE_TYPE_GPU:
-                    deviceDesc.deviceType = "GPU";
-					ss << "GPU";
-					break;
-				case CL_DEVICE_TYPE_ACCELERATOR:
-                    deviceDesc.deviceType = "ACCELERATOR";
-					ss << "ACCELERATOR";
-					break;
-				default:
-                    deviceDesc.deviceType = "UNKNOWN";
-					ss << "UNKNOWN";
-					break;
-			}
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.units = odevDesc->GetComputeUnits();
-			ss << "Compute Units: " << deviceDesc.units;
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.clock = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
-			ss << "Clock: " << deviceDesc.clock << " MHz";
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.nativeVectorWidthFloat = odevDesc->GetNativeVectorWidthFloat();
-			ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.globalMem = odevDesc->GetMaxMemory();
-			ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.localMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_LOCAL_MEM_SIZE>();
-			ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			ss.str("");
-            deviceDesc.constantMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>();
-			ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
-			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
-
-			bool isCPUDev = (odevDesc->GetType() == DEVICE_TYPE_OPENCL_CPU);
-			if (isCPUDev) {
-				// The default mode is GPU-only
-				newNode->setChecked(false);
-				oclCPUDev->appendChild(newNode);
-			} else {
-				newNode->setChecked(true);
-				oclGPUDev->appendChild(newNode);
-			}
-
-            deviceDescs.push_back(deviceDesc);
-			deviceSelection.push_back(!isCPUDev);
-			isCPU.push_back(isCPUDev);
-		}
-	}
-
-	delete ctx;
+//	// Retrieve the hardware information with LuxRays
+//	Context *ctx = new Context(LuxRaysErrorHandler);
+//	const vector<DeviceDescription *> devDescs = ctx->GetAvailableDeviceDescriptions();
+//
+//	// Build the gui
+//	win = w;
+//
+//	rootItem = new HardwareTreeItem("Hardware");
+//
+//	// OpenCL devices
+//	HardwareTreeItem *oclDev = new HardwareTreeItem("OpenCL");
+//	rootItem->appendChild(oclDev);
+//
+//	HardwareTreeItem *oclCPUDev = new HardwareTreeItem("CPUs");
+//	oclDev->appendChild(oclCPUDev);
+//	HardwareTreeItem *oclGPUDev = new HardwareTreeItem("GPUs and Accelerators");
+//	oclDev->appendChild(oclGPUDev);
+//
+//	int index = 0;
+//	for (size_t i = 0; i < devDescs.size(); ++i) {
+//		DeviceDescription *devDesc = devDescs[i];
+//
+//		if (devDesc->GetType() &  DEVICE_TYPE_OPENCL_ALL) {
+//            BenchmarkDeviceDescription deviceDesc;
+//            const OpenCLDeviceDescription *odevDesc = (OpenCLDeviceDescription *)devDesc;
+//
+//            deviceDesc.deviceName = odevDesc->GetName();
+//			HardwareTreeItem *newNode = new HardwareTreeItem(index++, deviceDesc.deviceName.c_str());
+//
+//			stringstream ss;
+//			cl::Platform platform = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_PLATFORM>();
+//            deviceDesc.platformName = platform.getInfo<CL_PLATFORM_VENDOR>();
+//			ss << "Platform: " << deviceDesc.platformName;
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//           
+//			ss.str("");
+//            deviceDesc.platformVersion = platform.getInfo<CL_PLATFORM_VERSION>();
+//			ss << "Platform Version: " << deviceDesc.platformVersion;
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//			ss << "Type: ";
+//			switch (odevDesc->GetOCLDevice().getInfo<CL_DEVICE_TYPE>()) {
+//				case CL_DEVICE_TYPE_CPU:
+//                    deviceDesc.deviceType = "CPU";
+//					ss << "CPU";
+//					break;
+//				case CL_DEVICE_TYPE_GPU:
+//                    deviceDesc.deviceType = "GPU";
+//					ss << "GPU";
+//					break;
+//				case CL_DEVICE_TYPE_ACCELERATOR:
+//                    deviceDesc.deviceType = "ACCELERATOR";
+//					ss << "ACCELERATOR";
+//					break;
+//				default:
+//                    deviceDesc.deviceType = "UNKNOWN";
+//					ss << "UNKNOWN";
+//					break;
+//			}
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.units = odevDesc->GetComputeUnits();
+//			ss << "Compute Units: " << deviceDesc.units;
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.clock = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CLOCK_FREQUENCY>();
+//			ss << "Clock: " << deviceDesc.clock << " MHz";
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.nativeVectorWidthFloat = odevDesc->GetNativeVectorWidthFloat();
+//			ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.globalMem = odevDesc->GetMaxMemory();
+//			ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.localMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_LOCAL_MEM_SIZE>();
+//			ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			ss.str("");
+//            deviceDesc.constantMem = odevDesc->GetOCLDevice().getInfo<CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE>();
+//			ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
+//			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+//
+//			bool isCPUDev = (odevDesc->GetType() == DEVICE_TYPE_OPENCL_CPU);
+//			if (isCPUDev) {
+//				// The default mode is GPU-only
+//				newNode->setChecked(false);
+//				oclCPUDev->appendChild(newNode);
+//			} else {
+//				newNode->setChecked(true);
+//				oclGPUDev->appendChild(newNode);
+//			}
+//
+//            deviceDescs.push_back(deviceDesc);
+//			deviceSelection.push_back(!isCPUDev);
+//			isCPU.push_back(isCPUDev);
+//		}
+//	}
+//
+//	delete ctx;
 }
 
 HardwareTreeModel::~HardwareTreeModel() {

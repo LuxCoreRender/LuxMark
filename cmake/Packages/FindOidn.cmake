@@ -14,34 +14,34 @@
 ## limitations under the License.                                           ##
 ## ======================================================================== ##
 
-FIND_PATH(EMBREE_INCLUDE_PATH NAMES embree3/rtcore.h PATHS
-	${EMBREE_ROOT}/include)
-IF (NOT EMBREE_INCLUDE_PATH)
-	FIND_PATH(EMBREE_INCLUDE_PATH NAMES embree3/rtcore.h PATHS
+FIND_PATH(OIDN_INCLUDE_PATH NAMES OpenImageDenoise/version.h PATHS
+	${OIDN_ROOT}/include)
+IF (NOT OIDN_INCLUDE_PATH)
+	FIND_PATH(OIDN_INCLUDE_PATH NAMES OpenImageDenoise/version.h PATHS
 		/usr/include
 		/usr/local/include
 		/opt/local/include)
 ENDIF()
 
-FIND_LIBRARY(EMBREE_LIBRARY NAMES embree3 libembree3.so.3 PATHS
-	${EMBREE_ROOT}/lib/x64
-	${EMBREE_ROOT}/lib
-	${EMBREE_ROOT}/build
+FIND_LIBRARY(OIDN_LIBRARY NAMES OpenImageDenoise libOpenImageDenoise.so.0 PATHS
+	${OIDN_ROOT}/lib/x64
+	${OIDN_ROOT}/lib
+	${OIDN_ROOT}/build
 	NO_DEFAULT_PATH)
-IF (NOT EMBREE_LIBRARY)
-	FIND_LIBRARY(EMBREE_LIBRARY NAMES embree3 libembree3.so.3 PATHS
+IF (NOT OIDN_LIBRARY)
+	FIND_LIBRARY(OIDN_LIBRARY NAMES OpenImageDenoise libOpenImageDenoise.so.0 PATHS
 		/usr/lib 
 		/usr/lib64
 		/usr/local/lib 
 		/opt/local/lib)
 ENDIF()
 
-IF (EMBREE_INCLUDE_PATH AND EMBREE_LIBRARY)
-	SET(EMBREE_LIBRARY ${EMBREE_LIBRARY})
-	SET(EMBREE_FOUND TRUE)
+IF (OIDN_INCLUDE_PATH AND OIDN_LIBRARY)
+	SET(OIDN_LIBRARY ${OIDN_LIBRARY})
+	SET(OIDN_FOUND TRUE)
 ENDIF()
 
 MARK_AS_ADVANCED(
-	EMBREE_INCLUDE_PATH
-	EMBREE_LIBRARY
+	OIDN_INCLUDE_PATH
+	OIDN_LIBRARY
 )

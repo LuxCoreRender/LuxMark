@@ -25,8 +25,6 @@
 #include <QTextStream>
 #include <QGraphicsItem>
 
-#include "slg/renderconfig.h"
-
 #include "mainwindow.h"
 #include "aboutdialog.h"
 #include "luxmarkdefs.h"

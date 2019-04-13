@@ -15,8 +15,6 @@
 #                                                                         #
 #   You should have received a copy of the GNU General Public License     #
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>. #
-#                                                                         #
-#   Lux website: http://www.luxrender.net                                 #
 ###########################################################################
 
 # - Try to find OpenEXR
@@ -69,7 +67,7 @@ ENDFOREACH(i)
 ENDIF(OPENEXR_INCLUDE_DIRS)
 
 SET(OpenEXR_LIBRARY_MODULES Iex IlmImf Half Imath IlmThread)
-SET(OpenEXR_LIB_SUFFIXES lib64 lib Lib lib/OpenEXR Libs)
+SET(OpenEXR_LIB_SUFFIXES lib64 lib Lib lib/OpenEXR Libs x64/Release/lib)
 SET(OpenEXR_LIB_SUFFIXES_REL)
 SET(OpenEXR_LIB_SUFFIXES_DBG)
 FOREACH(i ${OpenEXR_LIB_SUFFIXES})

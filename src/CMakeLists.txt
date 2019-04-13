@@ -19,15 +19,15 @@
 #   LuxMark website: http://www.luxrender.net                             #
 ###########################################################################
 
-set(LUXMARK_VERSION_MAJOR 3)
-set(LUXMARK_VERSION_MINOR 1)
+set(LUXMARK_VERSION_MAJOR 4)
+set(LUXMARK_VERSION_MINOR 0)
 
 FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtMain)
 IF(QT4_FOUND)
   include(${QT_USE_FILE})
   include_directories(${QT_INCLUDES} ${QT_QTNETWORK_INCLUDE_DIR})
 ELSE(QT4_FOUND)
-  message(STATUS "Is env variable QTDIR set correctly? Currently: $ENV{QTDIR}")
+  message(FATAL_ERROR "Is env variable QTDIR set correctly? Currently: $ENV{QTDIR}")
 ENDIF(QT4_FOUND)
 
 
@@ -99,60 +99,16 @@ set(LUXMARK_SRCS
 	)
 
 #############################################################################
-#
-#  APPLE CUSTOM GUI_TYPE MACOSX_BUNDLE 
-#
-#############################################################################
 
-IF(APPLE)
-	SET(GUI_TYPE MACOSX_BUNDLE)
-	# SET(MACOSX_BUNDLE_LONG_VERSION_STRING "${OPENSCENEGRAPH_MAJOR_VERSION}.${OPENSCENEGRAPH_MINOR_VERSION}.${OPENSCENEGRAPH_PATCH_VERSION}")
-	# Short Version is the "marketing version". It is the version
-	# the user sees in an information panel.
-	SET(MACOSX_BUNDLE_SHORT_VERSION_STRING "v${LUXMARK_VERSION_MAJOR}.${LUXMARK_VERSION_MINOR}")
-	# Bundle version is the version the OS looks at.
-	SET(MACOSX_BUNDLE_BUNDLE_VERSION "v${LUXMARK_VERSION_MAJOR}.${LUXMARK_VERSION_MINOR}")
-	SET(MACOSX_BUNDLE_GUI_IDENTIFIER "org.luxrenderk.luxrender" )
-	SET(MACOSX_BUNDLE_BUNDLE_NAME "LuxMark" )
-	SET(MACOSX_BUNDLE_ICON_FILE "LuxMark.icns")
-	# SET(MACOSX_BUNDLE_COPYRIGHT "")
-	# SET(MACOSX_BUNDLE_INFO_STRING "Info string, localized?")
-ENDIF(APPLE)
+ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
 
-#############################################################################
+TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
 
-IF(APPLE)
-	add_executable(LuxMark  ${GUI_TYPE} ${LUXMARK_SRCS})
-	target_link_libraries(LuxMark ${LUXCORE_LIBRARY} ${SLG_LIBRARY} ${LUXRAYS_LIBRARY} ${EMBREE_LIBRARY} ${Boost_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${GLEW_LIBRARY} ${GLUT_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES} ${OPENIMAGEIO_LIBRARIES} ${TIFF_LIBRARIES} ${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES})
-
-	set_target_properties(LuxMark PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/Info.plist)
-	ADD_CUSTOM_COMMAND(
-		TARGET LuxMark POST_BUILD
-			COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/scenes
-			COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
-			COMMAND rm -rf ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU
-			COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources
-			COMMAND mkdir ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU
-			COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/osx-bundle/LuxMark.icns ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/Resources/
-			COMMAND cp ${OSX_DEPENDENCY_ROOT}/bin/slg4 ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/ # bundle slg
-			COMMAND install_name_tool -change @loader_path/libembree.2.4.0.dylib @loader_path/../MacOS/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/SmallluxGPU/slg4
-			COMMAND cp ${OSX_DEPENDENCY_ROOT}/lib/embree2/libembree.2.4.0.dylib ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents/MacOS # bundle embree
-			COMMAND cp -R ${CMAKE_SOURCE_DIR}/scenes ${CMAKE_BINARY_DIR}/bin/$(CONFIGURATION)/LuxMark.app/Contents
-)
-ELSE(APPLE)
-	ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
-
-	TARGET_LINK_LIBRARIES(luxmark ${LUXCORE_LIBRARY} ${SLG_LIBRARY} ${LUXRAYS_LIBRARY} ${EMBREE_LIBRARY} ${Boost_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${GLEW_LIBRARY} ${GLUT_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES} ${OPENIMAGEIO_LIBRARIES} ${TIFF_LIBRARIES} ${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES})
-	
-	# This instructs FREEGLUT to emit a pragma for the static version
-	SET_TARGET_PROPERTIES(luxmark PROPERTIES COMPILE_DEFINITIONS FREEGLUT_STATIC)
-
-	if(WIN32)
-		set_target_properties(luxmark PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
-		set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
-		set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
-		set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
-		set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
-		set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
-	endif(WIN32)
-ENDIF(APPLE)
+if(WIN32)
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
+	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+endif(WIN32)

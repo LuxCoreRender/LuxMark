@@ -14,34 +14,34 @@
 ## limitations under the License.                                           ##
 ## ======================================================================== ##
 
-FIND_PATH(EMBREE_INCLUDE_PATH NAMES embree3/rtcore.h PATHS
-	${EMBREE_ROOT}/include)
-IF (NOT EMBREE_INCLUDE_PATH)
-	FIND_PATH(EMBREE_INCLUDE_PATH NAMES embree3/rtcore.h PATHS
+FIND_PATH(TBB_INCLUDE_PATH NAMES tbb/tbb.h PATHS
+	${TBB_ROOT}/include)
+IF (NOT TBB_INCLUDE_PATH)
+	FIND_PATH(TBB_INCLUDE_PATH NAMES tbb/tbb.h PATHS
 		/usr/include
 		/usr/local/include
 		/opt/local/include)
 ENDIF()
 
-FIND_LIBRARY(EMBREE_LIBRARY NAMES embree3 libembree3.so.3 PATHS
-	${EMBREE_ROOT}/lib/x64
-	${EMBREE_ROOT}/lib
-	${EMBREE_ROOT}/build
+FIND_LIBRARY(TBB_LIBRARY NAMES libtbb tbb tbb.so PATHS
+	${TBB_ROOT}/lib/x64
+	${TBB_ROOT}/lib
+	${TBB_ROOT}/build
 	NO_DEFAULT_PATH)
-IF (NOT EMBREE_LIBRARY)
-	FIND_LIBRARY(EMBREE_LIBRARY NAMES embree3 libembree3.so.3 PATHS
+IF (NOT TBB_LIBRARY)
+	FIND_LIBRARY(TBB_LIBRARY NAMES libtbb tbb tbb.so PATHS
 		/usr/lib 
 		/usr/lib64
 		/usr/local/lib 
 		/opt/local/lib)
 ENDIF()
 
-IF (EMBREE_INCLUDE_PATH AND EMBREE_LIBRARY)
-	SET(EMBREE_LIBRARY ${EMBREE_LIBRARY})
-	SET(EMBREE_FOUND TRUE)
+IF (TBB_INCLUDE_PATH AND TBB_LIBRARY)
+	SET(TBB_LIBRARY ${TBB_LIBRARY} ${TBB_LIBRARY})
+	SET(TBB_FOUND TRUE)
 ENDIF()
 
 MARK_AS_ADVANCED(
-	EMBREE_INCLUDE_PATH
-	EMBREE_LIBRARY
+	TBB_INCLUDE_PATH
+	TBB_LIBRARY
 )

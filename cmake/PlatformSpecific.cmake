@@ -22,7 +22,6 @@
 # Use relative paths
 # This is mostly to reduce path size for command-line limits on windows
 if(WIN32)
-  # This seems to break Xcode projects so definitely don't enable on Apple builds
   set(CMAKE_USE_RELATIVE_PATHS true)
   set(CMAKE_SUPPRESS_REGENERATION true)
 endif(WIN32)
@@ -122,94 +121,3 @@ ENDIF()
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(CMAKE_EXE_LINKER_FLAGS -Wl,--version-script='${CMAKE_SOURCE_DIR}/cmake/exportmaps/linux_symbol_exports.map')
 ENDIF()
-
-# Setting Universal Binary Properties, only for Mac OS X
-#  generate with xcode/crosscompile, setting: ( darwin - 10.6 - gcc - g++ - MacOSX10.6.sdk - Find from root, then native system )
-IF(APPLE)
-	IF(COMMAND cmake_policy)
-		if(${CMAKE_VERSION} VERSION_LESS 3.0)
-			cmake_minimum_required(VERSION 2.8.3) # new requirement for simplification
-			cmake_policy(VERSION 2.8.3)
-		else()
-			# keep until CMake-3.0 is min requirement
-			cmake_policy(VERSION 3.0.0)
-			cmake_policy(SET CMP0043 OLD)
-		endif()
-	ENDIF(COMMAND cmake_policy)
-
-	########## OS and hardware detection ###########
-
-	if(NOT ${CMAKE_GENERATOR} MATCHES "Xcode") # unix makefile generator does not fill XCODE_VERSION var ! 
-		execute_process(COMMAND xcodebuild -version OUTPUT_VARIABLE XCODE_VERS_BUILDNR )
-		STRING(SUBSTRING ${XCODE_VERS_BUILDNR} 6 3 XCODE_VERSION) # truncate away build-nr
-	endif()	
-
-execute_process(COMMAND uname -r OUTPUT_VARIABLE MAC_SYS) # check for actual system-version
-
-	if(${MAC_SYS} MATCHES 15)
-		set(OSX_SYSTEM 10.11)
-		cmake_minimum_required(VERSION 3.0.0) # throw an error here, older cmake cannot handle 2 digit subversion !
-	elseif(${MAC_SYS} MATCHES 14)
-		set(OSX_SYSTEM 10.10)
-		cmake_minimum_required(VERSION 3.0.0) # throw an error here, older cmake cannot handle 2 digit subversion !
-	elseif(${MAC_SYS} MATCHES 13)
-		set(OSX_SYSTEM 10.9)
-	elseif(${MAC_SYS} MATCHES 12)
-		set(OSX_SYSTEM 10.8)
-	elseif(${MAC_SYS} MATCHES 11)
-		set(OSX_SYSTEM 10.7)
-	elseif(${MAC_SYS} MATCHES 10)
-		set(OSX_SYSTEM 10.6)
-	else()
-		set(OSX_SYSTEM unsupported)
-	endif()
-
-	set(CMAKE_OSX_DEPLOYMENT_TARGET 10.6) # keep this @ 10.6 to archieve bw-compatibility by weak-linking !
-
-	if(${XCODE_VERSION} VERSION_LESS 4.3)
-		SET(CMAKE_OSX_SYSROOT /Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk)
-	else()
-		SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${OSX_SYSTEM}.sdk)
-		set(CMAKE_XCODE_ATTRIBUTE_SDKROOT macosx) # to silence sdk not found warning, just overrides CMAKE_OSX_SYSROOT, gets alway latest available
-	endif()
-
-	# set a precedence of sdk path over all other default search pathes
-	SET(CMAKE_FIND_ROOT_PATH ${CMAKE_OSX_SYSROOT})
-
-	### options
-
-	set(LUXMARK_NO_DEFAULT_CONFIG true)
-	set(LUXMARK_CUSTOM_CONFIG Config_OSX)
-
-	if(NOT ${CMAKE_GENERATOR} MATCHES "Xcode") # will be set later in XCode
-#		SET(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "assure config" FORCE)
-		# Setup binaries output directory in Xcode manner
-		SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE} CACHE PATH "per configuration" FORCE)
-		SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib/${CMAKE_BUILD_TYPE} CACHE PATH "per configuration" FORCE)
-	endif()
-	#### OSX-flags by jensverwiebe
-	set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -fvisibility=hidden -fvisibility-inlines-hidden -fPIC -O3 -ftree-vectorize -msse -msse2 -msse3 -mssse3")
-	set(CMAKE_CXX_FLAGS_DEBUG "-fvisibility=hidden -fvisibility-inlines-hidden -fPIC -O0 -g -msse -msse2 -msse3 -mssse3")
-	
-	# Do not set "-cl-fast-relaxed-math -cl-mad-enable" as they change the precision and behaviour of floating point math!
-
-	MESSAGE(STATUS "")
-	MESSAGE(STATUS "################ GENERATED XCODE PROJECT INFORMATION ################")
-	MESSAGE(STATUS "")
-	MESSAGE(STATUS "OSX_DEPLOYMENT_TARGET : " ${CMAKE_OSX_DEPLOYMENT_TARGET})
-	IF(CMAKE_VERSION VERSION_LESS 2.8.1)
-		MESSAGE(STATUS "Setting CMAKE_OSX_ARCHITECTURES ( cmake lower 2.8 method ): " ${CMAKE_OSX_ARCHITECTURES})
-	ELSE(CMAKE_VERSION VERSION_LESS 2.8.1)
-		MESSAGE(STATUS "CMAKE_XCODE_ATTRIBUTE_ARCHS ( cmake 2.8 or higher method ): " ${CMAKE_XCODE_ATTRIBUTE_ARCHS})
-	ENDIF(CMAKE_VERSION VERSION_LESS 2.8.1)
-	MESSAGE(STATUS "OSX SDK SETTING : " ${CMAKE_OSX_SYSROOT})
-	MESSAGE(STATUS "XCODE_VERSION : " ${XCODE_VERSION})
-	if(${CMAKE_GENERATOR} MATCHES "Xcode")
-		MESSAGE(STATUS "BUILD_TYPE : Please set in Xcode ALL_BUILD target to aimed type")
-	else()
-		MESSAGE(STATUS "BUILD_TYPE : " ${CMAKE_BUILD_TYPE} " - compile with: make " )
-	endif()
-	MESSAGE(STATUS "")
-	MESSAGE(STATUS "#####################################################################")
-
-ENDIF(APPLE)
