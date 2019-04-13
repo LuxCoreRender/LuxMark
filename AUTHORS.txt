@@ -1,8 +1,5 @@
 Authors:
 
 David "Dade" Bucciarelli <dade916.at.gmail.com>
-Alain "Chiaroscuro" Ducharme <>
-Jens Verwiebe <info.at.jensverwiebe.de>
-Tom "Tomb" Bech <tom.bech.at.gmail.com>
-Vlad "SATtva" Miller <>
-Amir "foobarbarian" Mohammadkhani-Aminabadi <amir.at.mohammadkhani.eu>
+
+Complete list available at https://github.com/LuxCoreRender/LuxMark/graphs/contributors

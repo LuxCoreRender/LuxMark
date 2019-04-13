@@ -1,52 +1,31 @@
 LuxMark
 =======
 
-LuxMark is OpenCL benchmark based on LuxCore, the new LuxRender (http://www.luxrender.net)
-v2.x API. You can find more information about LuxMark at http://www.luxrender.net/wiki/index.php?title=LuxMark
+LuxMark is OpenCL benchmark based on LuxCoreRender (https://www.luxcorerender.org)
+and written using LuxCore API. You can find more information about LuxMark
+at https://wiki.luxcorerender.org/LuxMark.
 
-LuxCore
-=======
+LuxCore API
+===========
 
-LuxCore is the new LuxRender v2.x C++ and Python API. It is released under Apache Public License v2.0
-and can be freely used in open source and commercial applications. You can find more
-information about the API at http://www.luxrender.net/wiki/LuxCore
+LuxCore is the new LuxCoreRender v2.x C++ and Python API. It is released under
+Apache Public License v2.0 and can be freely used in open source and commercial
+applications. You can find more information about the API at https://wiki.luxcorerender.org/LuxCore_API
 
 Donate
 ======
 
-LuxRender is now part of the Software Freedom Conservancy (http://sfconservancy.org/), which allows us to receive
-donations to foster the development and cover the expenses of the LuxRender project.
-For each donation you'll do, a small amount will go to the Conservancy so that it can
-benefit all the member projects, and the rest will be made available to LuxRender.
-In the United States, you can benefit from tax deductions according to the
-Conservancy 501(c)(3) not for profit organization status.
-
-You can donate at http://www.luxrender.net/en_GB/donate
+LuxCoreRender project is available on BountySource (https://www.bountysource.com/teams/luxcorerender).
+It is a funding platform for open-source software. Users can improve the
+open-source projects they love by creating/collecting bounties and pledging to
+fundraisers. Check https://luxcorerender.org/donate for more information.
 
 Authors
 =======
 
 See AUTHORS.txt file.
 
-Credits
+License
 =======
-
-A special thanks goes to:
-
-- Alain "Chiaroscuro" Ducharme for Blender 2.5 exporter and several scenes provided;
-- Sladjan "lom" Ristic for several scenes provided;
-- Riku "rikb" Walve for source patches;
-- David "livuxman" Rodr�guez for source patches;
-- Daniel "ZanQdo" Salazar (http://www.3developer.com/) for Sala scene and Michael "neo2068" Klemm for SLG2 adaptation;
-- Mourelas Konstantinos "Moure" (http://moure-portfolio.blogspot.com/) for Room Scene;
-- Nate Robins for glut32.dll;
-- Diego Nehab for PLY reading/writing library;
-- http://www.hdrlabs.com/sibl/archive.html and http://shtlab.blogspot.com/2009/08/hdri-panoramic-skies-for-free.html for HDR maps;
-- http://chronosphere.home.comcast.net/~chronosphere/radiosity.htm for Cornell Blender scene;
-- libPNG authors http://www.libpng.org;
-- zlib authors http://www.zlib.net/ (not used anymore);
-- OpenEXR authors http://www.openexr.com/ (not used anymore);
-- FreeImage open source image library. See http://freeimage.sourceforge.net for details;
-- Tomas Davidovic (http://www.davidovic.cz and http://www.smallvcm.com) for SmallVCM, an endless source of hints
 
 This software is released under GPL License (see COPYING.txt file).
