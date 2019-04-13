@@ -19,8 +19,8 @@
  *   LuxMark website: http://www.luxrender.net                             *
  ***************************************************************************/
 
-#ifndef LUXRENDERSESSION_H
-#define	LUXRENDERSESSION_H
+#ifndef LUXCORERENDERSESSION_H
+#define	LUXCORERENDERSESSION_H
 
 #ifndef Q_MOC_RUN
 #include <string>
@@ -29,11 +29,11 @@
 #include "luxmarkdefs.h"
 #endif
 
-class LuxRenderSession {
+class LuxCoreRenderSession {
 public:
-	LuxRenderSession(const string &sceneFileName, const LuxMarkAppMode mode,
+	LuxCoreRenderSession(const string &sceneFileName, const LuxMarkAppMode mode,
 			const string &devSel, const string &oclCompOpts);
-	~LuxRenderSession();
+	~LuxCoreRenderSession();
 
 	void Start();
 	void Stop();
@@ -45,7 +45,7 @@ public:
 	const luxrays::Properties &GetStats() const;
 
 private:
-	static void RenderThreadImpl(LuxRenderSession *session);
+	static void RenderThreadImpl(LuxCoreRenderSession *session);
 
 	std::string sceneFileName;
 	LuxMarkAppMode renderMode;
@@ -58,4 +58,4 @@ private:
 	bool started;
 };
 
-#endif	/* LUXRENDERSESSION_H */
+#endif	/* LUXCORERENDERSESSION_H */

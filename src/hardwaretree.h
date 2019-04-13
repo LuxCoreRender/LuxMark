@@ -88,9 +88,9 @@ typedef struct {
 	int units;
 	int clock;
     int nativeVectorWidthFloat;
-	size_t globalMem;
-	size_t localMem;
-	size_t constantMem;
+	unsigned long long globalMem;
+	unsigned long long localMem;
+	unsigned long long constantMem;
 } BenchmarkDeviceDescription;
 
 

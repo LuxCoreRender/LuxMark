@@ -20,7 +20,7 @@
 ###########################################################################
 
 set(LUXMARK_VERSION_MAJOR 4)
-set(LUXMARK_VERSION_MINOR 0)
+set(LUXMARK_VERSION_MINOR 0alpha0)
 
 FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtMain)
 IF(QT4_FOUND)
@@ -56,7 +56,7 @@ set(LUXMARK_SRCS
 	luxvrdialog.cpp
     resultdialog.cpp
 	submitdialog.cpp
-	luxrendersession.cpp
+	luxcorerendersession.cpp
 	convtest/convtest.cpp
 	convtest/pdiff/lpyramid.cpp
 	convtest/pdiff/metric.cpp

@@ -32,7 +32,7 @@
 #include "luxmarkdefs.h"
 #include "mainwindow.h"
 #include "hardwaretree.h"
-#include "luxrendersession.h"
+#include "luxcorerendersession.h"
 #endif
 
 //------------------------------------------------------------------------------
@@ -84,7 +84,7 @@ private:
 	boost::thread *engineInitThread;
 	double renderingStartTime;
 	bool engineInitDone;
-	LuxRenderSession *luxSession;
+	LuxCoreRenderSession *luxSession;
 
 	QTimer *renderRefreshTimer;
 

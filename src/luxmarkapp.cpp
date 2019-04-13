@@ -257,7 +257,7 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 			oclCompilerOpts += "-cl-no-signed-zeros";
 		}
 
-		app->luxSession = new LuxRenderSession(sname, app->mode, deviceSelection, oclCompilerOpts);
+		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection, oclCompilerOpts);
 
 		// Start the rendering
 		app->luxSession->Start();

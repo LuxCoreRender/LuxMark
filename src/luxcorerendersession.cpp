@@ -22,13 +22,13 @@
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 
-#include "luxrendersession.h"
+#include "luxcorerendersession.h"
 #include "mainwindow.h"
 
 using namespace luxrays;
 using namespace luxcore;
 
-LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
+LuxCoreRenderSession::LuxCoreRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
 		const string &devSel, const string &oclCompOpts) {
     renderMode = mode;
     
@@ -42,12 +42,12 @@ LuxRenderSession::LuxRenderSession(const std::string &fileName, const LuxMarkApp
 	started = false;
 }
 
-LuxRenderSession::~LuxRenderSession() {
+LuxCoreRenderSession::~LuxCoreRenderSession() {
 	if (started)
 		Stop();
 }
 
-void LuxRenderSession::Start() {
+void LuxCoreRenderSession::Start() {
 	assert (!started);
 	started = true;
 
@@ -119,26 +119,26 @@ void LuxRenderSession::Start() {
 	session->Start();
 }
 
-void LuxRenderSession::Stop() {
+void LuxCoreRenderSession::Stop() {
 	assert (started);
 
 	delete session;
 	delete config;
 }
 
-const float *LuxRenderSession::GetFrameBuffer() const {
+const float *LuxCoreRenderSession::GetFrameBuffer() const {
 	return session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE);
 }
 
-u_int LuxRenderSession::GetFrameBufferWidth() const {
+u_int LuxCoreRenderSession::GetFrameBufferWidth() const {
 	return session->GetFilm().GetWidth();
 }
 
-u_int LuxRenderSession::GetFrameBufferHeight() const {
+u_int LuxCoreRenderSession::GetFrameBufferHeight() const {
 	return session->GetFilm().GetHeight();
 }
 
-const Properties &LuxRenderSession::GetStats() const {
+const Properties &LuxCoreRenderSession::GetStats() const {
 	session->UpdateStats();
 	return session->GetStats();
 }
