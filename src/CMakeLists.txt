@@ -103,6 +103,10 @@ set(LUXMARK_SRCS
 ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
 
 TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
+if (WIN32)
+	# This is needed by Boost 1.67 but is not found automatically
+    TARGET_LINK_LIBRARIES(luxmark bcrypt.lib)
+endif(WIN32)
 
 if(WIN32)
 	set_target_properties(luxmark PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
