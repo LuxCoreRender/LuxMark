@@ -22,14 +22,14 @@
 set(LUXMARK_VERSION_MAJOR 4)
 set(LUXMARK_VERSION_MINOR 0alpha0)
 
-FIND_PACKAGE(Qt4 4.6.0 COMPONENTS QtCore QtGui QtNetwork QtMain)
-IF(QT4_FOUND)
-  include(${QT_USE_FILE})
-  include_directories(${QT_INCLUDES} ${QT_QTNETWORK_INCLUDE_DIR})
-ELSE(QT4_FOUND)
+set(Qt5_MODULES Widgets Network)
+FIND_PACKAGE(Qt5 5.12.0 COMPONENTS ${Qt5_MODULES})
+IF(NOT Qt5_FOUND)
   message(FATAL_ERROR "Is env variable QTDIR set correctly? Currently: $ENV{QTDIR}")
-ENDIF(QT4_FOUND)
-
+ENDIF()
+foreach(comp ${Qt5_MODULES})
+    set(Qt5_LIBRARIES ${Qt5_LIBRARIES} Qt5::${comp})
+endforeach()
 
 # Configure a header file to pass some of the CMake settings
 # to the source code
@@ -43,9 +43,6 @@ configure_file(
 # LuxMark binary
 #
 #############################################################################
-
-set(QT_USE_QTOPENGL true)
-include(${QT_USE_FILE})
 
 set(LUXMARK_SRCS
 	aboutdialog.cpp
@@ -81,12 +78,13 @@ set(LUXMARK_RCS
 	resources.qrc
 	)
 
-QT4_ADD_RESOURCES(LUXMARK_RC_SRCS ${LUXMARK_RCS})
-QT4_WRAP_UI(LUXMARK_UI_HDRS ${LUXMARK_UIS})
+QT5_ADD_RESOURCES(LUXMARK_RC_SRCS ${LUXMARK_RCS})
+QT5_WRAP_UI(LUXMARK_UI_HDRS ${LUXMARK_UIS})
 # The next OPTIONS directive prevent the moc to include some boost files
 # because qt 4 moc parser fails on some complexes macro definiton in boost >=
 # 1.53.
-QT4_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+#QT5_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
+QT5_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC})
 
 include_directories(".")
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
@@ -102,7 +100,7 @@ set(LUXMARK_SRCS
 
 ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
 
-TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${QT_LIBRARIES} ${QT_QTNETWORK_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
+TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${Qt5_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
 if (WIN32)
 	# This is needed by Boost 1.67 but is not found automatically
     TARGET_LINK_LIBRARIES(luxmark bcrypt.lib)
@@ -113,6 +111,6 @@ if(WIN32)
 	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
 	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
 	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
-	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
-	set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif(WIN32)

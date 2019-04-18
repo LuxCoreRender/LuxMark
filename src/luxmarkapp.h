@@ -23,7 +23,7 @@
 #define _LUXMARKAPP_H
 
 #ifndef Q_MOC_RUN
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include <QTimer>
 
 #include <boost/thread.hpp>

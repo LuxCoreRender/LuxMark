@@ -27,7 +27,7 @@
 #include "luxmarkapp.h"
 
 static void PrintCmdLineHelp(const QString &cmd) {
-	cerr << "Usage: " << cmd.toAscii().data() << " [options]" << endl <<
+	cerr << "Usage: " << cmd.toLatin1().data() << " [options]" << endl <<
 			" --help (display this help and exit)" << endl <<
 			" --scene=LUXBALL_HDR|MICROPHONE|HOTEL (select the scene to use)" << endl <<
 			" --mode="
@@ -83,7 +83,7 @@ int main(int argc, char **argv) {
 			else if (scene.compare("HOTEL", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_HOTEL;
 			else {
-				cerr << "Unknown scene name: " << argScene.cap(1).toAscii().data() << endl;
+				cerr << "Unknown scene name: " << argScene.cap(1).toLatin1().data() << endl;
 				PrintCmdLineHelp(argsList.at(0));
 				exit = true;
 				break;
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)
 				mode = PAUSE;
 			else {
-				cerr << "Unknown mode name: " << argMode.cap(1).toAscii().data() << endl;
+				cerr << "Unknown mode name: " << argMode.cap(1).toLatin1().data() << endl;
 				PrintCmdLineHelp(argsList.at(0));
 				exit = true;
 				break;
@@ -119,7 +119,7 @@ int main(int argc, char **argv) {
 		} else if (argSingleRunExtInfo.indexIn(argsList.at(i)) != -1 ) {   
 			singleRunExtInfo = true;
         } else {
-            cerr << "Unknown argument: " << argsList.at(i).toAscii().data() << endl;
+            cerr << "Unknown argument: " << argsList.at(i).toLatin1().data() << endl;
 			PrintCmdLineHelp(argsList.at(0));
 			exit = true;
 			break;
