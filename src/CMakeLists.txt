@@ -80,10 +80,6 @@ set(LUXMARK_RCS
 
 QT5_ADD_RESOURCES(LUXMARK_RC_SRCS ${LUXMARK_RCS})
 QT5_WRAP_UI(LUXMARK_UI_HDRS ${LUXMARK_UIS})
-# The next OPTIONS directive prevent the moc to include some boost files
-# because qt 4 moc parser fails on some complexes macro definiton in boost >=
-# 1.53.
-#QT5_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 QT5_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC})
 
 include_directories(".")
@@ -98,7 +94,7 @@ set(LUXMARK_SRCS
 
 #############################################################################
 
-ADD_EXECUTABLE(luxmark ${LUXMARK_SRCS})
+ADD_EXECUTABLE(luxmark WIN32 ${LUXMARK_SRCS})
 
 TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${Qt5_LIBRARIES} ${OPENGL_gl_LIBRARY} ${OPENCL_LIBRARIES})
 if (WIN32)
@@ -111,6 +107,6 @@ if(WIN32)
 	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
 	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
 	set_target_properties(luxmark PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
-	set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
-	set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	#set_target_properties(luxmark PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	#set_target_properties(luxmark PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
 endif(WIN32)
