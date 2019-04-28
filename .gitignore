@@ -13,10 +13,10 @@ scenes/hotel/*
 *CMakeCache.txt
 *Makefile
 *cmake_install.cmake
-moc_*.cxx
-moc_*.cxx_parameters
+moc_*.cpp
+moc_*.cpp_parameters
 ui_*.h
-qrc_*.cxx
+qrc_*.cpp
 *.sdf
 *.vcxproj*
 
