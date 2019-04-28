@@ -9,19 +9,11 @@
 
 MESSAGE(STATUS "Using Dade's Linux Configuration settings")
 
-SET(BOOST_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
-SET(OPENIMAGEIO_ROOT_DIR	"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
-SET(EMBREE_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
-SET(OIDN_SEARCH_PATH		"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(CMAKE_INCLUDE_PATH "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2/include;/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(CMAKE_LIBRARY_PATH "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2/lib;/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
+SET(Qt5_DIR "/home/david/tmp/Qt/5.12.2/gcc_64/lib/cmake/Qt5")
 
-SET(OPENCL_SEARCH_PATH		"$ENV{AMDAPPSDKROOT}")
-
-SET(BLOSC_SEARCH_PATH       "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
-SET(TBB_SEARCH_PATH         "/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2")
-SET(ENV{QTDIR}				"/home/david/projects/luxcorerender/LinuxCompile/target-64-sse2/bin")
-
-SET(LuxRays_HOME		"/home/david/projects/luxcorerender/LuxCore")
+SET(LuxRays_HOME "/home/david/projects/luxcorerender/LuxCore")
 
 #SET(CMAKE_BUILD_TYPE "Debug")
 SET(CMAKE_BUILD_TYPE "Release")
-

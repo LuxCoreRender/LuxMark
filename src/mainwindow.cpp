@@ -365,7 +365,7 @@ void MainWindow::SetHardwareTreeModel(HardwareTreeModel *treeModel) {
 }
 
 bool MainWindow::event(QEvent *event) {
-	bool retval = FALSE;
+	bool retval = false;
 	int eventtype = event->type();
 
 	// Check if it's one of "our" events
