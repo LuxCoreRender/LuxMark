@@ -94,13 +94,11 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	setFont(QFont  ("Lucida Grande", 11)); // todo: find best size			
 #endif
 
-	// Disable the Complex benchmark if we are running with 32bit address space
-	if (sizeof(size_t) < 8) {
-		ui->action_Hotel->setDisabled(true);
-		ui->action_Hotel->setText(QString("Complex benchmark not available on 32bit platform"));
-	}
-
 	ShowLogo();
+	
+	this->setWindowState(Qt::WindowMaximized);
+	ui->MainVerticalSplitter->setSizes(QList<int>() << 1024 << 128);
+	ui->MainHorizontalSplitter->setSizes(QList<int>() << 1024 << 128);
 }
 
 MainWindow::~MainWindow() {
@@ -145,18 +143,18 @@ void MainWindow::UpdateSceneLabel(const char *name) {
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
 		authorLabel->setBrush(Qt::darkGray);
-	} else if (!strcmp(SCENE_LUXBALL_HDR, name)) {
-		authorLabelBack->setText(QString("Scene designed by LuxRender project"));
+	} else if (!strcmp(SCENE_FOOD, name)) {
+		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
 		authorLabel->setBrush(Qt::white);
 	}
 }
 
-void MainWindow::setLuxBallHDRScene() {
-	LM_LOG("Set LuxBall HDR scene");
-	UpdateSceneLabel(SCENE_LUXBALL_HDR);
-	((LuxMarkApp *)qApp)->SetScene(SCENE_LUXBALL_HDR);
+void MainWindow::setFoodScene() {
+	LM_LOG("Set Food scene");
+	UpdateSceneLabel(SCENE_FOOD);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_FOOD);
 }
 
 void MainWindow::setMicrophoneScene() {
@@ -291,15 +289,15 @@ void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
 		ui->action_Hotel->setChecked(true);
 		ui->action_Microphone->setChecked(false);
-		ui->action_LuxBall_HDR->setChecked(false);
+		ui->action_Food->setChecked(false);
 	} else if (index == 1) {
 		ui->action_Hotel->setChecked(false);
 		ui->action_Microphone->setChecked(true);
-		ui->action_LuxBall_HDR->setChecked(false);
+		ui->action_Food->setChecked(false);
 	} else if (index == 2) {
 		ui->action_Hotel->setChecked(false);
 		ui->action_Microphone->setChecked(false);
-		ui->action_LuxBall_HDR->setChecked(true);
+		ui->action_Food->setChecked(true);
 	} else
 		assert(false);
 

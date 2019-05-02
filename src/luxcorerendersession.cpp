@@ -51,6 +51,14 @@ void LuxCoreRenderSession::Start() {
 	assert (!started);
 	started = true;
 
+	// Clear the file name resolver list
+	luxcore::ClearFileNameResolverPaths();
+	// Add the current directory to the list of place where to look for files
+	luxcore::AddFileNameResolverPath(".");
+	// Add the .cfg directory to the list of place where to look for files
+	boost::filesystem::path path(sceneFileName);
+	luxcore::AddFileNameResolverPath(path.parent_path().generic_string());
+
 	// Load the configuration from file
 	Properties props(sceneFileName.c_str());
 	props << Property("screen.refresh.interval")(2000);

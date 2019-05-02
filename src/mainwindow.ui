@@ -34,15 +34,36 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
-     <widget class="QSplitter" name="splitter_2">
+     <widget class="QSplitter" name="MainVerticalSplitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QSplitter" name="splitter">
+      <widget class="QSplitter" name="MainHorizontalSplitter">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -52,7 +73,7 @@
          <item>
           <widget class="QLabel" name="hardwareDevicesLabel">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -97,6 +118,12 @@
        </widget>
       </widget>
       <widget class="QTextEdit" name="LogView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -111,7 +138,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -150,7 +177,7 @@
     </property>
     <addaction name="action_Hotel"/>
     <addaction name="action_Microphone"/>
-    <addaction name="action_LuxBall_HDR"/>
+    <addaction name="action_Food"/>
    </widget>
    <widget class="QMenu" name="menuOpenCL_Compiler_Opts">
     <property name="title">
@@ -189,15 +216,15 @@
     <string>Benchmark (OpenCL GPUs)</string>
    </property>
   </action>
-  <action name="action_LuxBall_HDR">
+  <action name="action_Food">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>LuxBall &amp;HDR (Simple Benchmark: 217K triangles)</string>
+    <string>&amp;Food (Simple Benchmark: 5519K triangles)</string>
    </property>
    <property name="toolTip">
-    <string>LuxBall HDR (Simple Benchmark: 217K triangles)</string>
+    <string>Food (Simple Benchmark: 5519K triangles)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -373,10 +400,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_LuxBall_HDR</sender>
+   <sender>action_Food</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setLuxBallHDRScene()</slot>
+   <slot>setFoodScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -648,7 +675,7 @@
  <slots>
   <slot>exitApp()</slot>
   <slot>showAbout()</slot>
-  <slot>setLuxBallHDRScene()</slot>
+  <slot>setFoodScene()</slot>
   <slot>setMicrophoneScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setHotelScene()</slot>

@@ -71,6 +71,9 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 
 	ui->resultLCD->display(int(sampleSec / 1000.0));
 
+	// Results submit is disabled for the moment
+	ui->submitButton->setVisible(false);
+
     // Re-enabled only after the validation process
 	ui->submitButton->setEnabled(false);
 
@@ -80,7 +83,7 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 			this, SLOT(setImageValidationLabel(const QString &, const bool, const bool)));
 
 	// Check if it is one of the official benchmarks
-	if ((strcmp(sceneName, SCENE_LUXBALL_HDR) == 0) ||
+	if ((strcmp(sceneName, SCENE_FOOD) == 0) ||
 			(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
 			(strcmp(sceneName, SCENE_HOTEL) == 0)) {
 		// Start the md5 validation thread
@@ -136,7 +139,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text,
 		// Check if I can enable submit button
 		if (imageValidationOk && ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
 				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
-				(strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
 		ui->sceneValidation->setStyleSheet("QLabel { color : red; }");
@@ -159,7 +162,7 @@ void ResultDialog::setImageValidationLabel(const QString &text,
         if (sceneValidationOk &&
                 ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
 				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
-				(strcmp(sceneName, SCENE_LUXBALL_HDR) == 0)))
+				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
 		ui->imageValidation->setStyleSheet("QLabel { color : red; }");
@@ -231,7 +234,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		const string md5 = QString(hash.result().toHex()).toStdString();
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
-		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR)) {
+		if (!strcmp(resultDialog->sceneName, SCENE_FOOD)) {
 			if (md5 == "f4d99d9deb8add29ec9ea7ab73eeb5f6")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
@@ -272,7 +275,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		const u_int dataCount = resultDialog->frameBufferWidth * resultDialog->frameBufferHeight * 3;
 
 		// Read the reference file
-		if (!strcmp(resultDialog->sceneName, SCENE_LUXBALL_HDR) ||
+		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
 				!strcmp(resultDialog->sceneName, SCENE_MICROPHONE) ||
 				!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
 			boost::filesystem::path fileName;

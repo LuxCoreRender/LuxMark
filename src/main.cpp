@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 
 	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
 	// Remember to change the default label in mainwindow.cpp too
-	const char *scnName = SCENE_LUXBALL_HDR;
+	const char *scnName = SCENE_FOOD;
     for (int i = 1; i < argsList.size(); ++i) {
         if (argHelp.indexIn(argsList.at(i)) != -1 ) {   
 			PrintCmdLineHelp(argsList.at(0));
@@ -76,8 +76,8 @@ int main(int argc, char **argv) {
 			break;
 		} else if (argScene.indexIn(argsList.at(i)) != -1) {   
             QString scene = argScene.cap(1);
-			if (scene.compare("LUXBALL_HDR", Qt::CaseInsensitive) == 0)
-				scnName = SCENE_LUXBALL_HDR;
+			if (scene.compare("FOOD", Qt::CaseInsensitive) == 0)
+				scnName = SCENE_FOOD;
 			else if (scene.compare("MICROPHONE", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_MICROPHONE;
 			else if (scene.compare("HOTEL", Qt::CaseInsensitive) == 0)

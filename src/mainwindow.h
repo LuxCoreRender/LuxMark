@@ -89,7 +89,7 @@ private slots:
 	void exitApp();
 	void showAbout();
 
-	void setLuxBallHDRScene();
+	void setFoodScene();
 	void setMicrophoneScene();
 	void setHotelScene();
 

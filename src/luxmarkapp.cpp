@@ -189,7 +189,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		mainWin->SetSceneCheck(0);
 	else if (!strcmp(scnName, SCENE_MICROPHONE))
 		mainWin->SetSceneCheck(1);
-	else if (!strcmp(scnName, SCENE_LUXBALL_HDR))
+	else if (!strcmp(scnName, SCENE_FOOD))
 		mainWin->SetSceneCheck(2);
 
 	// Initialize the new mode

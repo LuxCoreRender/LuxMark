@@ -120,7 +120,7 @@
        <verstretch>1</verstretch>
       </sizepolicy>
      </property>
-     <property name="numDigits">
+     <property name="digitCount">
       <number>8</number>
      </property>
      <property name="value" stdset="0">
@@ -131,7 +131,16 @@
    <item row="10" column="0" colspan="2">
     <widget class="QWidget" name="widget" native="true">
      <layout class="QGridLayout" name="gridLayout">
-      <property name="margin">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
        <number>0</number>
       </property>
       <item row="0" column="0">
@@ -149,6 +158,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="submitButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -202,7 +214,7 @@
       <number>1</number>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;LuxRender is now part of the &lt;a href=&quot;http://sfconservancy.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Software Freedom Conservancy&lt;/span&gt;&lt;/a&gt;, which allows us to receive donations to foster the development and cover the expenses of the LuxRender project. For each donation you'll do, a small amount will go to the Conservancy so that it can benefit all the member projects, and the rest will be made available to LuxRender.&lt;/p&gt;&lt;p align=&quot;justify&quot;&gt;In the United States, you can benefit from tax deductions according to the Conservancy 501(c)(3) not for profit organization status.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;You can donate at &lt;a href=&quot;http://www.luxrender.net/en_GB/donate&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;http://www.luxrender.net/en_GB/donate&quot;&gt;&lt;span style=&quot; color:#0000ff;&quot;&gt;.&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;a href=&quot;https://luxcorerender.org&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;LuxCoreRender&lt;/span&gt;&lt;/a&gt; project is available on &lt;a href=&quot;https://www.bountysource.com/teams/luxcorerender&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;BountySource&lt;/span&gt;&lt;/a&gt;. It is a funding platform for open-source software. Users can improve the open-source projects they love by creating/collecting bounties and pledging to fundraisers.&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;You can donate &lt;a href=&quot;https://salt.bountysource.com/teams/luxcorerender&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="textFormat">
       <enum>Qt::RichText</enum>
