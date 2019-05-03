@@ -40,11 +40,6 @@ class LuxMarkApp;
 class LuxFrameBuffer : public QGraphicsPixmapItem {
 public:
 	LuxFrameBuffer(const QPixmap &pixmap);
-
-	void SetLuxApp(LuxMarkApp *la) { luxApp = la; }
-
-private:
-	LuxMarkApp *luxApp;
 };
 
 class MainWindow : public QMainWindow {
@@ -57,15 +52,16 @@ public:
 	void ShowLogo();
 	bool IsShowingLogo() const;
 	void ShowFrameBuffer(const float *frameBuffer,
+		const float *frameBufferDenoisedSrc,
 		const unsigned int width, const unsigned int height);
 	const unsigned char *GetFrameBuffer() const { return frameBuffer; }
 
 	void SetModeCheck(const LuxMarkAppMode mode);
 	void SetSceneCheck(const int index);
 	void UpdateSceneLabel(const char *name);
-	void UpdateScreenLabel(const char *msg, const bool valid);
+	void UpdateScreenLabel(const char *msg);
+	void UpdateScreenLabelPosition();
 	void SetHardwareTreeModel(HardwareTreeModel *treeModel);
-	void SetLuxApp(LuxMarkApp *la) { luxFrameBuffer->SetLuxApp(la); }
 
 	void Pause();
 
@@ -74,11 +70,12 @@ private:
 
 	Ui::MainWindow *ui;
 	QGraphicsPixmapItem *luxLogo;
-	LuxFrameBuffer *luxFrameBuffer;
+	QGraphicsPixmapItem *luxFrameBuffer;
 	unsigned char *frameBuffer;
 	unsigned int fbWidth, fbHeight;
 	QGraphicsSimpleTextItem *authorLabel;
 	QGraphicsSimpleTextItem *authorLabelBack;
+	QGraphicsSimpleTextItem *raw2denoisedLabel;
 	QGraphicsSimpleTextItem *screenLabel;
 	QGraphicsRectItem *screenLabelBack;
 	QLabel *statusBarLabel;

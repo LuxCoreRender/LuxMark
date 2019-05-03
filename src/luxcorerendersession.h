@@ -38,7 +38,7 @@ public:
 	void Start();
 	void Stop();
 
-	const float *GetFrameBuffer() const;
+	const float *GetFrameBuffer(const u_int imagePipelineIndex) const;
 	u_int GetFrameBufferWidth() const;
 	u_int GetFrameBufferHeight() const;
 

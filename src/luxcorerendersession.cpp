@@ -134,8 +134,8 @@ void LuxCoreRenderSession::Stop() {
 	delete config;
 }
 
-const float *LuxCoreRenderSession::GetFrameBuffer() const {
-	return session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE);
+const float *LuxCoreRenderSession::GetFrameBuffer(const u_int imagePipelineIndex) const {
+	return session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE, imagePipelineIndex);
 }
 
 u_int LuxCoreRenderSession::GetFrameBufferWidth() const {

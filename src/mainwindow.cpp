@@ -49,8 +49,6 @@ LuxErrorEvent::LuxErrorEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_ERR_MES
 //------------------------------------------------------------------------------
 
 LuxFrameBuffer::LuxFrameBuffer(const QPixmap &pixmap) : QGraphicsPixmapItem(pixmap) {
-	luxApp = NULL;
-
 	setAcceptHoverEvents(true);
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 }
@@ -68,12 +66,18 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	luxFrameBuffer = new LuxFrameBuffer(QPixmap(":/images/resources/luxlogo_bg.png"));
 	renderScene->addItem(luxFrameBuffer);
 
-	authorLabelBack = new QGraphicsSimpleTextItem(QString("Scene designed by LuxRender project"));
+	authorLabelBack = new QGraphicsSimpleTextItem(QString("Scene designed by LuxCoreRender project"));
 	renderScene->addItem(authorLabelBack);
 	authorLabelBack->setBrush(Qt::black);
 	authorLabel = new QGraphicsSimpleTextItem(authorLabelBack->text());
-	authorLabel->setBrush(Qt::white);
+	authorLabel->setBrush(Qt::blue);
 	renderScene->addItem(authorLabel);
+	
+	raw2denoisedLabel = new QGraphicsSimpleTextItem(QString("(Raw Vs. Denoised rendering)"));
+	raw2denoisedLabel->setBrush(Qt::blue);
+	raw2denoisedLabel->setVisible(false);
+	renderScene->addItem(raw2denoisedLabel);
+	
 
 	screenLabelBack = renderScene->addRect(0.f, 0.f, 1.f, 1.f, QPen(), Qt::lightGray);
 	screenLabel = new QGraphicsSimpleTextItem(QString("[Time: 0secs (Wait)]"));
@@ -98,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 	
 	this->setWindowState(Qt::WindowMaximized);
 	ui->MainVerticalSplitter->setSizes(QList<int>() << 1024 << 128);
-	ui->MainHorizontalSplitter->setSizes(QList<int>() << 1024 << 128);
+	ui->MainHorizontalSplitter->setSizes(QList<int>() << 1024 << 256);
 }
 
 MainWindow::~MainWindow() {
@@ -106,6 +110,7 @@ MainWindow::~MainWindow() {
 	delete statusBarLabel;
 	delete authorLabel;
 	delete authorLabelBack;
+	delete raw2denoisedLabel;
 	delete screenLabel;
 	delete screenLabelBack;
 	delete luxFrameBuffer;
@@ -147,7 +152,7 @@ void MainWindow::UpdateSceneLabel(const char *name) {
 		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
-		authorLabel->setBrush(Qt::white);
+		authorLabel->setBrush(Qt::blue);
 	}
 }
 
@@ -255,6 +260,7 @@ void MainWindow::ShowLogo() {
 		luxFrameBuffer->hide();
 		authorLabel->hide();
 		authorLabelBack->hide();
+		raw2denoisedLabel->hide();
 		screenLabelBack->hide();
 		screenLabel->hide();
 	}
@@ -300,7 +306,6 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_Food->setChecked(true);
 	} else
 		assert(false);
-
 }
 
 bool MainWindow::IsShowingLogo() const {
@@ -308,6 +313,7 @@ bool MainWindow::IsShowingLogo() const {
 }
 
 void MainWindow::ShowFrameBuffer(const float *frameBufferSrc,
+		const float *frameBufferDenoisedSrc,
 		const unsigned  int width, const unsigned  int height) {
 	if (luxLogo->isVisible())
 		luxLogo->hide();
@@ -320,34 +326,57 @@ void MainWindow::ShowFrameBuffer(const float *frameBufferSrc,
 		frameBuffer = new unsigned char[fbWidth * fbHeight * 3];
 	}
 
-	for (u_int y = 0; y < height; ++y) {
-		for (u_int x = 0; x < width; ++x) {
-			const u_int srcIndex = (x + y * width) * 3;
-			const u_int dstIndex = (x + (height - y - 1) * width) * 3;
+	for (u_int y = 0; y < fbHeight; ++y) {
+		for (u_int x = 0; x < fbWidth; ++x) {
+			const u_int srcIndex = (x + y * fbWidth) * 3;
+			const u_int dstIndex = (x + (fbHeight - y - 1) * fbWidth) * 3;
 			frameBuffer[dstIndex] = (unsigned char)(Clamp(frameBufferSrc[srcIndex] * 255.f + .5f, 0.f, 255.f));
 			frameBuffer[dstIndex + 1] = (unsigned char)(Clamp(frameBufferSrc[srcIndex + 1] * 255.f + .5f, 0.f, 255.f));
 			frameBuffer[dstIndex + 2] = (unsigned char)(Clamp(frameBufferSrc[srcIndex + 2] * 255.f + .5f, 0.f, 255.f));
 		}
 	}
 
-	luxFrameBuffer->setPixmap(QPixmap::fromImage(QImage(
-		frameBuffer, fbWidth, fbHeight, width * 3, QImage::Format_RGB888)));
+	if (!frameBufferDenoisedSrc) {
+		luxFrameBuffer->setPixmap(QPixmap::fromImage(QImage(
+			frameBuffer, fbWidth, fbHeight, fbWidth * 3, QImage::Format_RGB888)));
+	} else {
+		vector<unsigned char> frameBufferTmp(2 * fbWidth * fbHeight * 3);
+		
+		for (u_int y = 0; y < fbHeight; ++y) {
+			for (u_int x = 0; x < fbWidth; ++x) {
+				const u_int srcIndex = (x + y * fbWidth) * 3;
+
+				const u_int dstIndexRaw = (x + y * fbWidth * 2) * 3;
+				frameBufferTmp[dstIndexRaw] = frameBuffer[srcIndex];
+				frameBufferTmp[dstIndexRaw + 1] = frameBuffer[srcIndex + 1];
+				frameBufferTmp[dstIndexRaw + 2] = frameBuffer[srcIndex + 2];
+
+				const u_int dstIndexDenoised = (fbWidth + x + (fbHeight - y - 1) * fbWidth * 2) * 3;
+				frameBufferTmp[dstIndexDenoised] = (unsigned char)(Clamp(frameBufferDenoisedSrc[srcIndex] * 255.f + .5f, 0.f, 255.f));
+				frameBufferTmp[dstIndexDenoised + 1] = (unsigned char)(Clamp(frameBufferDenoisedSrc[srcIndex + 1] * 255.f + .5f, 0.f, 255.f));
+				frameBufferTmp[dstIndexDenoised + 2] = (unsigned char)(Clamp(frameBufferDenoisedSrc[srcIndex + 2] * 255.f + .5f, 0.f, 255.f));
+			}
+		}	
+
+		luxFrameBuffer->setPixmap(QPixmap::fromImage(QImage(
+			&frameBufferTmp[0], 2 * fbWidth, fbHeight, 2 * fbWidth * 3, QImage::Format_RGB888)));
+	}
 
 	if (!luxFrameBuffer->isVisible()) {
 		luxFrameBuffer->show();
 		authorLabelBack->show();
 		authorLabel->show();
-
-		qreal w = Max<qreal>(fbWidth, screenLabel->boundingRect().width());
-		qreal h = fbHeight + screenLabel->boundingRect().height();
-		renderScene->setSceneRect(0.f, 0.f, w, h);
-		luxFrameBuffer->setPos(Max<qreal>(0.f, (w - fbWidth) / 2), 0.f);
-		ui->RenderView->centerOn(luxFrameBuffer);
-
-		screenLabelBack->setRect(0.f, fbHeight, w, screenLabel->boundingRect().height());
+		raw2denoisedLabel->show();
 		screenLabelBack->show();
 		screenLabel->show();
 	}
+
+	if (frameBufferDenoisedSrc && !raw2denoisedLabel->isVisible())
+		raw2denoisedLabel->setVisible(true);
+	else
+		raw2denoisedLabel->setVisible(false);
+
+	UpdateScreenLabelPosition();
 
 	ui->RenderView->setDragMode(QGraphicsView::ScrollHandDrag);
 	ui->RenderView->setInteractive(true);
@@ -399,25 +428,35 @@ bool MainWindow::event(QEvent *event) {
 	return QMainWindow::event(event);
 }
 
-void MainWindow::UpdateScreenLabel(const char *msg, const bool valid) {
+void MainWindow::UpdateScreenLabel(const char *msg) {
 	screenLabel->setText(QString(msg));
-	//screenLabel->setBrush(valid ? Qt::green : Qt::red);
-	screenLabel->setBrush(Qt::blue);
-	screenLabel->setPos(0.f, fbHeight);
-
-	// Update scene size
-	const qreal w = Max<qreal>(fbWidth, screenLabel->boundingRect().width());
-	const qreal h = fbHeight + screenLabel->boundingRect().height();
-	renderScene->setSceneRect(0.f, 0.f, w, h);
-	luxFrameBuffer->setPos(Max<qreal>(0.f, (w - fbWidth) / 2), 0.f);
-	screenLabelBack->setRect(0.f, fbHeight, w, screenLabel->boundingRect().height());
-
-	// Update author label
-	const qreal alh = Max<qreal>(0.f, (w - fbWidth) / 2);
-	authorLabelBack->setPos(alh + 1.f, 1.f);
-	authorLabel->setPos(alh, 0.f);
 
 	// Update status bar with the first line of the message
 	QString qMsg(msg);
 	statusBarLabel->setText(qMsg.split(QString("\n"))[0]);
+	
+	UpdateScreenLabelPosition();
+}
+
+void MainWindow::UpdateScreenLabelPosition() {
+	const int pixmapWidth = luxFrameBuffer->pixmap().width();
+	const int pixmapHeight = luxFrameBuffer->pixmap().height();
+
+	screenLabel->setBrush(Qt::blue);
+	screenLabel->setPos(0.f, pixmapHeight);
+
+	// Update scene size
+	qreal w = Max<qreal>(pixmapWidth, screenLabel->boundingRect().width());
+	qreal h = pixmapHeight + screenLabel->boundingRect().height();
+	renderScene->setSceneRect(0.f, 0.f, w, h);
+	luxFrameBuffer->setPos(Max<qreal>(0.f, (w - pixmapWidth) / 2), 0.f);
+	screenLabelBack->setRect(0.f, pixmapHeight, w, screenLabel->boundingRect().height());
+
+	// Update author label position
+	const qreal alw = Max<qreal>(0.f, (w - pixmapWidth) / 2);
+	authorLabelBack->setPos(alw + 1.f, 1.f);
+	authorLabel->setPos(alw, 0.f);
+
+	// Raw Vs. Denoised label position
+	raw2denoisedLabel->setPos(alw, authorLabel->boundingRect().height() + 1.f);
 }

@@ -119,7 +119,6 @@ void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName,
 	mainWin = new MainWindow();
 	mainWin->setWindowTitle("LuxMark v" LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
 	mainWin->show();
-	mainWin->SetLuxApp(this);
 	LogWindow = mainWin;
 	singleRun = single;
 	singleRunExtInfo = extInfo;
@@ -284,7 +283,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	const int width = luxSession->GetFrameBufferWidth();
 	const int height = luxSession->GetFrameBufferHeight();
 	const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
-	mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(), width, height);
+	mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(0), NULL, width, height);
 	const unsigned char *pixels = mainWin->GetFrameBuffer();
 
 	// To save reference image
@@ -394,7 +393,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		}
 	}
 
-	mainWin->UpdateScreenLabel(ss.str().c_str(), benchmarkDone);
+	mainWin->UpdateScreenLabel(ss.str().c_str());
 
 	if (benchmarkDone) {
 		// Check if I'm in single run mode
@@ -404,6 +403,8 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 			exit(EXIT_SUCCESS);
 		} else {
+			mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(0), luxSession->GetFrameBuffer(1), width, height);
+
 			Stop();
 
             vector<BenchmarkDeviceDescription> descs = hardwareTreeModel->getSelectedDeviceDescs(mode);
