@@ -31,6 +31,11 @@ foreach(comp ${Qt5_MODULES})
     set(Qt5_LIBRARIES ${Qt5_LIBRARIES} Qt5::${comp})
 endforeach()
 
+# Instruct CMake to run moc automatically when needed
+set(CMAKE_AUTOMOC ON)
+# Create code from a list of Qt designer ui files
+set(CMAKE_AUTOUIC ON)
+
 # Configure a header file to pass some of the CMake settings
 # to the source code
 configure_file(

@@ -86,7 +86,7 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 
 	// Check if it is one of the official benchmarks
 	if ((strcmp(sceneName, SCENE_FOOD) == 0) ||
-			(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
+			(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 			(strcmp(sceneName, SCENE_HOTEL) == 0)) {
 		// Start the md5 validation thread
 		md5Thread = new boost::thread(boost::bind(ResultDialog::MD5ThreadImpl, this));
@@ -140,7 +140,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text,
 
 		// Check if I can enable submit button
 		if (imageValidationOk && ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
-				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
+				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
@@ -163,7 +163,7 @@ void ResultDialog::setImageValidationLabel(const QString &text,
 		// Check if I can enable submit button
         if (sceneValidationOk &&
                 ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
-				(strcmp(sceneName, SCENE_MICROPHONE) == 0) ||
+				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
@@ -186,7 +186,8 @@ void ResultDialog::AddSceneFiles(ResultDialog *resultDialog,
 			// Check if it is one of the scene file extensions or reference images
 			const string ext = fileName.extension().generic_string();
 			if ((ext == ".cfg") || (ext == ".scn") || (ext == ".ply") ||
-					(ext == ".exr") || (ext == ".png") || (ext == ".raw")) {
+					(ext == ".pgi") || (ext == ".exr") || (ext == ".png") ||
+					(ext == ".raw")) {
 				const QString label(("Selecting file [" + fileName.filename().generic_string() + "]").c_str());
 				emit resultDialog->sceneValidationLabelChanged(label, false, false);
 				files.push_back(fileName);
@@ -238,12 +239,12 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (!strcmp(resultDialog->sceneName, SCENE_FOOD)) {
-			if (md5 == "32d1806f6b80b5906de8c9769980a9dd")
+			if (md5 == "9c6bf2bd1223782d9f2e3d1149b426ac")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
-		} else if (!strcmp(resultDialog->sceneName, SCENE_MICROPHONE)) {
-			if (md5 == "885de1a27b6bfa86c114b4810d323e97")
+		} else if (!strcmp(resultDialog->sceneName, SCENE_HALLBENCH)) {
+			if (md5 == "1a6e859c00dc8a444286f8fba49b89b3")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
@@ -279,7 +280,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 //
 //		// Read the reference file
 //		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
-//				!strcmp(resultDialog->sceneName, SCENE_MICROPHONE) ||
+//				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
 //				!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
 //			boost::filesystem::path fileName;
 //			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||

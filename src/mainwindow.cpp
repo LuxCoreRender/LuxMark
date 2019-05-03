@@ -143,11 +143,11 @@ void MainWindow::UpdateSceneLabel(const char *name) {
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
 		authorLabel->setBrush(Qt::white);
-	} else if (!strcmp(SCENE_MICROPHONE, name)) {
-		authorLabelBack->setText(QString("Scene designed by Vlad \"SATtva\" Miller (http://vladmiller.info/blog/index.php?comment=308)"));
+	} else if (!strcmp(SCENE_HALLBENCH, name)) {
+		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
-		authorLabel->setBrush(Qt::darkGray);
+		authorLabel->setBrush(Qt::blue);
 	} else if (!strcmp(SCENE_FOOD, name)) {
 		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
@@ -162,10 +162,10 @@ void MainWindow::setFoodScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_FOOD);
 }
 
-void MainWindow::setMicrophoneScene() {
-	LM_LOG("Set Microphone scene");
-	UpdateSceneLabel(SCENE_MICROPHONE);
-	((LuxMarkApp *)qApp)->SetScene(SCENE_MICROPHONE);
+void MainWindow::setHallBenchScene() {
+	LM_LOG("Set HallBench scene");
+	UpdateSceneLabel(SCENE_HALLBENCH);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_HALLBENCH);
 }
 
 void MainWindow::setHotelScene() {
@@ -294,15 +294,15 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
 		ui->action_Hotel->setChecked(true);
-		ui->action_Microphone->setChecked(false);
+		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(false);
 	} else if (index == 1) {
 		ui->action_Hotel->setChecked(false);
-		ui->action_Microphone->setChecked(true);
+		ui->action_HallBench->setChecked(true);
 		ui->action_Food->setChecked(false);
 	} else if (index == 2) {
 		ui->action_Hotel->setChecked(false);
-		ui->action_Microphone->setChecked(false);
+		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(true);
 	} else
 		assert(false);

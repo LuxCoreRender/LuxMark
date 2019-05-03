@@ -87,7 +87,7 @@ private slots:
 	void showAbout();
 
 	void setFoodScene();
-	void setMicrophoneScene();
+	void setHallBenchScene();
 	void setHotelScene();
 
 	void setMode_BENCHMARK_OCL_GPU();

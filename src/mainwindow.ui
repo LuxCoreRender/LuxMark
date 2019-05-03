@@ -176,7 +176,7 @@
      <string>&amp;Scene</string>
     </property>
     <addaction name="action_Hotel"/>
-    <addaction name="action_Microphone"/>
+    <addaction name="action_HallBench"/>
     <addaction name="action_Food"/>
    </widget>
    <widget class="QMenu" name="menuOpenCL_Compiler_Opts">
@@ -221,7 +221,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Food (Simple Benchmark: 5519K triangles)</string>
+    <string>&amp;Food (Brute force path tracing)</string>
    </property>
    <property name="toolTip">
     <string>Food (Simple Benchmark: 5519K triangles)</string>
@@ -254,12 +254,12 @@
     <string>Benchmark (OpenCL CPUs)</string>
    </property>
   </action>
-  <action name="action_Microphone">
+  <action name="action_HallBench">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Neumann TLM-102 SE (Medium Benchmark: 1769K triangles)</string>
+    <string>&amp;Hall Bench (Path tracing + Global Illumination cache)</string>
    </property>
    <property name="toolTip">
     <string>Neumann TLM-102 SE (Medium Benchmark: 1769K triangles)</string>
@@ -480,10 +480,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Microphone</sender>
+   <sender>action_HallBench</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMicrophoneScene()</slot>
+   <slot>setHallBenchScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -676,7 +676,7 @@
   <slot>exitApp()</slot>
   <slot>showAbout()</slot>
   <slot>setFoodScene()</slot>
-  <slot>setMicrophoneScene()</slot>
+  <slot>setHallBenchScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setHotelScene()</slot>
   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
