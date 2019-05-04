@@ -87,7 +87,7 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 	// Check if it is one of the official benchmarks
 	if ((strcmp(sceneName, SCENE_FOOD) == 0) ||
 			(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
-			(strcmp(sceneName, SCENE_HOTEL) == 0)) {
+			(strcmp(sceneName, SCENE_WALLPAPER) == 0)) {
 		// Start the md5 validation thread
 		md5Thread = new boost::thread(boost::bind(ResultDialog::MD5ThreadImpl, this));
 
@@ -139,7 +139,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text,
 		ui->sceneValidation->setStyleSheet("QLabel { color : green; }");
 
 		// Check if I can enable submit button
-		if (imageValidationOk && ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
+		if (imageValidationOk && ((strcmp(sceneName, SCENE_WALLPAPER) == 0) ||
 				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
@@ -162,7 +162,7 @@ void ResultDialog::setImageValidationLabel(const QString &text,
 
 		// Check if I can enable submit button
         if (sceneValidationOk &&
-                ((strcmp(sceneName, SCENE_HOTEL) == 0) ||
+                ((strcmp(sceneName, SCENE_WALLPAPER) == 0) ||
 				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 				(strcmp(sceneName, SCENE_FOOD) == 0)))
 			ui->submitButton->setEnabled(true);
@@ -248,7 +248,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
-		} else if (!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
+		} else if (!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
 			if (md5 == "901b621dee6c0a032b0c521dc3ea13fc")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
@@ -281,7 +281,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 //		// Read the reference file
 //		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
 //				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
-//				!strcmp(resultDialog->sceneName, SCENE_HOTEL)) {
+//				!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
 //			boost::filesystem::path fileName;
 //			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
 //					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
@@ -328,7 +328,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 //		emit resultDialog->imageValidationLabelChanged("Comparing...", false, false);
 //		const u_int diffPixelCount = convTest.Test(testImage);
 //
-//		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_HOTEL) == 0) ? 60.f : 15.f;
+//		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_WALLPAPER) == 0) ? 60.f : 15.f;
 //		const float errorPerc =  100.f * diffPixelCount / (float)(resultDialog->frameBufferWidth * resultDialog->frameBufferHeight);
 //		const bool isOk = (errorPerc < errorTreshold);
 

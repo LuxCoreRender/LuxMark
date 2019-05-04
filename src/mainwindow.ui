@@ -161,7 +161,7 @@
     <addaction name="action_OpenCL_CPUs_GPUs"/>
     <addaction name="action_OpenCL_CPUs"/>
     <addaction name="action_OpenCL_Custom"/>
-    <addaction name="action_Path"/>
+    <addaction name="action_NativeCPP"/>
     <addaction name="separator"/>
     <addaction name="action_StressTest_OpenCL_GPUs"/>
     <addaction name="action_StressTest_OpenCL_CPUs_GPUs"/>
@@ -175,7 +175,7 @@
     <property name="title">
      <string>&amp;Scene</string>
     </property>
-    <addaction name="action_Hotel"/>
+    <addaction name="action_WallPaper"/>
     <addaction name="action_HallBench"/>
     <addaction name="action_Food"/>
    </widget>
@@ -224,7 +224,7 @@
     <string>&amp;Food (Brute force path tracing)</string>
    </property>
    <property name="toolTip">
-    <string>Food (Simple Benchmark: 5519K triangles)</string>
+    <string>Food (Brute force path tracing)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -262,7 +262,7 @@
     <string>&amp;Hall Bench (Path tracing + Global Illumination cache)</string>
    </property>
    <property name="toolTip">
-    <string>Neumann TLM-102 SE (Medium Benchmark: 1769K triangles)</string>
+    <string>Hall Bench (Path tracing + Global Illumination cache)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+M</string>
@@ -276,7 +276,7 @@
     <string>Benchmark (OpenCL selected devices only)</string>
    </property>
   </action>
-  <action name="action_Hotel">
+  <action name="action_WallPaper">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -284,16 +284,19 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Hotel lobby (Complex Benchmark: 4973K triangles)</string>
+    <string>&amp;Wall Paper (Brute force bidirectional path tracing)</string>
    </property>
    <property name="toolTip">
-    <string>Hotel lobby (Complex Benchmark: 4973K triangles)</string>
+    <string>Wall Paper (Brute force bidirectional path tracing)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="action_Path">
+  <action name="action_NativeCPP">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Benchmark (Native C++)</string>
    </property>
@@ -512,10 +515,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Hotel</sender>
+   <sender>action_WallPaper</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setHotelScene()</slot>
+   <slot>setWallPaperScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -528,7 +531,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Path</sender>
+   <sender>action_NativeCPP</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>setMode_BENCHMARK_NATIVE_PATH()</slot>
@@ -678,7 +681,7 @@
   <slot>setFoodScene()</slot>
   <slot>setHallBenchScene()</slot>
   <slot>setMode_PAUSE()</slot>
-  <slot>setHotelScene()</slot>
+  <slot>setWallPaperScene()</slot>
   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CPU()</slot>

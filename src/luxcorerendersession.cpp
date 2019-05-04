@@ -23,6 +23,7 @@
 #include <boost/filesystem.hpp>
 
 #include "luxcorerendersession.h"
+#include "luxmarkapp.h"
 #include "mainwindow.h"
 
 using namespace luxrays;
@@ -63,15 +64,18 @@ void LuxCoreRenderSession::Start() {
 	Properties props(sceneFileName.c_str());
 	props << Property("screen.refresh.interval")(2000);
 
+	//--------------------------------------------------------------------------
+	// BENCHMARK and STRESSTEST render modes
+	//--------------------------------------------------------------------------
+
 	switch (renderMode) {
-		//----------------------------------------------------------------------
-		// BENCHMARK and STRESSTEST
-		//----------------------------------------------------------------------
 		case STRESSTEST_OCL_GPU:
 		case BENCHMARK_OCL_GPU: {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(false) <<
+					Property("opencl.native.threads.count")(0) <<
+					Property("native.threads.count")(0) <<
 					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
@@ -81,6 +85,8 @@ void LuxCoreRenderSession::Start() {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(true) <<
+					Property("opencl.native.threads.count")(0) <<
+					Property("native.threads.count")(0) <<
 					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
@@ -90,6 +96,8 @@ void LuxCoreRenderSession::Start() {
 			props <<
 					Property("opencl.gpu.use")(false) <<
 					Property("opencl.cpu.use")(true) <<
+					Property("opencl.native.threads.count")(0) <<
+					Property("native.threads.count")(0) <<
 					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
@@ -99,20 +107,23 @@ void LuxCoreRenderSession::Start() {
 			if (deviceSelection == "") {
 				props <<
 						Property("opencl.gpu.use")(true) <<
-						Property("opencl.cpu.use")(false) <<
-						Property("opencl.kernel.options")(oclCompilerOpts) <<
-						Property("renderengine.type")("PATHOCL");
+						Property("opencl.cpu.use")(false);
 			} else {
 				props <<
-						Property("opencl.devices.select")(deviceSelection) <<
-						Property("opencl.kernel.options")(oclCompilerOpts) <<
-						Property("renderengine.type")("PATHOCL");
+						Property("opencl.devices.select")(deviceSelection);
 			}
+
+			props <<
+					Property("opencl.native.threads.count")(0) <<
+					Property("native.threads.count")(0) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
+					Property("renderengine.type")("PATHOCL");
 			break;
 		}
 		case BENCHMARK_NATIVE: {
 			props <<
-					Property("renderengine.type")("PATHCPU");
+					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<
+					Property("renderengine.type")((sceneFileName == SCENE_WALLPAPER) ? "BIDIRCPU" : "PATHCPU");
 			break;
 		}
 		default: {

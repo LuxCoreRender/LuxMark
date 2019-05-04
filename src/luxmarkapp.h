@@ -40,7 +40,7 @@
 //------------------------------------------------------------------------------
 
 // List of supported scenes
-#define SCENE_HOTEL "scenes/hotel/render.cfg"
+#define SCENE_WALLPAPER "scenes/wallpaper/render.cfg"
 #define SCENE_HALLBENCH "scenes/hallbench/render.cfg"
 #define SCENE_FOOD "scenes/food/render.cfg"
 
@@ -58,7 +58,7 @@ public:
 	void Stop();
 
 	void SetMode(LuxMarkAppMode m);
-	void SetScene(const char *name);
+	void SetScene(const char *scnName);
 
 	void SetOpenCLCompilerOpts(const OCLCompilerOpts opt, const bool enable);
 

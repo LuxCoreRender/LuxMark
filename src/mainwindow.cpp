@@ -138,11 +138,11 @@ void MainWindow::showAbout() {
 }
 
 void MainWindow::UpdateSceneLabel(const char *name) {
-	if (!strcmp(SCENE_HOTEL, name)) {
-		authorLabelBack->setText(QString("Scene designed by Peter Sandbacka"));
+	if (!strcmp(SCENE_WALLPAPER, name)) {
+		authorLabelBack->setText(QString("Scene designed by Simon \"B.Y.O.B.\" Wendsche (based on Psor's Cube scene)"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
-		authorLabel->setBrush(Qt::white);
+		authorLabel->setBrush(Qt::blue);
 	} else if (!strcmp(SCENE_HALLBENCH, name)) {
 		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
@@ -168,10 +168,10 @@ void MainWindow::setHallBenchScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_HALLBENCH);
 }
 
-void MainWindow::setHotelScene() {
-	LM_LOG("Set Hotel scene");
-	UpdateSceneLabel(SCENE_HOTEL);
-	((LuxMarkApp *)qApp)->SetScene(SCENE_HOTEL);
+void MainWindow::setWallPaperScene() {
+	LM_LOG("Set WallPaper scene");
+	UpdateSceneLabel(SCENE_WALLPAPER);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_WALLPAPER);
 }
 
 void MainWindow::setMode_BENCHMARK_OCL_GPU() {
@@ -280,7 +280,7 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_OCL_CPUGPU);
 	ui->action_OpenCL_CPUs->setChecked(mode == BENCHMARK_OCL_CPU);
 	ui->action_OpenCL_Custom->setChecked(mode == BENCHMARK_OCL_CUSTOM);
-	ui->action_Path->setChecked(mode == BENCHMARK_NATIVE);
+	ui->action_NativeCPP->setChecked(mode == BENCHMARK_NATIVE);
 
 	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);
 	ui->action_StressTest_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_OCL_CPUGPU);
@@ -293,17 +293,36 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 
 void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
-		ui->action_Hotel->setChecked(true);
+		ui->action_WallPaper->setChecked(true);
 		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(false);
+		
+		ui->action_OpenCL_GPUs->setEnabled(false);
+		ui->action_OpenCL_CPUs->setEnabled(false);
+		ui->action_OpenCL_CPUs_GPUs->setEnabled(false);
+		ui->action_OpenCL_Custom->setEnabled(false);
+		ui->action_NativeCPP->setEnabled(true);
+		ui->action_NativeCPP->setChecked(true);
 	} else if (index == 1) {
-		ui->action_Hotel->setChecked(false);
+		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(true);
 		ui->action_Food->setChecked(false);
+
+		ui->action_OpenCL_GPUs->setEnabled(true);
+		ui->action_OpenCL_CPUs->setEnabled(true);
+		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
+		ui->action_OpenCL_Custom->setEnabled(true);
+		ui->action_NativeCPP->setEnabled(true);
 	} else if (index == 2) {
-		ui->action_Hotel->setChecked(false);
+		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(true);
+
+		ui->action_OpenCL_GPUs->setEnabled(true);
+		ui->action_OpenCL_CPUs->setEnabled(true);
+		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
+		ui->action_OpenCL_Custom->setEnabled(true);
+		ui->action_NativeCPP->setEnabled(true);
 	} else
 		assert(false);
 }

@@ -137,8 +137,8 @@ void LuxMarkApp::SetMode(LuxMarkAppMode m) {
 	InitRendering(m, sceneName);
 }
 
-void LuxMarkApp::SetScene(const char *name) {
-	InitRendering(mode, name);
+void LuxMarkApp::SetScene(const char *scnName) {
+	InitRendering(mode, scnName);
 }
 
 void  LuxMarkApp::SetOpenCLCompilerOpts(const OCLCompilerOpts opt, const bool enable) {
@@ -184,9 +184,30 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	Stop();
 
-	if (!strcmp(scnName, SCENE_HOTEL))
+	if (!strcmp(scnName, SCENE_WALLPAPER)) {
 		mainWin->SetSceneCheck(0);
-	else if (!strcmp(scnName, SCENE_HALLBENCH))
+
+		// Wall Paper scene can be rendered only with BiDir
+		switch (mode) {
+			case BENCHMARK_OCL_GPU:
+			case BENCHMARK_OCL_CPUGPU:
+			case BENCHMARK_OCL_CPU:
+			case BENCHMARK_OCL_CUSTOM:
+				mode = BENCHMARK_NATIVE;
+				break;
+			case STRESSTEST_OCL_GPU:
+			case STRESSTEST_OCL_CPUGPU:
+			case STRESSTEST_OCL_CPU:
+				// TODO
+				break;
+			case DEMO_LUXVR:
+				// TODO
+				break;
+			case PAUSE:
+			default:
+				break;
+		}
+	} else if (!strcmp(scnName, SCENE_HALLBENCH))
 		mainWin->SetSceneCheck(1);
 	else if (!strcmp(scnName, SCENE_FOOD))
 		mainWin->SetSceneCheck(2);

@@ -88,7 +88,7 @@ private slots:
 
 	void setFoodScene();
 	void setHallBenchScene();
-	void setHotelScene();
+	void setWallPaperScene();
 
 	void setMode_BENCHMARK_OCL_GPU();
 	void setMode_BENCHMARK_OCL_CPUGPU();

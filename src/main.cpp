@@ -29,7 +29,7 @@
 static void PrintCmdLineHelp(const QString &cmd) {
 	cerr << "Usage: " << cmd.toLatin1().data() << " [options]" << endl <<
 			" --help (display this help and exit)" << endl <<
-			" --scene=FOOD|HALLBENCH|HOTEL (select the scene to use)" << endl <<
+			" --scene=FOOD|HALLBENCH|WALLPAPER (select the scene to use)" << endl <<
 			" --mode="
                 "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
 				"BENCHMARK_NATIVE|"
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
-	QRegExp argScene("--scene=(FOOD|HALLBENCH|HOTEL)");
+	QRegExp argScene("--scene=(FOOD|HALLBENCH|WALLPAPER)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
 		"BENCHMARK_NATIVE|"
@@ -80,8 +80,8 @@ int main(int argc, char **argv) {
 				scnName = SCENE_FOOD;
 			else if (scene.compare("HALLBENCH", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_HALLBENCH;
-			else if (scene.compare("HOTEL", Qt::CaseInsensitive) == 0)
-				scnName = SCENE_HOTEL;
+			else if (scene.compare("WALLPAPER", Qt::CaseInsensitive) == 0)
+				scnName = SCENE_WALLPAPER;
 			else {
 				cerr << "Unknown scene name: " << argScene.cap(1).toLatin1().data() << endl;
 				PrintCmdLineHelp(argsList.at(0));

@@ -15,6 +15,7 @@ scenes/hotel/*
 *cmake_install.cmake
 moc_*.cpp
 moc_*.cpp_parameters
+src/luxmark_autogen/
 ui_*.h
 qrc_*.cpp
 *.sdf
