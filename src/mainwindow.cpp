@@ -20,6 +20,7 @@
  ***************************************************************************/
 
 // List of new v4.0 features:
+//  - LuxCoreRender v2.2 render engine
 //  - New Brute force path tracing Food benchmark scene
 //  - New Path tracing + Global Illumination cache Wall Bench benchmark scene
 //  - New Brute force bidirectional path tracing Wall Paper benchmark scene
@@ -27,6 +28,7 @@
 //  - New BENCHMARK_HYBRID_CUSTOM (OpenCL Custom + Native C++) benchmark mode
 //  - New STRESSTEST_HYBRID (OpenCL GPUs + Native C++) stress test mode
 //  - New STRESSTEST_NATIVE (Native C++) stress test mode
+//  - Showing OpenCL and Native C++ rendering statistics
 
 #include <QTextEdit>
 #include <QDialogButtonBox>

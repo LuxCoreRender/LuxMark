@@ -21,6 +21,7 @@
 
 #include <limits>
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include <QFile>
 #include <QGraphicsSceneMouseEvent>
@@ -332,46 +333,34 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	vector<string> deviceNames;
 	vector<double> deviceRaysSecs;
 	vector<double> deviceMem, deviceMaxMem;
+	vector<bool> deviceIsOpenCL;
+	bool hasOpenCLDevices = false;
+	bool hasNativeDevices = false;
 	double triangleCount = 0.0;
 	double minPerf = 0.0;
 	double totalPerf = 0.0;
-	switch (mode) {
-		case STRESSTEST_OCL_GPU:
-		case STRESSTEST_OCL_CPUGPU:
-		case STRESSTEST_OCL_CPU:
-		case STRESSTEST_HYBRID:
-		case BENCHMARK_OCL_GPU:
-		case BENCHMARK_OCL_CPUGPU:
-		case BENCHMARK_OCL_CPU:
-		case BENCHMARK_OCL_CUSTOM:
-		case BENCHMARK_HYBRID:
-		case BENCHMARK_HYBRID_CUSTOM: {
-			triangleCount = stats.Get("stats.dataset.trianglecount").Get<double>();
 
-			// Get each device statistics
-			minPerf = numeric_limits<double>::infinity();
-			totalPerf = 0.0;
-			const Property &devNames = stats.Get("stats.renderengine.devices");
-			for (u_int i = 0; i < devNames.GetSize(); ++i) {
-				const string deviceName = devNames.Get<string>(i);
-                deviceNames.push_back(deviceName);
+	triangleCount = stats.Get("stats.dataset.trianglecount").Get<double>();
 
-				const double raySecs = stats.Get("stats.renderengine.devices." + deviceName + ".performance.total").Get<double>();
-				deviceRaysSecs.push_back(raySecs);
-				deviceMaxMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.total").Get<double>());
-				deviceMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.used").Get<double>());
+	// Get each device statistics
+	minPerf = numeric_limits<double>::infinity();
+	const Property &devNames = stats.Get("stats.renderengine.devices");
+	for (u_int i = 0; i < devNames.GetSize(); ++i) {
+		const string deviceName = devNames.Get<string>(i);
+		deviceNames.push_back(deviceName);
 
-				minPerf = Min(raySecs, minPerf);
-				totalPerf += raySecs;
-			}
-			break;
-		}
-		case STRESSTEST_NATIVE:
-		case BENCHMARK_NATIVE:
-			break;
-		default:
-			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown render mode in LuxMarkApp::RenderRefreshTimeout(): " << mode << "</FONT>");
-			break;
+		const double raySecs = stats.Get("stats.renderengine.devices." + deviceName + ".performance.total").Get<double>();
+		deviceRaysSecs.push_back(raySecs);
+		deviceMaxMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.total").Get<double>());
+		deviceMem.push_back(stats.Get("stats.renderengine.devices." + deviceName + ".memory.used").Get<double>());
+
+		minPerf = Min(raySecs, minPerf);
+		totalPerf += raySecs;
+		
+		const bool isOpenCLDevice = boost::starts_with(deviceName, "NativeIntersect") ? false : true;
+		deviceIsOpenCL.push_back(isOpenCLDevice);
+		hasOpenCLDevices = (hasOpenCLDevices || isOpenCLDevice);
+		hasNativeDevices = (hasNativeDevices || !isOpenCLDevice);
 	}
 
 	// Get the list of device names
@@ -413,16 +402,33 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			triCountBuf);
 	ss << buf;
 
-	if (deviceNames.size() > 0) {
+	if (hasOpenCLDevices) {
 		ss << "\n\nOpenCL rendering devices:";
 		for (size_t i = 0; i < deviceNames.size(); ++i) {
-			sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
-					deviceNames[i].c_str(),
-					int(deviceRaysSecs[i] / 1000.0),
-					(minPerf > 0.0) ? (deviceRaysSecs[i] / minPerf) : 0.f,
-					(totalPerf > 0.0) ? (100.0 * deviceRaysSecs[i] / totalPerf) : 0.f,
-					deviceMem[i] / (1024 * 1024), int(deviceMaxMem[i] / (1024 * 1024)));
-			ss << buf;
+			if (deviceIsOpenCL[i]) {
+				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
+						deviceNames[i].c_str(),
+						int(deviceRaysSecs[i] / 1000.0),
+						(minPerf > 0.0) ? (deviceRaysSecs[i] / minPerf) : 0.f,
+						(totalPerf > 0.0) ? (100.0 * deviceRaysSecs[i] / totalPerf) : 0.f,
+						deviceMem[i] / (1024 * 1024), int(deviceMaxMem[i] / (1024 * 1024)));
+				ss << buf;
+			}
+		}
+	}
+	
+	if (hasNativeDevices) {
+		ss << "\n\nNative C++ rendering devices:";
+		for (size_t i = 0; i < deviceNames.size(); ++i) {
+			if (!deviceIsOpenCL[i]) {
+				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
+						deviceNames[i].c_str(),
+						int(deviceRaysSecs[i] / 1000.0),
+						(minPerf > 0.0) ? (deviceRaysSecs[i] / minPerf) : 0.f,
+						(totalPerf > 0.0) ? (100.0 * deviceRaysSecs[i] / totalPerf) : 0.f,
+						deviceMem[i] / (1024 * 1024), int(deviceMaxMem[i] / (1024 * 1024)));
+				ss << buf;
+			}
 		}
 	}
 
