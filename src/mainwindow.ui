@@ -168,6 +168,8 @@
     <addaction name="action_StressTest_OpenCL_GPUs"/>
     <addaction name="action_StressTest_OpenCL_CPUs_GPUs"/>
     <addaction name="action_StressTest_OpenCL_CPUs"/>
+    <addaction name="action_StressTest_Hybrid"/>
+    <addaction name="action_StressTest_Native"/>
     <addaction name="separator"/>
     <addaction name="action_LuxVR"/>
     <addaction name="separator"/>
@@ -384,6 +386,22 @@
    </property>
    <property name="toolTip">
     <string>Benchmark (OpenCL selected devices only + Native C++)</string>
+   </property>
+  </action>
+  <action name="action_StressTest_Hybrid">
+   <property name="text">
+    <string>Stress Test (Hybrid OpenCL GPUs + Native C++)</string>
+   </property>
+   <property name="toolTip">
+    <string>Stress Test (Hybrid OpenCL GPUs + Native C++)</string>
+   </property>
+  </action>
+  <action name="action_StressTest_Native">
+   <property name="text">
+    <string>Stress Test (Native C++)</string>
+   </property>
+   <property name="toolTip">
+    <string>Stress Test (Native C++)</string>
    </property>
   </action>
  </widget>
@@ -727,6 +745,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_StressTest_Hybrid</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_HYBRID()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_StressTest_Native</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_STRESSTEST_NATIVE()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitApp()</slot>
@@ -745,6 +795,8 @@
   <slot>setMode_STRESSTEST_OCL_GPU()</slot>
   <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
+  <slot>setMode_STRESSTEST_HYBRID()</slot>
+  <slot>setMode_STRESSTEST_NATIVE()</slot>
   <slot>setMode_DEMO_LUXVR()</slot>
   <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
   <slot>setOCLOpts_cl_mad_enable(bool)</slot>

@@ -54,6 +54,8 @@ enum LuxMarkAppMode {
 	STRESSTEST_OCL_GPU,
 	STRESSTEST_OCL_CPUGPU,
 	STRESSTEST_OCL_CPU,
+	STRESSTEST_HYBRID,
+	STRESSTEST_NATIVE,
 	DEMO_LUXVR,
 	PAUSE
 };
@@ -93,6 +95,10 @@ inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 			return "OpenCL CPUs+GPUs (stress test)";
 		case STRESSTEST_OCL_CPU:
 			return "OpenCL CPUs (stress test)";
+		case STRESSTEST_HYBRID:
+			return "Hybrid OpenCL GPUs + Native C++ (stress test)";
+		case STRESSTEST_NATIVE:
+			return "Native C++ (stress test)";
 		case PAUSE:
 			return "Pause";
 		default:

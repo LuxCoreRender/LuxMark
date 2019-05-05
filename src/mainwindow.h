@@ -100,6 +100,8 @@ private slots:
 	void setMode_STRESSTEST_OCL_GPU();
 	void setMode_STRESSTEST_OCL_CPUGPU();
 	void setMode_STRESSTEST_OCL_CPU();
+	void setMode_STRESSTEST_HYBRID();
+	void setMode_STRESSTEST_NATIVE();
 	void setMode_DEMO_LUXVR();
 	void setMode_PAUSE();
 	

@@ -200,7 +200,9 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 			case STRESSTEST_OCL_GPU:
 			case STRESSTEST_OCL_CPUGPU:
 			case STRESSTEST_OCL_CPU:
-				// TODO
+			case STRESSTEST_HYBRID:
+			case STRESSTEST_NATIVE:
+				// Nothing to do
 				break;
 			case DEMO_LUXVR:
 				// TODO
@@ -337,6 +339,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		case STRESSTEST_OCL_GPU:
 		case STRESSTEST_OCL_CPUGPU:
 		case STRESSTEST_OCL_CPU:
+		case STRESSTEST_HYBRID:
 		case BENCHMARK_OCL_GPU:
 		case BENCHMARK_OCL_CPUGPU:
 		case BENCHMARK_OCL_CPU:
@@ -363,6 +366,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			}
 			break;
 		}
+		case STRESSTEST_NATIVE:
 		case BENCHMARK_NATIVE:
 			break;
 		default:
@@ -375,7 +379,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	const bool benchmarkDone = (renderingTime > 120.0) &&
 		(mode != STRESSTEST_OCL_GPU) &&
 		(mode != STRESSTEST_OCL_CPUGPU) &&
-		(mode != STRESSTEST_OCL_GPU);
+		(mode != STRESSTEST_OCL_GPU) &&
+		(mode != STRESSTEST_HYBRID) &&
+		(mode != STRESSTEST_NATIVE);
 
 	char buf[512];
 	stringstream ss("");
@@ -386,7 +392,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	else {
 		if ((mode != STRESSTEST_OCL_GPU) &&
 				(mode != STRESSTEST_OCL_CPUGPU) &&
-				(mode != STRESSTEST_OCL_GPU))
+				(mode != STRESSTEST_OCL_GPU) &&
+				(mode != STRESSTEST_HYBRID) &&
+				(mode != STRESSTEST_NATIVE))
 			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 		else
 			strcpy(validBuf, "");

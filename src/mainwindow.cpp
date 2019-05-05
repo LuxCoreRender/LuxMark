@@ -25,6 +25,8 @@
 //  - New Brute force bidirectional path tracing Wall Paper benchmark scene
 //  - New BENCHMARK_HYBRID (OpenCL GPUs + Native C++) benchmark mode
 //  - New BENCHMARK_HYBRID_CUSTOM (OpenCL Custom + Native C++) benchmark mode
+//  - New STRESSTEST_HYBRID (OpenCL GPUs + Native C++) stress test mode
+//  - New STRESSTEST_NATIVE (Native C++) stress test mode
 
 #include <QTextEdit>
 #include <QDialogButtonBox>
@@ -231,6 +233,16 @@ void MainWindow::setMode_STRESSTEST_OCL_CPU() {
 	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_CPU);
 }
 
+void MainWindow::setMode_STRESSTEST_HYBRID() {
+	LM_LOG("Set mode: STRESSTEST_HYBRID");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_HYBRID);
+}
+
+void MainWindow::setMode_STRESSTEST_NATIVE() {
+	LM_LOG("Set mode: STRESSTEST_NATIVE");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NATIVE);
+}
+
 void MainWindow::setMode_DEMO_LUXVR() {
 	LM_LOG("Set mode: DEMO_LUXVR");
 	((LuxMarkApp *)qApp)->SetMode(DEMO_LUXVR);
@@ -304,6 +316,8 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);
 	ui->action_StressTest_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_OCL_CPUGPU);
 	ui->action_StressTest_OpenCL_CPUs->setChecked(mode == STRESSTEST_OCL_CPU);
+	ui->action_StressTest_Hybrid->setChecked(mode == STRESSTEST_HYBRID);
+	ui->action_StressTest_Native->setChecked(mode == STRESSTEST_NATIVE);
 
 	ui->action_LuxVR->setChecked(mode == DEMO_LUXVR);
 

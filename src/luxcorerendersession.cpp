@@ -120,6 +120,7 @@ void LuxCoreRenderSession::Start() {
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
+		case STRESSTEST_HYBRID:
 		case BENCHMARK_HYBRID: {
 			props <<
 					Property("opencl.gpu.use")(true) <<
@@ -148,6 +149,7 @@ void LuxCoreRenderSession::Start() {
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
+		case STRESSTEST_NATIVE:
 		case BENCHMARK_NATIVE: {
 			props <<
 					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<
