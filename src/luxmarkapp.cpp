@@ -203,7 +203,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 			case STRESSTEST_OCL_CPU:
 			case STRESSTEST_HYBRID:
 			case STRESSTEST_NATIVE:
-				// Nothing to do
+				mode = STRESSTEST_NATIVE;
 				break;
 			case DEMO_LUXVR:
 				// TODO
