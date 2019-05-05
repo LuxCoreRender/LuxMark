@@ -104,6 +104,9 @@ void SubmitDialog::genericButton() {
             case BENCHMARK_NATIVE:
                 benchMode = "C++";
                 break;
+            case BENCHMARK_HYBRID:
+                benchMode = "Hybrid";
+                break;
             default:
                 benchMode = "Unknown";
         }

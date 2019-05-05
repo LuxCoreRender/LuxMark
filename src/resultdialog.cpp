@@ -249,7 +249,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
-			if (md5 == "901b621dee6c0a032b0c521dc3ea13fc")
+			if (md5 == "7bb735d81e848ba309382153a9ac8b36")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
@@ -286,6 +286,8 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 //			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
 //					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
 //					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
+//					(resultDialog->mode == BENCHMARK_OCL_HYBRID) ||
+//					(resultDialog->mode == BENCHMARK_OCL_HYBRID_CUSTOM) ||
 //					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
 //                fileName = scenePath / "reference-opencl.raw";
 //            } else if (resultDialog->mode == BENCHMARK_NATIVE) {

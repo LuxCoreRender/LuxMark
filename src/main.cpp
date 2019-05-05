@@ -32,7 +32,7 @@ static void PrintCmdLineHelp(const QString &cmd) {
 			" --scene=FOOD|HALLBENCH|WALLPAPER (select the scene to use)" << endl <<
 			" --mode="
                 "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
-				"BENCHMARK_NATIVE|"
+				"BENCHMARK_HYBRID|BENCHMARK_NATIVE|"
 				"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 				"DEMO_LUXVR|PAUSE"
 				" (select the mode to use)" << endl <<
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	QRegExp argScene("--scene=(FOOD|HALLBENCH|WALLPAPER)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|"
-		"BENCHMARK_NATIVE|"
+		"BENCHMARK_HYBRID|BENCHMARK_NATIVE|"
 		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 		"DEMO_LUXVR|PAUSE"
 		")");
@@ -96,6 +96,8 @@ int main(int argc, char **argv) {
 				mode = BENCHMARK_OCL_CPUGPU;
 			else if (scene.compare("BENCHMARK_OCL_CPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_OCL_CPU;
+			else if (scene.compare("BENCHMARK_HYBRID", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_HYBRID;
 			else if (scene.compare("BENCHMARK_NATIVE", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_NATIVE;
 			else if (scene.compare("STRESSTEST_OCL_GPU", Qt::CaseInsensitive) == 0)

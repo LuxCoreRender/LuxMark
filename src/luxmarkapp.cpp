@@ -193,6 +193,8 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 			case BENCHMARK_OCL_CPUGPU:
 			case BENCHMARK_OCL_CPU:
 			case BENCHMARK_OCL_CUSTOM:
+			case BENCHMARK_HYBRID:
+			case BENCHMARK_HYBRID_CUSTOM:
 				mode = BENCHMARK_NATIVE;
 				break;
 			case STRESSTEST_OCL_GPU:
@@ -338,7 +340,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 		case BENCHMARK_OCL_GPU:
 		case BENCHMARK_OCL_CPUGPU:
 		case BENCHMARK_OCL_CPU:
-		case BENCHMARK_OCL_CUSTOM: {
+		case BENCHMARK_OCL_CUSTOM:
+		case BENCHMARK_HYBRID:
+		case BENCHMARK_HYBRID_CUSTOM: {
 			triangleCount = stats.Get("stats.dataset.trianglecount").Get<double>();
 
 			// Get each device statistics

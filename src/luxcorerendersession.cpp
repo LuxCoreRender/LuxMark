@@ -120,6 +120,34 @@ void LuxCoreRenderSession::Start() {
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
+		case BENCHMARK_HYBRID: {
+			props <<
+					Property("opencl.gpu.use")(true) <<
+					Property("opencl.cpu.use")(false) <<
+					Property("opencl.native.threads.count")(boost::thread::hardware_concurrency()) <<
+					Property("native.threads.count")(0) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
+					Property("renderengine.type")("PATHOCL");
+			break;
+		}
+		case BENCHMARK_HYBRID_CUSTOM: {
+			// At the first run, hardwareTreeModel is NULL
+			if (deviceSelection == "") {
+				props <<
+						Property("opencl.gpu.use")(true) <<
+						Property("opencl.cpu.use")(false);
+			} else {
+				props <<
+						Property("opencl.devices.select")(deviceSelection);
+			}
+
+			props <<
+					Property("opencl.native.threads.count")(boost::thread::hardware_concurrency()) <<
+					Property("native.threads.count")(0) <<
+					Property("opencl.kernel.options")(oclCompilerOpts) <<
+					Property("renderengine.type")("PATHOCL");
+			break;
+		}
 		case BENCHMARK_NATIVE: {
 			props <<
 					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<

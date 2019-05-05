@@ -324,6 +324,7 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
         case DEMO_LUXVR:
         case STRESSTEST_OCL_GPU:
         case BENCHMARK_OCL_GPU:
+		case BENCHMARK_HYBRID:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
                 if (!isCPU[i])
                     descs.push_back(deviceDescs[i]);
@@ -341,6 +342,7 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
                     descs.push_back(deviceDescs[i]);
             }
             break;
+		case BENCHMARK_HYBRID_CUSTOM:
         case BENCHMARK_OCL_CUSTOM:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
                 if (deviceSelection[i])

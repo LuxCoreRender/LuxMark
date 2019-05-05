@@ -19,6 +19,13 @@
  *   LuxMark website: https://www.luxcorerender.org                        *
  ***************************************************************************/
 
+// List of new v4.0 features:
+//  - New Brute force path tracing Food benchmark scene
+//  - New Path tracing + Global Illumination cache Wall Bench benchmark scene
+//  - New Brute force bidirectional path tracing Wall Paper benchmark scene
+//  - New BENCHMARK_HYBRID (OpenCL GPUs + Native C++) benchmark mode
+//  - New BENCHMARK_HYBRID_CUSTOM (OpenCL Custom + Native C++) benchmark mode
+
 #include <QTextEdit>
 #include <QDialogButtonBox>
 #include <QDateTime>
@@ -194,8 +201,18 @@ void MainWindow::setMode_BENCHMARK_OCL_CUSTOM() {
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CUSTOM);
 }
 
-void MainWindow::setMode_BENCHMARK_NATIVE_PATH() {
-	LM_LOG("Set mode: BENCHMARK_SPECTRAL_NATIVE_PATH");
+void MainWindow::setMode_BENCHMARK_HYBRID() {
+	LM_LOG("Set mode: BENCHMARK_HYBRID");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID);
+}
+
+void MainWindow::setMode_BENCHMARK_HYBRID_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_HYBRID_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_CUSTOM);
+}
+
+void MainWindow::setMode_BENCHMARK_NATIVE() {
+	LM_LOG("Set mode: BENCHMARK_NATIVE");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NATIVE);
 }
 
@@ -280,6 +297,8 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_OCL_CPUGPU);
 	ui->action_OpenCL_CPUs->setChecked(mode == BENCHMARK_OCL_CPU);
 	ui->action_OpenCL_Custom->setChecked(mode == BENCHMARK_OCL_CUSTOM);
+	ui->action_Hybrid->setChecked(mode == BENCHMARK_HYBRID);
+	ui->action_Hybrid_Custom->setChecked(mode == BENCHMARK_HYBRID_CUSTOM);
 	ui->action_NativeCPP->setChecked(mode == BENCHMARK_NATIVE);
 
 	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);
@@ -301,7 +320,8 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_OpenCL_CPUs->setEnabled(false);
 		ui->action_OpenCL_CPUs_GPUs->setEnabled(false);
 		ui->action_OpenCL_Custom->setEnabled(false);
-		ui->action_NativeCPP->setEnabled(true);
+		ui->action_Hybrid->setEnabled(false);
+		ui->action_Hybrid_Custom->setEnabled(false);
 		ui->action_NativeCPP->setChecked(true);
 	} else if (index == 1) {
 		ui->action_WallPaper->setChecked(false);
@@ -312,6 +332,8 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_OpenCL_CPUs->setEnabled(true);
 		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
 		ui->action_OpenCL_Custom->setEnabled(true);
+		ui->action_Hybrid->setEnabled(true);
+		ui->action_Hybrid_Custom->setEnabled(true);
 		ui->action_NativeCPP->setEnabled(true);
 	} else if (index == 2) {
 		ui->action_WallPaper->setChecked(false);
@@ -322,6 +344,8 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_OpenCL_CPUs->setEnabled(true);
 		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
 		ui->action_OpenCL_Custom->setEnabled(true);
+		ui->action_Hybrid->setEnabled(true);
+		ui->action_Hybrid_Custom->setEnabled(true);
 		ui->action_NativeCPP->setEnabled(true);
 	} else
 		assert(false);

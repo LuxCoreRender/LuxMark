@@ -161,6 +161,8 @@
     <addaction name="action_OpenCL_CPUs_GPUs"/>
     <addaction name="action_OpenCL_CPUs"/>
     <addaction name="action_OpenCL_Custom"/>
+    <addaction name="action_Hybrid"/>
+    <addaction name="action_Hybrid_Custom"/>
     <addaction name="action_NativeCPP"/>
     <addaction name="separator"/>
     <addaction name="action_StressTest_OpenCL_GPUs"/>
@@ -365,6 +367,25 @@
     <string>-cl-no-signed-zeros</string>
    </property>
   </action>
+  <action name="action_Hybrid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (OpenCL GPUs + Native C++)</string>
+   </property>
+  </action>
+  <action name="action_Hybrid_Custom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Benchmark (OpenCL selected devices only + Native C++)</string>
+   </property>
+   <property name="toolTip">
+    <string>Benchmark (OpenCL selected devices only + Native C++)</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="resources.qrc"/>
@@ -534,7 +555,7 @@
    <sender>action_NativeCPP</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NATIVE_PATH()</slot>
+   <slot>setMode_BENCHMARK_NATIVE()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -674,6 +695,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Hybrid</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_BENCHMARK_HYBRID()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Hybrid_Custom</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>exitApp()</slot>
@@ -686,9 +739,9 @@
   <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CPU()</slot>
   <slot>setMode_BENCHMARK_OCL_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_HYBRID_GPU()</slot>
+  <slot>setMode_BENCHMARK_HYBRID()</slot>
   <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_NATIVE_PATH()</slot>
+  <slot>setMode_BENCHMARK_NATIVE()</slot>
   <slot>setMode_STRESSTEST_OCL_GPU()</slot>
   <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
