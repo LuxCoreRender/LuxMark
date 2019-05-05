@@ -38,7 +38,8 @@ public:
 	void Start();
 	void Stop();
 
-	const float *GetFrameBuffer(const u_int imagePipelineIndex) const;
+	const float *UpdateFrameBuffer(const u_int imagePipelineIndex);
+	const float *GetFrameBufferPtr(const u_int imagePipelineIndex);
 	u_int GetFrameBufferWidth() const;
 	u_int GetFrameBufferHeight() const;
 
@@ -54,6 +55,8 @@ private:
 
 	luxcore::RenderConfig *config;
 	luxcore::RenderSession *session;
+
+	vector<const float *> frameBufferPtrs;
 
 	bool started;
 };

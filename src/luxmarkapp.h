@@ -82,7 +82,7 @@ private:
 	HardwareTreeModel *hardwareTreeModel;
 
 	boost::thread *engineInitThread;
-	double renderingStartTime;
+	double renderingStartTime, lastFrameBufferDenoisedUpdate;
 	bool engineInitDone;
 	LuxCoreRenderSession *luxSession;
 

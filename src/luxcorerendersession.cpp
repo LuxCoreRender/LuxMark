@@ -175,8 +175,20 @@ void LuxCoreRenderSession::Stop() {
 	delete config;
 }
 
-const float *LuxCoreRenderSession::GetFrameBuffer(const u_int imagePipelineIndex) const {
-	return session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE, imagePipelineIndex);
+const float *LuxCoreRenderSession::UpdateFrameBuffer(const u_int imagePipelineIndex) {
+	if (frameBufferPtrs.size() <= imagePipelineIndex)
+		frameBufferPtrs.resize(imagePipelineIndex + 1, NULL);
+
+	frameBufferPtrs[imagePipelineIndex] = session->GetFilm().GetChannel<float>(Film::CHANNEL_IMAGEPIPELINE, imagePipelineIndex);
+
+	return frameBufferPtrs[imagePipelineIndex];
+}
+
+const float *LuxCoreRenderSession::GetFrameBufferPtr(const u_int imagePipelineIndex) {
+	if (frameBufferPtrs.size() <= imagePipelineIndex)
+		frameBufferPtrs.resize(imagePipelineIndex + 1, NULL);
+
+	return frameBufferPtrs[imagePipelineIndex];
 }
 
 u_int LuxCoreRenderSession::GetFrameBufferWidth() const {

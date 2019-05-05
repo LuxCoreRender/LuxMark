@@ -29,6 +29,10 @@
 //  - New STRESSTEST_HYBRID (OpenCL GPUs + Native C++) stress test mode
 //  - New STRESSTEST_NATIVE (Native C++) stress test mode
 //  - Showing OpenCL and Native C++ rendering statistics
+//  - Stress tests now show progressive denoised rendering too
+//
+//  ToDo:
+//  - Command line option to select the OpenCL devices to use
 
 #include <QTextEdit>
 #include <QDialogButtonBox>
@@ -430,10 +434,7 @@ void MainWindow::ShowFrameBuffer(const float *frameBufferSrc,
 		screenLabel->show();
 	}
 
-	if (frameBufferDenoisedSrc && !raw2denoisedLabel->isVisible())
-		raw2denoisedLabel->setVisible(true);
-	else
-		raw2denoisedLabel->setVisible(false);
+	raw2denoisedLabel->setVisible(frameBufferDenoisedSrc != NULL);
 
 	UpdateScreenLabelPosition();
 

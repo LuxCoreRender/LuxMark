@@ -289,6 +289,7 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 
 		// Done
 		app->renderingStartTime = luxrays::WallClockTime();
+		app->lastFrameBufferDenoisedUpdate = app->renderingStartTime;
 		app->engineInitDone = true;
 	} catch (cl::Error err) {
 		LM_ERROR("OpenCL ERROR: " << err.what() << "(" << err.err() << ")");
@@ -303,31 +304,62 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	if (!engineInitDone)
 		return;
 
+	const bool isStressTest = (mode == STRESSTEST_OCL_GPU) ||
+		(mode == STRESSTEST_OCL_CPUGPU) ||
+		(mode == STRESSTEST_OCL_GPU) ||
+		(mode == STRESSTEST_HYBRID) ||
+		(mode == STRESSTEST_NATIVE);
+
 	const Properties &stats = luxSession->GetStats();
+	const double renderingTime = stats.Get("stats.renderengine.time").Get<double>();
 
 	// Update shown image
 	const int width = luxSession->GetFrameBufferWidth();
 	const int height = luxSession->GetFrameBufferHeight();
-	const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
-	mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(0), NULL, width, height);
-	const unsigned char *pixels = mainWin->GetFrameBuffer();
+	
+	const float *frameBuffer = luxSession->UpdateFrameBuffer(0);
+	const float *frameBufferDenoised = NULL;
+	if (isStressTest) {
+		// Check it is time to refresh the denoised frame buffer
+		const double deltaTime = luxrays::WallClockTime() - lastFrameBufferDenoisedUpdate;
+		if (((renderingTime < 30.0) && (deltaTime > 10.0)) ||
+				((renderingTime < 30.0 + 60.0) && (deltaTime > 20.0)) ||
+				((renderingTime < 30.0 + 60.0 + 90.0) && (deltaTime > 30.0)) ||
+				(deltaTime > 300.0)) {
+			frameBufferDenoised = luxSession->UpdateFrameBuffer(1);
+			lastFrameBufferDenoisedUpdate = luxrays::WallClockTime();
+		} else
+			frameBufferDenoised = luxSession->GetFrameBufferPtr(1);
+	}
+
+	mainWin->ShowFrameBuffer(frameBuffer, frameBufferDenoised, width, height);
 
 	// To save reference image
-	/*const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
-	LM_LOG("Sample per pixel: " << samlePerPixel);
-	static bool saved = false;
-	if (!saved && samlePerPixel > 5000) {
-		LM_LOG("Saving reference...");
-		const QByteArray data = QByteArray::fromRawData((char *)pixels, width * height * 3);
-		QFile refImage("reference.raw");
-		refImage.open(QIODevice::WriteOnly);
-		refImage.write(data);
-		refImage.close();
-		saved = true;
-	}*/
+	/*
+	{
+		const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
+		const unsigned char *pixels = mainWin->UpdateFrameBuffer(0);
 
+		const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
+		LM_LOG("Sample per pixel: " << samlePerPixel);
+		static bool saved = false;
+		if (!saved && samlePerPixel > 5000) {
+			LM_LOG("Saving reference...");
+			const QByteArray data = QByteArray::fromRawData((char *)pixels, width * height * 3);
+			QFile refImage("reference.raw");
+			refImage.open(QIODevice::WriteOnly);
+			refImage.write(data);
+			refImage.close();
+			saved = true;
+		}
+	}
+	*/
+
+	//--------------------------------------------------------------------------
 	// Update the statistics
-	const double renderingTime = stats.Get("stats.renderengine.time").Get<double>();
+	//--------------------------------------------------------------------------
+
+	const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
 	const double sampleSec = (renderingTime > 0.0) ? (sampleCount / renderingTime) : 0.0;
 
 	vector<string> deviceNames;
@@ -365,12 +397,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	// Get the list of device names
 	// After 120secs of benchmark, show the result dialog
-	const bool benchmarkDone = (renderingTime > 120.0) &&
-		(mode != STRESSTEST_OCL_GPU) &&
-		(mode != STRESSTEST_OCL_CPUGPU) &&
-		(mode != STRESSTEST_OCL_GPU) &&
-		(mode != STRESSTEST_HYBRID) &&
-		(mode != STRESSTEST_NATIVE);
+	const bool benchmarkDone = (renderingTime > 120.0) && (!isStressTest);
 
 	char buf[512];
 	stringstream ss("");
@@ -379,11 +406,7 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	if (benchmarkDone)
 		strcpy(validBuf, " (OK)");
 	else {
-		if ((mode != STRESSTEST_OCL_GPU) &&
-				(mode != STRESSTEST_OCL_CPUGPU) &&
-				(mode != STRESSTEST_OCL_GPU) &&
-				(mode != STRESSTEST_HYBRID) &&
-				(mode != STRESSTEST_NATIVE))
+		if (!isStressTest)
 			sprintf(validBuf, " (%dsecs remaining)", Max<int>(120 - renderingTime, 0));
 		else
 			strcpy(validBuf, "");
@@ -434,6 +457,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 	mainWin->UpdateScreenLabel(ss.str().c_str());
 
+	//--------------------------------------------------------------------------
+	// End the benchmark if it is time
+	//--------------------------------------------------------------------------
+
 	if (benchmarkDone) {
 		// Check if I'm in single run mode
 		if (singleRun && !singleRunExtInfo) {
@@ -442,11 +469,12 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 			exit(EXIT_SUCCESS);
 		} else {
-			mainWin->ShowFrameBuffer(luxSession->GetFrameBuffer(0), luxSession->GetFrameBuffer(1), width, height);
+			mainWin->ShowFrameBuffer(luxSession->UpdateFrameBuffer(0), luxSession->UpdateFrameBuffer(1), width, height);
 
 			Stop();
 
             vector<BenchmarkDeviceDescription> descs = hardwareTreeModel->getSelectedDeviceDescs(mode);
+			const unsigned char *pixels = mainWin->GetFrameBuffer();
 			ResultDialog *dialog = new ResultDialog(mode, sceneName, sampleSec,
                     descs, pixels, width, height,
 					singleRun && singleRunExtInfo);
