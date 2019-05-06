@@ -10,7 +10,8 @@ LuxCore API
 
 LuxCore is the new LuxCoreRender v2.x C++ and Python API. It is released under
 Apache Public License v2.0 and can be freely used in open source and commercial
-applications. You can find more information about the API at https://wiki.luxcorerender.org/LuxCore_API
+applications. You can find more information about the API at
+https://wiki.luxcorerender.org/LuxCore_API.
 
 LuxCoreRender
 =============
@@ -25,7 +26,7 @@ Donate
 LuxCoreRender project is available on BountySource (https://www.bountysource.com/teams/luxcorerender).
 It is a funding platform for open-source software. Users can improve the
 open-source projects they love by creating/collecting bounties and pledging to
-fundraisers. Check https://luxcorerender.org/donate for more information.
+fundraisers. Check https://www.luxcorerender.org/donate for more information.
 
 Authors
 =======

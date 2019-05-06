@@ -239,7 +239,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (!strcmp(resultDialog->sceneName, SCENE_FOOD)) {
-			if (md5 == "9c6bf2bd1223782d9f2e3d1149b426ac")
+			if (md5 == "5e7c08c1b5c4b7b59ec9748772f04c1d")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
