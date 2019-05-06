@@ -35,7 +35,7 @@ static void PrintCmdLineHelp(const QString &cmd) {
 				"BENCHMARK_HYBRID|BENCHMARK_HYBRID_CUSTOM|BENCHMARK_NATIVE|"
 				"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 				"STRESSTEST_HYBRID|STRESSTEST_NATIVE|"
-				"DEMO_LUXVR|PAUSE"
+				"DEMO_LUXCOREUI|PAUSE"
 				" (select the mode to use)" << endl <<
 			" --devices=<a string of 1 or 0 to enable/disable each OpenCL device in CUSTOM modes>" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl <<
@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
 		"BENCHMARK_HYBRID|BENCHMARK_HYBRID_CUSTOM|BENCHMARK_NATIVE|"
 		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
 		"STRESSTEST_HYBRID|STRESSTEST_NATIVE|"
-		"DEMO_LUXVR|PAUSE"
+		"DEMO_LUXCOREUI|PAUSE"
 		")");
 	QRegExp argDevices("--devices=([01]+)");
 	QRegExp argSingleRun("--single-run");
@@ -119,8 +119,8 @@ int main(int argc, char **argv) {
 				mode = STRESSTEST_HYBRID;
 			else if (scene.compare("STRESSTEST_NATIVE", Qt::CaseInsensitive) == 0)
 				mode = STRESSTEST_NATIVE;
-			else if (scene.compare("DEMO_LUXVR", Qt::CaseInsensitive) == 0)
-				mode = DEMO_LUXVR;
+			else if (scene.compare("DEMO_LUXCOREUI", Qt::CaseInsensitive) == 0)
+				mode = DEMO_LUXCOREUI;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)
 				mode = PAUSE;
 			else {

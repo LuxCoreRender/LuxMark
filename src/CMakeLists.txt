@@ -55,7 +55,7 @@ set(LUXMARK_SRCS
 	luxmarkapp.cpp
 	main.cpp
 	mainwindow.cpp
-	luxvrdialog.cpp
+	luxcoreuidialog.cpp
     resultdialog.cpp
 	submitdialog.cpp
 	luxcorerendersession.cpp
@@ -68,14 +68,14 @@ set(LUXMARK_MOC
 	mainwindow.h
     hardwaretree.h
 	luxmarkapp.h
-	luxvrdialog.h
+	luxcoreuidialog.h
     resultdialog.h
 	submitdialog.h
 	)
 set(LUXMARK_UIS
 	aboutdialog.ui
 	mainwindow.ui
-	luxvrdialog.ui
+	luxcoreuidialog.ui
     resultdialog.ui
 	submitdialog.ui
 	)

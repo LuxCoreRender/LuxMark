@@ -102,7 +102,7 @@ private slots:
 	void setMode_STRESSTEST_OCL_CPU();
 	void setMode_STRESSTEST_HYBRID();
 	void setMode_STRESSTEST_NATIVE();
-	void setMode_DEMO_LUXVR();
+	void setMode_DEMO_LUXCOREUI();
 	void setMode_PAUSE();
 	
 	void setOCLOpts_cl_fast_relaxed_math(bool enable);

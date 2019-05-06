@@ -244,7 +244,7 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HALLBENCH)) {
-			if (md5 == "1a6e859c00dc8a444286f8fba49b89b3")
+			if (md5 == "baf71664c4f87dd944f448dc125f37fb")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);

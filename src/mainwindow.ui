@@ -171,7 +171,7 @@
     <addaction name="action_StressTest_Hybrid"/>
     <addaction name="action_StressTest_Native"/>
     <addaction name="separator"/>
-    <addaction name="action_LuxVR"/>
+    <addaction name="action_LuxCoreUI"/>
     <addaction name="separator"/>
     <addaction name="action_Pause"/>
    </widget>
@@ -320,9 +320,9 @@
     <string>Stress Test (OpenCL CPUs)</string>
    </property>
   </action>
-  <action name="action_LuxVR">
+  <action name="action_LuxCoreUI">
    <property name="text">
-    <string>LuxVR (OpenCL GPUs)</string>
+    <string>LuxCoreUI (OpenCL GPUs)</string>
    </property>
   </action>
   <action name="action_cl_fast_relaxed_math">
@@ -634,10 +634,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_LuxVR</sender>
+   <sender>action_LuxCoreUI</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_DEMO_LUXVR()</slot>
+   <slot>setMode_DEMO_LUXCOREUI()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -797,7 +797,7 @@
   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
   <slot>setMode_STRESSTEST_HYBRID()</slot>
   <slot>setMode_STRESSTEST_NATIVE()</slot>
-  <slot>setMode_DEMO_LUXVR()</slot>
+  <slot>setMode_DEMO_LUXCOREUI()</slot>
   <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
   <slot>setOCLOpts_cl_mad_enable(bool)</slot>
   <slot>setOCLOpts_cl_strict_aliasing(bool)</slot>

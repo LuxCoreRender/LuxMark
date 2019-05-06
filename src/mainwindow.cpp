@@ -33,6 +33,7 @@
 //  - BENCHMARK_OCL_CUSTOM and BENCHMARK_HYBRID_CUSTOM can now used as command
 //    line option in combination with "--devices" to enable/disable each
 //    single device
+//  - Replaced LuxVR with LuxCoreUI
 //
 //  ToDo:
 //  - Command line option to select the OpenCL devices to use
@@ -252,9 +253,9 @@ void MainWindow::setMode_STRESSTEST_NATIVE() {
 	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NATIVE);
 }
 
-void MainWindow::setMode_DEMO_LUXVR() {
-	LM_LOG("Set mode: DEMO_LUXVR");
-	((LuxMarkApp *)qApp)->SetMode(DEMO_LUXVR);
+void MainWindow::setMode_DEMO_LUXCOREUI() {
+	LM_LOG("Set mode: DEMO_LUXCOREUI");
+	((LuxMarkApp *)qApp)->SetMode(DEMO_LUXCOREUI);
 }
 
 void MainWindow::setMode_PAUSE() {
@@ -328,7 +329,7 @@ void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
 	ui->action_StressTest_Hybrid->setChecked(mode == STRESSTEST_HYBRID);
 	ui->action_StressTest_Native->setChecked(mode == STRESSTEST_NATIVE);
 
-	ui->action_LuxVR->setChecked(mode == DEMO_LUXVR);
+	ui->action_LuxCoreUI->setChecked(mode == DEMO_LUXCOREUI);
 
 	ui->action_Pause->setChecked(mode == PAUSE);
 }

@@ -326,7 +326,7 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
     vector<BenchmarkDeviceDescription> descs;
 
     switch (mode) {
-        case DEMO_LUXVR:
+        case DEMO_LUXCOREUI:
         case STRESSTEST_OCL_GPU:
 		case STRESSTEST_HYBRID:
         case BENCHMARK_OCL_GPU:

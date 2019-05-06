@@ -38,7 +38,7 @@
 
 #include "luxmarkcfg.h"
 #include "luxmarkapp.h"
-#include "luxvrdialog.h"
+#include "luxcoreuidialog.h"
 #include "resultdialog.h"
 #include "luxmarkdefs.h"
 
@@ -205,8 +205,8 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 			case STRESSTEST_NATIVE:
 				mode = STRESSTEST_NATIVE;
 				break;
-			case DEMO_LUXVR:
-				// TODO
+			case DEMO_LUXCOREUI:
+				// Nothing to do
 				break;
 			case PAUSE:
 			default:
@@ -219,7 +219,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	// Initialize the new mode
 	mainWin->SetModeCheck(mode);
-	if ((mode == PAUSE) || (mode == DEMO_LUXVR)) {
+	if ((mode == PAUSE) || (mode == DEMO_LUXCOREUI)) {
 		// Nothing to do
 	} else {
 		// Update timer
@@ -234,13 +234,13 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 	if (mode == PAUSE) {
 		// Nothing to do
-	} else if (mode == DEMO_LUXVR) {
-		// Show LuxVR dialog
-		LuxVRDialog *dialog = new LuxVRDialog(sceneName, exePath);
+	} else if (mode == DEMO_LUXCOREUI) {
+		// Show LuxCoreUI dialog
+		LuxCoreUIDialog *dialog = new LuxCoreUIDialog(sceneName, exePath);
 
 		dialog->exec();
 		delete dialog;
-		mainWin->raise(); // make luxmark gui frontmost win 
+		mainWin->raise(); // Make LuxMark GUI front most win 
 		
 		// Go in PAUSE mode
 		InitRendering(PAUSE, sceneName);

@@ -23,36 +23,36 @@
 #include <QtGui/qevent.h>
 
 #include "luxmarkcfg.h"
-#include "luxvrdialog.h"
+#include "luxcoreuidialog.h"
 #include "mainwindow.h"
 
-LuxVRDialog::LuxVRDialog(const char *name,
+LuxCoreUIDialog::LuxCoreUIDialog(const char *name,
 		const boost::filesystem::path &path, QWidget *parent) :
-		QDialog(parent), ui(new Ui::LuxVRDialog), sceneName(name), exePath(path),
+		QDialog(parent), ui(new Ui::LuxCoreUIDialog), sceneName(name), exePath(path),
 		toCloseDialog(false) {
 	ui->setupUi(this);
 
-	QObject::connect(this, SIGNAL(signalLuxVRThreadDone()),
-			this, SLOT(luxVRThreadDone()));
+	QObject::connect(this, SIGNAL(signalLuxCoreUIThreadDone()),
+			this, SLOT(luxCoreUIThreadDone()));
 
-	luxvrThread = new boost::thread(boost::bind(LuxVRDialog::LuxVRThreadImpl, this));
+	luxCoreUIThread = new boost::thread(boost::bind(LuxCoreUIDialog::LuxCoreUIThreadImpl, this));
 }
 
-LuxVRDialog::~LuxVRDialog() {
-	luxvrThread->join();
-	delete luxvrThread;
+LuxCoreUIDialog::~LuxCoreUIDialog() {
+	luxCoreUIThread->join();
+	delete luxCoreUIThread;
 
 	delete ui;
 }
 
-void LuxVRDialog::closeEvent(QCloseEvent *event) {
+void LuxCoreUIDialog::closeEvent(QCloseEvent *event) {
 	if (toCloseDialog)
 		event->accept(); // Close window
 	else
 		event->ignore(); // Keep window
 }
 
-void LuxVRDialog::luxVRThreadDone() {
+void LuxCoreUIDialog::luxCoreUIThreadDone() {
 	toCloseDialog = true;
 
 	// Close the dialog
@@ -67,7 +67,7 @@ void LuxVRDialog::luxVRThreadDone() {
 #define PCLOSE pclose
 #endif
 
-void LuxVRDialog::ExecCmd(const string &cmd) {
+void LuxCoreUIDialog::ExecCmd(const string &cmd) {
 	string execCmd = cmd;
 #if defined(WIN32)
 	// Wrap whole command line in quotes so it becomes one parameter
@@ -99,35 +99,30 @@ void LuxVRDialog::ExecCmd(const string &cmd) {
 	PCLOSE(pipe);
 }
 
-void LuxVRDialog::LuxVRThreadImpl(LuxVRDialog *luxvrDialog) {
-	// Looks for LuxVR command
-	LM_LOG("Lux executable path: [" << luxvrDialog->exePath << "]");
-	boost::filesystem::path luxvrPath = luxvrDialog->exePath / "slg4";
+void LuxCoreUIDialog::LuxCoreUIThreadImpl(LuxCoreUIDialog *luxCoreUIDialog) {
+	// Looks for LuxCoreUI command
+	LM_LOG("Lux CoreUIexecutable path: [" << luxCoreUIDialog->exePath << "]");
+	boost::filesystem::path luxCoreUIPath = luxCoreUIDialog->exePath / "luxcoreui";
 
-	if (!boost::filesystem::exists(luxvrPath))
-		luxvrPath = luxvrDialog->exePath / "slg4.exe";
-	if (!boost::filesystem::exists(luxvrPath))
-		luxvrPath = luxvrDialog->exePath / "SmallluxGPU/slg4"; // OSX bundle
+	if (!boost::filesystem::exists(luxCoreUIPath))
+		luxCoreUIPath = luxCoreUIDialog->exePath / "luxcoreui.exe";
 
-	if (!boost::filesystem::exists(luxvrPath)) {
-		LM_LOG("Unable to find SLG4 executable");
+	if (!boost::filesystem::exists(luxCoreUIPath)) {
+		LM_LOG("Unable to find LuxCoreUI executable");
 	} else {
-		LM_LOG("LuxVR path: [" << luxvrPath << "]");
-		const string luxvr = luxvrPath.make_preferred().string();
-		LM_LOG("LuxVR native path: [" << luxvr << "]");
+		LM_LOG("LuxCoreUI path: [" << luxCoreUIPath << "]");
+		const string luxCoreUI = luxCoreUIPath.make_preferred().string();
+		LM_LOG("LuxCoreUI native path: [" << luxCoreUI << "]");
 
-		const string luxvrCmd = "\"" + luxvr + "\" "
-			"-R "
-			"-D renderengine.type RTPATHOCL "
-			"-D screen.refresh.interval 50 "
-			//"-D opencl.devices.select 10000 "
-			" \"" + luxvrDialog->sceneName + "\"" + " 2>&1";
+		const string luxCoreUICmd = "\"" + luxCoreUI + "\" "
+			"-D renderengine.type PATHOCL "
+			" \"" + luxCoreUIDialog->sceneName + "\"" + " 2>&1";
 
-		// Start LuxVR
-		ExecCmd(luxvrCmd);
+		// Start LuxCoreUI
+		ExecCmd(luxCoreUICmd);
 
-		LM_LOG("LuxVR done");
+		LM_LOG("LuxCoreUI done");
 	}
 	
-	luxvrDialog->signalLuxVRThreadDone();
+	luxCoreUIDialog->signalLuxCoreUIThreadDone();
 }

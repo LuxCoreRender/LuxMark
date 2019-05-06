@@ -12,6 +12,13 @@ LuxCore is the new LuxCoreRender v2.x C++ and Python API. It is released under
 Apache Public License v2.0 and can be freely used in open source and commercial
 applications. You can find more information about the API at https://wiki.luxcorerender.org/LuxCore_API
 
+LuxCoreRender
+=============
+
+LuxCoreRender is a physically based and unbiased rendering engine. Based on
+state of the art algorithms, LuxCoreRender simulates the flow of light according
+to physical equations, thus producing realistic images of photographic quality.
+
 Donate
 ======
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LuxVRDialog</class>
- <widget class="QDialog" name="LuxVRDialog">
+ <class>LuxCoreUIDialog</class>
+ <widget class="QDialog" name="LuxCoreUIDialog">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>90</height>
+    <width>433</width>
+    <height>239</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>LuxVR</string>
+   <string>LuxCoreUI</string>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -46,7 +46,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Running LuxVR..</string>
+      <string>Running LuxCoreUI..</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -56,10 +56,39 @@
    <item>
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>(To close LuxVR press &quot;ESC&quot; or &quot;q&quot; key, press &quot;h&quot; for help)</string>
+      <string>(To close LuxCoreUI press &quot;ESC&quot;, press &quot;h&quot; for help)</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;LuxCoreUI is a LuxCore API example for developers. It exposes all API features and it is a good start point for anyone interested in developing LuxCore API applications .&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;The sources are available &lt;a href=&quot;https://github.com/LuxCoreRender/LuxCore/tree/master/samples/luxcoreui&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="openExternalLinks">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

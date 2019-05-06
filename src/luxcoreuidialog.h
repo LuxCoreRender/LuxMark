@@ -19,8 +19,8 @@
  *   LuxMark website: https://www.luxcorerender.org                        *
  ***************************************************************************/
 
-#ifndef _LUXVRDIALOG_H
-#define	_LUXVRDIALOG_H
+#ifndef _LUXCOREUIDIALOG_H
+#define	_LUXCOREUIDIALOG_H
 
 #ifndef Q_MOC_RUN
 #include <cstddef>
@@ -30,37 +30,36 @@
 #include "luxmarkdefs.h"
 #endif
 
-#include "ui_luxvrdialog.h"
+#include "ui_luxcoreuidialog.h"
 
-class LuxVRDialog : public QDialog {
+class LuxCoreUIDialog : public QDialog {
 	Q_OBJECT
 
 public:
-	LuxVRDialog(const char *sceneName, const boost::filesystem::path &exePath,
+	LuxCoreUIDialog(const char *sceneName, const boost::filesystem::path &exePath,
 			QWidget *parent = NULL);
-	~LuxVRDialog();
+	~LuxCoreUIDialog();
 
 protected:
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *) { } // To ignore ESC key
 
 private:
-	static void LuxVRThreadImpl(LuxVRDialog *luxvrDialog);
+	static void LuxCoreUIThreadImpl(LuxCoreUIDialog *luxCoreUIDialog);
 	static void ExecCmd(const string &cmd);
 
-	Ui::LuxVRDialog *ui;
+	Ui::LuxCoreUIDialog *ui;
 	const char *sceneName;
 	const boost::filesystem::path exePath;
-	boost::thread *luxvrThread;
+	boost::thread *luxCoreUIThread;
 
 	bool toCloseDialog;
 
 private slots:
-	void luxVRThreadDone();
+	void luxCoreUIThreadDone();
 
 signals:
-	void signalLuxVRThreadDone();
+	void signalLuxCoreUIThreadDone();
 };
 
-#endif	/* _LUXVRDIALOG_H */
-
+#endif	/* _LUXCOREUIDIALOG_H */
