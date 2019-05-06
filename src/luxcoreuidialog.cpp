@@ -25,6 +25,7 @@
 #include "luxmarkcfg.h"
 #include "luxcoreuidialog.h"
 #include "mainwindow.h"
+#include "luxmarkapp.h"
 
 LuxCoreUIDialog::LuxCoreUIDialog(const char *name,
 		const boost::filesystem::path &path, QWidget *parent) :
@@ -114,8 +115,9 @@ void LuxCoreUIDialog::LuxCoreUIThreadImpl(LuxCoreUIDialog *luxCoreUIDialog) {
 		const string luxCoreUI = luxCoreUIPath.make_preferred().string();
 		LM_LOG("LuxCoreUI native path: [" << luxCoreUI << "]");
 
+		const string renderEngine = (string(luxCoreUIDialog->sceneName) == SCENE_WALLPAPER) ? "BIDIRCPU" : "PATHOCL";
 		const string luxCoreUICmd = "\"" + luxCoreUI + "\" "
-			"-D renderengine.type PATHOCL "
+			"-D renderengine.type " + renderEngine + " "
 			" \"" + luxCoreUIDialog->sceneName + "\"" + " 2>&1";
 
 		// Start LuxCoreUI
