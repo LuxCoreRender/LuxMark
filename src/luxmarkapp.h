@@ -53,7 +53,7 @@ public:
 	LuxMarkApp(int &argc, char **argv);
 	~LuxMarkApp();
 	
-	void Init(LuxMarkAppMode mode, const char *scnName,
+	void Init(LuxMarkAppMode mode, const string &enabledDevices, const char *scnName,
 			const bool singleRun, const bool singleRunExtInfo);
 	void Stop();
 

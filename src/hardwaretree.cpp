@@ -93,7 +93,8 @@ int HardwareTreeItem::row() const {
 // HardwareTreeModel
 //------------------------------------------------------------------------------
 
-HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
+HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices) :
+		QAbstractItemModel() {
 	// Build the gui
 	win = w;
 
@@ -166,14 +167,18 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w) : QAbstractItemModel() {
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		const bool isCPUDev = (deviceDesc.deviceType == "CPU");
-		if (isCPUDev) {
-			// The default mode is GPU-only
-			newNode->setChecked(false);
+		// The default mode is GPU-only
+		bool enabledDev = isCPUDev ? false : true;
+
+		if ((enabledDevices != "") && (i < enabledDevices.length()))
+			enabledDev = (enabledDevices.at(i) == '1');
+
+		newNode->setChecked(enabledDev);
+
+		if (isCPUDev)
 			oclCPUDev->appendChild(newNode);
-		} else {
-			newNode->setChecked(true);
+		else
 			oclGPUDev->appendChild(newNode);
-		}
 
 		deviceDescs.push_back(deviceDesc);
 		deviceSelection.push_back(!isCPUDev);

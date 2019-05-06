@@ -115,7 +115,7 @@ LuxMarkApp::~LuxMarkApp() {
 	delete hardwareTreeModel;
 }
 
-void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName,
+void LuxMarkApp::Init(LuxMarkAppMode mode, const string &enabledDevices, const char *scnName,
 		const bool single, const bool extInfo) {
 	mainWin = new MainWindow();
 	mainWin->setWindowTitle("LuxMark v" LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR);
@@ -128,7 +128,7 @@ void LuxMarkApp::Init(LuxMarkAppMode mode, const char *scnName,
 	LM_LOG("Based on <FONT COLOR=\"#0000ff\">LuxCore v" << LUXCORE_VERSION_MAJOR << "." << LUXCORE_VERSION_MINOR << "</FONT>");
 
 	// Initialize hardware information
-	hardwareTreeModel = new HardwareTreeModel(mainWin);
+	hardwareTreeModel = new HardwareTreeModel(mainWin, enabledDevices);
 	mainWin->SetHardwareTreeModel(hardwareTreeModel);
 
 	InitRendering(mode, scnName);

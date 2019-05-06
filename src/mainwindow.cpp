@@ -30,6 +30,9 @@
 //  - New STRESSTEST_NATIVE (Native C++) stress test mode
 //  - Showing OpenCL and Native C++ rendering statistics
 //  - Stress tests now show progressive denoised rendering too
+//  - BENCHMARK_OCL_CUSTOM and BENCHMARK_HYBRID_CUSTOM can now used as command
+//    line option in combination with "--devices" to enable/disable each
+//    single device
 //
 //  ToDo:
 //  - Command line option to select the OpenCL devices to use
