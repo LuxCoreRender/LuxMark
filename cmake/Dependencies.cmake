@@ -141,6 +141,17 @@ else()
 	MESSAGE(WARNING "OpenMP not found - compiling without")
 endif()
 
+set(Qt5_MODULES Widgets Network)
+FIND_PACKAGE(Qt5 5.9.5 COMPONENTS ${Qt5_MODULES})
+IF(NOT Qt5_FOUND)
+  message(FATAL_ERROR "Is env variable Qt5_DIR set correctly? Currently: $Qt5_DIR")
+ENDIF()
+foreach(comp ${Qt5_MODULES})
+    set(Qt5_LIBRARIES ${Qt5_LIBRARIES} Qt5::${comp})
+endforeach()
+MESSAGE(STATUS "Qt5 includes: ${Qt5Widgets_INCLUDE_DIRS}")
+MESSAGE(STATUS "Qt5 libraries: ${Qt5Widgets_LIBRARIES}")
+
 #############################################################################
 #############################################################################
 ##########################      Find LuxRays       ##########################

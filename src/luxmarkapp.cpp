@@ -338,19 +338,19 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	/*
 	{
 		const double sampleCount = stats.Get("stats.renderengine.total.samplecount").Get<double>();
-		const unsigned char *pixels = mainWin->UpdateFrameBuffer(0);
+		const unsigned char *pixels = mainWin->GetFrameBuffer();
 
 		const u_int samlePerPixel = (u_int)(sampleCount / (width * height));
-		LM_LOG("Sample per pixel: " << samlePerPixel);
-		static bool saved = false;
-		if (!saved && samlePerPixel > 5000) {
+		LM_LOG("Samples per pixel: " << samlePerPixel);
+		static u_int savedSpp = 0;
+		if (samlePerPixel / 100 > savedSpp) {
 			LM_LOG("Saving reference...");
 			const QByteArray data = QByteArray::fromRawData((char *)pixels, width * height * 3);
 			QFile refImage("reference.raw");
 			refImage.open(QIODevice::WriteOnly);
 			refImage.write(data);
 			refImage.close();
-			saved = true;
+			++savedSpp;
 		}
 	}
 	*/
@@ -419,9 +419,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	else
 		strcpy(triCountBuf, "");
 
-	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK]%s",
+	sprintf(buf, "[Mode: %s][Time: %dsecs%s][Samples/sec % 6dK][Samples/pixel %.1f]%s",
 			LuxMarkAppMode2String(mode).c_str(),
 			int(renderingTime), validBuf, int(sampleSec / 1000.0),
+			sampleCount / (width * height),
 			triCountBuf);
 	ss << buf;
 

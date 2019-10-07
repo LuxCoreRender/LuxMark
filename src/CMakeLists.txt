@@ -22,15 +22,6 @@
 set(LUXMARK_VERSION_MAJOR 4)
 set(LUXMARK_VERSION_MINOR 0alpha0)
 
-set(Qt5_MODULES Widgets Network)
-FIND_PACKAGE(Qt5 5.9.5 COMPONENTS ${Qt5_MODULES})
-IF(NOT Qt5_FOUND)
-  message(FATAL_ERROR "Is env variable Qt5_DIR set correctly? Currently: $Qt5_DIR")
-ENDIF()
-foreach(comp ${Qt5_MODULES})
-    set(Qt5_LIBRARIES ${Qt5_LIBRARIES} Qt5::${comp})
-endforeach()
-
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files

@@ -239,17 +239,17 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
 		if (!strcmp(resultDialog->sceneName, SCENE_FOOD)) {
-			if (md5 == "5e7c08c1b5c4b7b59ec9748772f04c1d")
+			if (md5 == "2d70f0078c15709f99d28e05b2617735")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_HALLBENCH)) {
-			if (md5 == "baf71664c4f87dd944f448dc125f37fb")
+			if (md5 == "12dfdd54a35d3aca3538bbb15ce15bc7")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
 		} else if (!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
-			if (md5 == "7bb735d81e848ba309382153a9ac8b36")
+			if (md5 == "3b5d82294d227245ddd16d3723a2593f")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
@@ -276,67 +276,63 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		boost::filesystem::path scenePath = boost::filesystem::path(resultDialog->sceneName).parent_path();
 		LM_LOG("Image validation scene path: [" << scenePath << "]");
 
-//		const u_int dataCount = resultDialog->frameBufferWidth * resultDialog->frameBufferHeight * 3;
-//
-//		// Read the reference file
-//		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
-//				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
-//				!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
-//			boost::filesystem::path fileName;
-//			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
-//					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
-//					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
-//					(resultDialog->mode == BENCHMARK_OCL_HYBRID) ||
-//					(resultDialog->mode == BENCHMARK_OCL_HYBRID_CUSTOM) ||
-//					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
-//                fileName = scenePath / "reference-opencl.raw";
-//            } else if (resultDialog->mode == BENCHMARK_NATIVE) {
-//				fileName = scenePath / "reference-native.raw";
-//			} else
-//				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
-//			LM_LOG("Image validation file name: [" << fileName << "]");
-//
-//			// Read the raw data
-//			QFile rawFile(Path2QString(fileName));
-//			if (!rawFile.open(QIODevice::ReadOnly))
-//				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unable to open image reference file");
-//			const QByteArray rawData = rawFile.readAll();
-//			rawFile.close();
-//
-//			// Check the image size
-//			if (rawData.size() != (int)dataCount)
-//				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): wrong image size");
-//
-//			// Create reference image
-//			referenceImage = new float[dataCount];
-//			const unsigned char *pixels = reinterpret_cast<const unsigned char *>(rawData.constData());
-//			for (u_int i = 0; i < dataCount; ++i)
-//				referenceImage[i] = pixels[i] / 255.f;
-//		} else
-//			throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown scene");
-//
-//		// Create test image
-//		testImage = new float[dataCount];
-//		for (u_int i = 0; i < dataCount; ++i)
-//			testImage[i] = resultDialog->frameBuffer[i] / 255.f;
-//
-//		// Run the image comparison
-//		lux::ConvergenceTest convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
-//
-//		// Reference image
-//		convTest.Test(referenceImage);
-//
-//		// Test image
-//		emit resultDialog->imageValidationLabelChanged("Comparing...", false, false);
-//		const u_int diffPixelCount = convTest.Test(testImage);
-//
-//		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_WALLPAPER) == 0) ? 60.f : 15.f;
-//		const float errorPerc =  100.f * diffPixelCount / (float)(resultDialog->frameBufferWidth * resultDialog->frameBufferHeight);
-//		const bool isOk = (errorPerc < errorTreshold);
+		const u_int dataCount = resultDialog->frameBufferWidth * resultDialog->frameBufferHeight * 3;
 
-		const u_int diffPixelCount = 0;
-		const float errorPerc = 0.f;
-		const bool isOk = true;
+		// Read the reference file
+		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
+				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
+				!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
+			boost::filesystem::path fileName;
+			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
+					(resultDialog->mode == BENCHMARK_HYBRID) ||
+					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM) ||
+					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
+                fileName = scenePath / "reference.raw";
+            } else if (resultDialog->mode == BENCHMARK_NATIVE) {
+				fileName = scenePath / "reference.raw";
+			} else
+				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
+			LM_LOG("Image validation file name: [" << fileName << "]");
+
+			// Read the raw data
+			QFile rawFile(Path2QString(fileName));
+			if (!rawFile.open(QIODevice::ReadOnly))
+				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unable to open image reference file");
+			const QByteArray rawData = rawFile.readAll();
+			rawFile.close();
+
+			// Check the image size
+			if (rawData.size() != (int)dataCount)
+				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): wrong image size");
+
+			// Create reference image
+			referenceImage = new float[dataCount];
+			const unsigned char *pixels = reinterpret_cast<const unsigned char *>(rawData.constData());
+			for (u_int i = 0; i < dataCount; ++i)
+				referenceImage[i] = pixels[i] / 255.f;
+		} else
+			throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown scene");
+
+		// Create test image
+		testImage = new float[dataCount];
+		for (u_int i = 0; i < dataCount; ++i)
+			testImage[i] = resultDialog->frameBuffer[i] / 255.f;
+
+		// Run the image comparison
+		lux::ConvergenceTest convTest(resultDialog->frameBufferWidth, resultDialog->frameBufferHeight);
+
+		// Reference image
+		convTest.Test(referenceImage);
+
+		// Test image
+		emit resultDialog->imageValidationLabelChanged("Comparing...", false, false);
+		const u_int diffPixelCount = convTest.Test(testImage);
+
+		const float errorTreshold = (strcmp(resultDialog->sceneName, SCENE_WALLPAPER) == 0) ? 50.f : 33.f;
+		const float errorPerc =  100.f * diffPixelCount / (float)(resultDialog->frameBufferWidth * resultDialog->frameBufferHeight);
+		const bool isOk = (errorPerc < errorTreshold);
 
 		stringstream ss;
         ss << (isOk ? "OK" : "Failed");
