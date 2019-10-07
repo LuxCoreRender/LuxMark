@@ -166,7 +166,7 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 		ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		const bool isCPUDev = (deviceDesc.deviceType == "CPU");
+		const bool isCPUDev = (deviceDesc.deviceType == "OPENCL_CPU");
 		// The default mode is GPU-only
 		bool enabledDev = isCPUDev ? false : true;
 
