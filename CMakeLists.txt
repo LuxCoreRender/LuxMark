@@ -83,10 +83,14 @@ endif(WIN32)
 #
 # Overwrite defaults with Custom Settings
 #
+
 IF(LUXMARK_CUSTOM_CONFIG)
+
 	MESSAGE(STATUS "Using custom build config: ${LUXMARK_CUSTOM_CONFIG}")
 	INCLUDE(${LUXMARK_CUSTOM_CONFIG})
+
 ELSE(LUXMARK_CUSTOM_CONFIG)
+
   IF (WIN32)
     IF(MSVC)
       # Disable Boost automatic linking
@@ -110,42 +114,43 @@ ELSE(LUXMARK_CUSTOM_CONFIG)
   ENDIF(WIN32)
 ENDIF(LUXMARK_CUSTOM_CONFIG)
 
-# Find dependencies
-include(Dependencies)
 
-if (NOT Boost_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required Boost files - Please check ${BOOST_SEARCH_PATH}")
-endif()
+    # Find dependencies
+    include(Dependencies)
 
-if (NOT OPENIMAGEIO_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required OpenImageIO files - Please check ${OPENIMAGEIO_SEARCH_PATH}")
-endif()
+    if (NOT BOOST_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required Boost files - Please check ${BOOST_SEARCH_PATH}")
+    endif()
 
-if (NOT OPENCL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
-	MESSAGE(ERROR "--> Could not locate required OpenCL files, disabling OpenCL support - Please check ${OPENCL_SEARCH_PATH}")
-	SET(LUXRAYS_DISABLE_OPENCL 1)
-endif()
+    if (NOT OPENIMAGEIO_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required OpenImageIO files - Please check ${OPENIMAGEIO_SEARCH_PATH}")
+    endif()
 
-if (NOT OPENGL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
-	MESSAGE(ERROR "--> Could not locate required OpenGL files, disabling OpenCL support, disabling samples build")
-	SET(LUXRAYS_DISABLE_OPENCL 1)
-endif()
+    if (NOT OPENCL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
+        MESSAGE(ERROR "--> Could not locate required OpenCL files, disabling OpenCL support - Please check ${OPENCL_SEARCH_PATH}")
+        SET(LUXRAYS_DISABLE_OPENCL 1)
+    endif()
 
-if (NOT EMBREE_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required Intel Embree files - Please check ${EMBREE_SEARCH_PATH}")
-endif()
+    if (NOT OPENGL_FOUND AND NOT LUXRAYS_DISABLE_OPENCL)
+        MESSAGE(ERROR "--> Could not locate required OpenGL files, disabling OpenCL support, disabling samples build")
+        SET(LUXRAYS_DISABLE_OPENCL 1)
+    endif()
 
-if (NOT OIDN_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required Intel Oidn files - Please check ${OIDN_SEARCH_PATH}")
-endif()
+    if (NOT EMBREE_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required Intel Embree files - Please check ${EMBREE_SEARCH_PATH}")
+    endif()
 
-if (NOT TBB_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required Intel TBB files - Please check ${TBB_SEARCH_PATH}")
-endif()
+    if (NOT OIDN_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required Intel Oidn files - Please check ${OIDN_SEARCH_PATH}")
+    endif()
 
-if (NOT BLOSC_FOUND)
-	MESSAGE(FATAL_ERROR "--> Could not locate required C-BLOSC files - Please check ${BLOSC_SEARCH_PATH}")
-endif()
+    if (NOT TBB_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required Intel TBB files - Please check ${TBB_SEARCH_PATH}")
+    endif()
+
+    if (NOT BLOSC_FOUND)
+        MESSAGE(FATAL_ERROR "--> Could not locate required C-BLOSC files - Please check ${BLOSC_SEARCH_PATH}")
+    endif()
 
 
 ###########################################################################

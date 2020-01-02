@@ -152,10 +152,10 @@ IF(APPLE)
 
 	EXECUTE_PROCESS(COMMAND uname -r OUTPUT_VARIABLE MAC_SYS) # check for actual system-version
 
-	SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.12) # Minimum OS requirements for LuxCore
+	SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.13) # Minimum OS requirements for LuxCore
 
 	IF(${MAC_SYS} MATCHES 17)
-		SET(OSX_SYSTEM 10.13)
+		SET(OSX_SYSTEM 10.14)
 	ELSEIF(${MAC_SYS} MATCHES 16)
 		SET(OSX_SYSTEM 10.12)
 	ELSE()
@@ -180,8 +180,8 @@ IF(APPLE)
 	### options
 	OPTION(OSX_BUILD_DEMOS "Compile benchsimple, luxcoredemo, luxcorescenedemo and luxcoreimplserializationdemo" FALSE)
 
-	SET(LUXRAYS_NO_DEFAULT_CONFIG true)
-	SET(LUXRAYS_CUSTOM_CONFIG "Config_OSX" CACHE STRING "")
+	SET(LUXMARK_NO_DEFAULT_CONFIG true)
+	SET(LUXMARK_CUSTOM_CONFIG "Config_OSX" CACHE STRING "")
 
 	IF(NOT ${CMAKE_GENERATOR} MATCHES "Xcode") # will be set later in XCode
 		# Setup binaries output directory in Xcode manner

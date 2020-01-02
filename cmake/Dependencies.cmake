@@ -33,18 +33,22 @@ find_package(OpenImageIO REQUIRED)
 include_directories(BEFORE SYSTEM ${OPENIMAGEIO_INCLUDE_DIR})
 find_package(OpenEXR REQUIRED)
 
-include_directories(BEFORE SYSTEM ${OPENEXR_INCLUDE_DIRS})
-find_package(TIFF REQUIRED)
-include_directories(BEFORE SYSTEM ${TIFF_INCLUDE_DIR})
-find_package(JPEG REQUIRED)
-include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR})
-find_package(PNG REQUIRED)
-include_directories(BEFORE SYSTEM ${PNG_PNG_INCLUDE_DIR})
-# Find Python Libraries
-if("${PYTHON_V}" EQUAL "27")
-	find_package(PythonLibs 2.7)
-else()
-	find_package(PythonLibs 3.4)
+if(NOT APPLE)
+    # Apple has these available hardcoded and matched in macos repo, see Config_OSX.cmake
+
+    include_directories(BEFORE SYSTEM ${OPENEXR_INCLUDE_DIRS})
+    find_package(TIFF REQUIRED)
+    include_directories(BEFORE SYSTEM ${TIFF_INCLUDE_DIR})
+    find_package(JPEG REQUIRED)
+    include_directories(BEFORE SYSTEM ${JPEG_INCLUDE_DIR})
+    find_package(PNG REQUIRED)
+    include_directories(BEFORE SYSTEM ${PNG_PNG_INCLUDE_DIR})
+	# Find Python Libraries
+    if("${PYTHON_V}" EQUAL "27")
+        find_package(PythonLibs 2.7)
+    else()
+        find_package(PythonLibs 3.4)
+    endif()
 endif()
 
 include_directories(${PYTHON_INCLUDE_DIRS})
@@ -132,13 +136,15 @@ if (BLOSC_FOUND)
 endif ()
 
 # OpenMP
-find_package(OpenMP)
-if (OPENMP_FOUND)
-	MESSAGE(STATUS "OpenMP found - compiling with")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-else()
-	MESSAGE(WARNING "OpenMP not found - compiling without")
+if(NOT APPLE)
+	find_package(OpenMP)
+	if (OPENMP_FOUND)
+		MESSAGE(STATUS "OpenMP found - compiling with")
+   		set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+   		set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+	else()
+		MESSAGE(WARNING "OpenMP not found - compiling without")
+	endif()
 endif()
 
 set(Qt5_MODULES Widgets Network)
@@ -152,6 +158,7 @@ endforeach()
 MESSAGE(STATUS "Qt5 includes: ${Qt5Widgets_INCLUDE_DIRS}")
 MESSAGE(STATUS "Qt5 libraries: ${Qt5Widgets_LIBRARIES}")
 
+IF(NOT APPLE)
 #############################################################################
 #############################################################################
 ##########################      Find LuxRays       ##########################
@@ -190,7 +197,7 @@ FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PA
 IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	SET(ALL_LUXCORE_LIBRARIES ${LUXCORE_LIBRARY} ${SLG_LIBRARY_CORE} ${SLG_LIBRARY_FILM} ${SLG_LIBRARY_KERNELS} ${LUXRAYS_LIBRARY}
 		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENIMAGEIO_LIBRARIES}
-		${BLOSC_LIBRARIES} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARIES} ${TIFF_LIBRARIES}
+		${BLOSC_LIBRARIES} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARIES}
 		${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES})
 
 	MESSAGE(STATUS "LuxCore include directory: " ${LUXCORE_INCLUDE_DIRS})
@@ -201,3 +208,4 @@ IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 ELSE (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	MESSAGE(FATAL_ERROR "LuxCore Library not found.")
 ENDIF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
+ENDIF(NOT APPLE)
