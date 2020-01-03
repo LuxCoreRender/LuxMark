@@ -188,6 +188,7 @@ ENDIF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ../luxrays/include ${LuxRays_HOME}/include)
 FIND_PATH(LUXCORE_INCLUDE_CFG_DIRS NAMES luxcore/cfg.h PATHS ../luxrays/include ${LuxRays_HOME}/generated/include)
 FIND_LIBRARY(OPENVDB_LIBRARY openvdb PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
+FIND_LIBRARY(OPENSUBDIV_LIBRARY opensubdiv PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 FIND_LIBRARY(BCD_LIBRARY bcd PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 FIND_LIBRARY(SLG_LIBRARY_CORE slg-core PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 FIND_LIBRARY(SLG_LIBRARY_FILM slg-film PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
@@ -196,8 +197,8 @@ FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PA
 
 IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	SET(ALL_LUXCORE_LIBRARIES ${LUXCORE_LIBRARY} ${SLG_LIBRARY_CORE} ${SLG_LIBRARY_FILM} ${SLG_LIBRARY_KERNELS} ${LUXRAYS_LIBRARY}
-		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENIMAGEIO_LIBRARIES}
-		${BLOSC_LIBRARIES} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARIES}
+		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENSUBDIV_LIBRARY} ${OPENIMAGEIO_LIBRARIES}
+		${BLOSC_LIBRARY} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARIES}
 		${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES})
 
 	MESSAGE(STATUS "LuxCore include directory: " ${LUXCORE_INCLUDE_DIRS})
