@@ -121,58 +121,8 @@ SET(OPENIMAGEIO_FOUND ON)
 SET(OIDN_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/libOpenImageDenoise.dylib)
 SET(OIDN_INCLUDE_PATH ${OSX_DEPENDENCY_ROOT}/include/OpenImageDenoise)
 SET(Qt5_DIR ${OSX_DEPENDENCY_ROOT}/lib/cmake/Qt5)
+    
 SET(ZLIB_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/libz.a)
 
-#############################################################################
-#############################################################################
-##########################      Find LuxRays       ##########################
-#############################################################################
-#############################################################################
-
 set(LuxRays_HOME ${OSX_DEPENDENCY_ROOT})
-
-FIND_PATH(LUXRAYS_INCLUDE_DIRS NAMES luxrays/luxrays.h PATHS ../luxrays/include ${LuxRays_HOME}/include )
-FIND_PATH(LUXRAYS_INCLUDE_CFG_DIRS NAMES luxrays/cfg.h PATHS ../luxrays/include ${LuxRays_HOME}/generated/include )
-FIND_LIBRARY(LUXRAYS_LIBRARY luxrays PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist )
-
-IF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
-	MESSAGE(STATUS "LuxRays include directory: " ${LUXRAYS_INCLUDE_DIRS})
-	MESSAGE(STATUS "LuxRays config include directory: " ${LUXRAYS_INCLUDE_CFG_DIRS})
-	MESSAGE(STATUS "LuxRays library directory: " ${LUXRAYS_LIBRARY})
-	INCLUDE_DIRECTORIES(SYSTEM ${LUXRAYS_INCLUDE_DIRS} ${LUXRAYS_INCLUDE_CFG_DIRS})
-ELSE (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
-	MESSAGE(FATAL_ERROR "LuxRays not found.")
-ENDIF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
-
-
-#############################################################################
-#############################################################################
-########################        Find LuxCore         ########################
-#############################################################################
-#############################################################################
-
-FIND_PATH(LUXCORE_INCLUDE_DIRS NAMES luxcore/luxcore.h PATHS ../luxrays/include ${LuxRays_HOME}/include)
-FIND_PATH(LUXCORE_INCLUDE_CFG_DIRS NAMES luxcore/cfg.h PATHS ../luxrays/include ${LuxRays_HOME}/generated/include)
-FIND_LIBRARY(OPENVDB_LIBRARY openvdb PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(OPENSUBDIV_LIBRARY opensubdiv PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(BCD_LIBRARY bcd PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(SLG_LIBRARY_CORE slg-core PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(SLG_LIBRARY_FILM slg-film PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(SLG_LIBRARY_KERNELS slg-kernels PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
-
-IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
-	SET(ALL_LUXCORE_LIBRARIES ${LUXCORE_LIBRARY} ${SLG_LIBRARY_CORE} ${SLG_LIBRARY_FILM} ${SLG_LIBRARY_KERNELS} ${LUXRAYS_LIBRARY}
-		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENSUBDIV_LIBRARY} ${OPENIMAGEIO_LIBRARY}
-		${BLOSC_LIBRARY} ${EMBREE_LIBRARY} ${OIDN_LIBRARY} ${TBB_LIBRARY} ${TIFF_LIBRARY}
-		${OPENEXR_LIBRARIES} ${PNG_LIBRARIES} ${JPEG_LIBRARIES} ${ZLIB_LIBRARY})
-
-	MESSAGE(STATUS "LuxCore include directory: " ${LUXCORE_INCLUDE_DIRS})
-	MESSAGE(STATUS "LuxCore config include directory: " ${LUXCORE_INCLUDE_CFG_DIRS})
-	MESSAGE(STATUS "LuxCore library directory: " ${LUXCORE_LIBRARY})
-	MESSAGE(STATUS "LuxCore all libraries: " ${ALL_LUXCORE_LIBRARIES})
-	INCLUDE_DIRECTORIES(SYSTEM ${LUXCORE_INCLUDE_DIRS} ${LUXCORE_INCLUDE_CFG_DIRS})
-ELSE (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
-	MESSAGE(FATAL_ERROR "LuxCore Library not found.")
-ENDIF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 

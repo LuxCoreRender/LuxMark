@@ -158,7 +158,6 @@ endforeach()
 MESSAGE(STATUS "Qt5 includes: ${Qt5Widgets_INCLUDE_DIRS}")
 MESSAGE(STATUS "Qt5 libraries: ${Qt5Widgets_LIBRARIES}")
 
-IF(NOT APPLE)
 #############################################################################
 #############################################################################
 ##########################      Find LuxRays       ##########################
@@ -195,6 +194,10 @@ FIND_LIBRARY(SLG_LIBRARY_FILM slg-film PATHS ${LuxRays_HOME}/lib ../luxrays/lib 
 FIND_LIBRARY(SLG_LIBRARY_KERNELS slg-kernels PATHS ${LuxRays_HOME}/lib ../luxrays/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 FIND_LIBRARY(LUXCORE_LIBRARY luxcore PATHS ../luxrays/lib ${LuxRays_HOME}/lib PATH_SUFFIXES "" release relwithdebinfo minsizerel dist)
 
+IF(APPLE)
+SET(OPENSUBDIV_LIBRARY ${OPENSUBDIV_LIBRARY} ${ZLIB_LIBRARY})
+ENDIF(APPLE)
+
 IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	SET(ALL_LUXCORE_LIBRARIES ${LUXCORE_LIBRARY} ${SLG_LIBRARY_CORE} ${SLG_LIBRARY_FILM} ${SLG_LIBRARY_KERNELS} ${LUXRAYS_LIBRARY}
 		${BCD_LIBRARY} ${OPENVDB_LIBRARY} ${OPENSUBDIV_LIBRARY} ${OPENIMAGEIO_LIBRARIES}
@@ -209,4 +212,3 @@ IF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 ELSE (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
 	MESSAGE(FATAL_ERROR "LuxCore Library not found.")
 ENDIF (LUXCORE_INCLUDE_DIRS AND LUXCORE_LIBRARY)
-ENDIF(NOT APPLE)
