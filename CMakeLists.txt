@@ -118,7 +118,7 @@ ENDIF(LUXMARK_CUSTOM_CONFIG)
     # Find dependencies
     include(Dependencies)
 
-    if (NOT BOOST_FOUND)
+    if (NOT Boost_FOUND)
         MESSAGE(FATAL_ERROR "--> Could not locate required Boost files - Please check ${BOOST_SEARCH_PATH}")
     endif()
 
