@@ -122,7 +122,9 @@ SET(OIDN_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/libOpenImageDenoise.dylib)
 SET(OIDN_INCLUDE_PATH ${OSX_DEPENDENCY_ROOT}/include/OpenImageDenoise)
 SET(Qt5_DIR ${OSX_DEPENDENCY_ROOT}/lib/cmake/Qt5)
     
-SET(ZLIB_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/libz.a)
+#SET(ZLIB_LIBRARY ${OSX_DEPENDENCY_ROOT}/lib/libz.a)
+
+SET(ZLIB_LIBRARY /usr/lib/libz.dylib)
 
 set(LuxRays_HOME ${OSX_DEPENDENCY_ROOT})
 
