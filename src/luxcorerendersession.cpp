@@ -26,6 +26,10 @@
 #include "luxmarkapp.h"
 #include "mainwindow.h"
 
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
+#include <Windows.h>
+#endif
+
 using namespace luxrays;
 using namespace luxcore;
 
@@ -152,7 +156,11 @@ void LuxCoreRenderSession::Start() {
 		case STRESSTEST_NATIVE:
 		case BENCHMARK_NATIVE: {
 			props <<
+				#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
+					Property("native.threads.count")((int)GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)) <<
+				#else
 					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<
+				#endif
 					Property("renderengine.type")((sceneFileName == SCENE_WALLPAPER) ? "BIDIRCPU" : "PATHCPU");
 			break;
 		}
