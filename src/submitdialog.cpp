@@ -89,9 +89,9 @@ void SubmitDialog::genericButton() {
 #endif
         const QString version = LUXMARK_VERSION_MAJOR "." LUXMARK_VERSION_MINOR;
 		const QString scene = sceneName;
-		const QString score = ToString(int(sampleSecs / 1000.0)).c_str();
+		const QString score = QString::number(int(sampleSecs / 1000.0));
 		const QString note = ui->noteTextEdit->toPlainText();
-		const QString devCount = ToString(descs.size()).c_str();
+		const QString devCount = QString::number(descs.size());
 
         QString benchMode;
         switch (mode) {
@@ -174,22 +174,22 @@ void SubmitDialog::genericButton() {
 			paramsQuery.addQueryItem("dev_type[]", QUrl::toPercentEncoding(QString(descs[i].deviceType.c_str())));
 
 			SD_LOG("dev_units = " << descs[i].units);
-			paramsQuery.addQueryItem("dev_units[]", QUrl::toPercentEncoding(QString(ToString(descs[i].units).c_str())));
+			paramsQuery.addQueryItem("dev_units[]", QUrl::toPercentEncoding(QString::number(descs[i].units)));
 
 			SD_LOG("dev_clock = " << descs[i].clock);
-			paramsQuery.addQueryItem("dev_clock[]", QUrl::toPercentEncoding(QString(ToString(descs[i].clock).c_str())));
+			paramsQuery.addQueryItem("dev_clock[]", QUrl::toPercentEncoding(QString::number(descs[i].clock)));
 
 			SD_LOG("dev_native_float_vec_width = " << descs[i].nativeVectorWidthFloat);
-			paramsQuery.addQueryItem("dev_native_float_vec_width[]", QUrl::toPercentEncoding(QString(ToString(descs[i].nativeVectorWidthFloat).c_str())));
+			paramsQuery.addQueryItem("dev_native_float_vec_width[]", QUrl::toPercentEncoding(QString::number(descs[i].nativeVectorWidthFloat)));
 
 			SD_LOG("dev_global_mem = " << descs[i].globalMem);
-			paramsQuery.addQueryItem("dev_global_mem[]", QUrl::toPercentEncoding(QString(ToString(descs[i].globalMem).c_str())));
+			paramsQuery.addQueryItem("dev_global_mem[]", QUrl::toPercentEncoding(QString::number(descs[i].globalMem)));
 
 			SD_LOG("dev_local_mem = " << descs[i].localMem);
-			paramsQuery.addQueryItem("dev_local_mem[]", QUrl::toPercentEncoding(QString(ToString(descs[i].localMem).c_str())));
+			paramsQuery.addQueryItem("dev_local_mem[]", QUrl::toPercentEncoding(QString::number(descs[i].localMem)));
 
 			SD_LOG("dev_constant_mem = " << descs[i].constantMem);
-			paramsQuery.addQueryItem("dev_constant_mem[]", QUrl::toPercentEncoding(QString(ToString(descs[i].constantMem).c_str())));
+			paramsQuery.addQueryItem("dev_constant_mem[]", QUrl::toPercentEncoding(QString::number(descs[i].constantMem)));
 		}
 
         params.setQuery(paramsQuery);

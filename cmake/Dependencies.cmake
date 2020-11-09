@@ -97,14 +97,6 @@ if (OPENGL_FOUND)
 	include_directories(BEFORE SYSTEM ${OPENGL_INCLUDE_PATH})
 endif()
 
-# OpenCL
-set(OPENCL_ROOT                "${OPENCL_SEARCH_PATH}")
-find_package(OpenCL)
-
-if (OPENCL_FOUND)
-	include_directories(BEFORE SYSTEM ${OPENCL_INCLUDE_DIR} ${OPENCL_C_INCLUDE_DIR})
-endif ()
-
 # Intel Embree
 set(EMBREE_ROOT                "${EMBREE_SEARCH_PATH}")
 find_package(Embree REQUIRED)
@@ -178,7 +170,6 @@ IF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 ELSE (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
 	MESSAGE(FATAL_ERROR "LuxRays not found.")
 ENDIF (LUXRAYS_INCLUDE_DIRS AND LUXRAYS_LIBRARY)
-
 
 #############################################################################
 #############################################################################

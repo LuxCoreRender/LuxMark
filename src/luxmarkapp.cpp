@@ -26,16 +26,6 @@
 #include <QFile>
 #include <QGraphicsSceneMouseEvent>
 
-// To avoid reference to OpenCL 1.2 symbols in cl.hpp file
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
-#define __CL_ENABLE_EXCEPTIONS
-
-#if defined(__APPLE__)
-#include <OpenCL/cl.hpp>
-#else
-#include <CL/cl.hpp>
-#endif
-
 #include "luxmarkcfg.h"
 #include "luxmarkapp.h"
 #include "luxcoreuidialog.h"
@@ -291,11 +281,9 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		app->renderingStartTime = luxrays::WallClockTime();
 		app->lastFrameBufferDenoisedUpdate = app->renderingStartTime;
 		app->engineInitDone = true;
-	} catch (cl::Error err) {
-		LM_ERROR("OpenCL ERROR: " << err.what() << "(" << err.err() << ")");
-	} catch (runtime_error err) {
+	} catch (runtime_error &err) {
 		LM_ERROR("RUNTIME ERROR: " << err.what());
-	} catch (exception err) {
+	} catch (exception &err) {
 		LM_ERROR("ERROR: " << err.what());
 	}
 }
