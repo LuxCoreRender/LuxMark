@@ -22,10 +22,13 @@
 #include <vector>
 #include <sstream>
 
+#include <boost/algorithm/string/trim.hpp>
+
 #include <QtCore/qabstractitemmodel.h>
 
 #include "hardwaretree.h"
 #include "mainwindow.h"
+#include "libcpuid.h"
 #include "luxcore/luxcore.h"
 
 using namespace std;
@@ -100,6 +103,14 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 
 	rootItem = new HardwareTreeItem("Hardware");
 
+	// Native CPU
+	HardwareTreeItem *nativeDev = new HardwareTreeItem("Native CPU");
+	rootItem->appendChild(nativeDev);
+
+	// CUDA devices
+	HardwareTreeItem *cudaDev = new HardwareTreeItem("CUDA");
+	rootItem->appendChild(cudaDev);
+	
 	// OpenCL devices
 	HardwareTreeItem *oclDev = new HardwareTreeItem("OpenCL");
 	rootItem->appendChild(oclDev);
@@ -109,80 +120,138 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 	HardwareTreeItem *oclGPUDev = new HardwareTreeItem("GPUs and Accelerators");
 	oclDev->appendChild(oclGPUDev);
 
-	// Retrieve the hardware information with LuxCore
-	const Properties oclDevDescs = GetOpenCLDeviceDescs();
-	const vector<string> oclDevDescPrefixs = oclDevDescs.GetAllUniqueSubNames("opencl.device");
+	// Retrieve native CPU information with LibCPUID
+	HardwareTreeItem *nativeCPUNode = nullptr;
+	if (cpuid_present()) {
+		struct cpu_raw_data_t raw;
+		if (cpuid_get_raw_data(&raw) < 0) {
+			LM_LOG("Error detecting native CPU raw data: " << cpuid_error());
 
-	for (size_t i = 0; i < oclDevDescPrefixs.size(); ++i) {
-		const string &prefix = oclDevDescPrefixs[i];
+			nativeCPUNode = new HardwareTreeItem(0, "Error detecting CPU raw data");
+		} else {
+			struct cpu_id_t data;
+			if (cpu_identify(&raw, &data) < 0) {
+				LM_LOG("Error identifying the native CPU: " << cpuid_error());
+
+				nativeCPUNode = new HardwareTreeItem(0, "Error identifying CPU");
+			} else {
+				string cpuName(data.brand_str);
+				boost::trim(cpuName);
+				nativeCPUNode = new HardwareTreeItem(0, cpuName.c_str());
+				
+				stringstream ss;
+				ss << "Vendor: " << data.vendor_str;
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+				
+				ss.str("");
+				ss << "Cores: " << data.num_cores;
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+				
+				ss.str("");
+				ss << "Logical cores: " << data.num_logical_cpus;
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+
+				ss.str("");
+				ss << "Total logical cores: " << data.total_logical_cpus;
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+
+				ss.str("");
+				ss << "Code name: " << data.cpu_codename;
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+
+				ss.str("");
+				ss << "Features:";
+				for (int i = 0; i < NUM_CPU_FEATURES; i++)
+					if (data.flags[i])
+						ss << " " << cpu_feature_str((cpu_feature_t)i);
+				nativeCPUNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+			}
+		}
+	} else
+		nativeCPUNode = new HardwareTreeItem(0, "Unknown CPU");
+
+	nativeCPUNode->setChecked(false);
+	nativeDev->appendChild(nativeCPUNode);
+	
+	// Retrieve the hardware information with LuxCore
+	const Properties hwDevDescs = GetOpenCLDeviceDescs();
+	const vector<string> hwDevDescPrefixs = hwDevDescs.GetAllUniqueSubNames("opencl.device");
+
+	for (size_t i = 0; i < hwDevDescPrefixs.size(); ++i) {
+		const string &prefix = hwDevDescPrefixs[i];
 
 		BenchmarkDeviceDescription deviceDesc;
 
-		deviceDesc.deviceName = oclDevDescs.Get(prefix + ".name").Get<string>();
+		deviceDesc.deviceName = hwDevDescs.Get(prefix + ".name").Get<string>();
 		HardwareTreeItem *newNode = new HardwareTreeItem(i, deviceDesc.deviceName.c_str());
 
 		stringstream ss;
-		deviceDesc.platformName = oclDevDescs.Get(prefix + ".platform.name").Get<string>();
+		deviceDesc.platformName = hwDevDescs.Get(prefix + ".platform.name").Get<string>();
 		ss << "Platform: " << deviceDesc.platformName;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.platformVersion = oclDevDescs.Get(prefix + ".platform.version").Get<string>();
+		deviceDesc.platformVersion = hwDevDescs.Get(prefix + ".platform.version").Get<string>();
 		ss << "Platform Version: " << deviceDesc.platformVersion;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.deviceType = oclDevDescs.Get(prefix + ".type").Get<string>();
+		deviceDesc.deviceType = hwDevDescs.Get(prefix + ".type").Get<string>();
 		ss << "Type: " << deviceDesc.deviceType;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.units = oclDevDescs.Get(prefix + ".units").Get<int>();
+		deviceDesc.units = hwDevDescs.Get(prefix + ".units").Get<int>();
 		ss << "Compute Units: " << deviceDesc.units;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.clock = oclDevDescs.Get(prefix + ".clock").Get<int>();
+		deviceDesc.clock = hwDevDescs.Get(prefix + ".clock").Get<int>();
 		ss << "Clock: " << deviceDesc.clock << " MHz";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.nativeVectorWidthFloat = oclDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
+		deviceDesc.nativeVectorWidthFloat = hwDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
 		ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.globalMem = oclDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
+		deviceDesc.globalMem = hwDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
 		ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.localMem = oclDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
+		deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
 		ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.constantMem = oclDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
+		deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
 		ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		const bool isCPUDev = (deviceDesc.deviceType == "OPENCL_CPU");
+		const bool isCUDADev = (deviceDesc.deviceType == "CUDA_GPU");
+		const bool isOpenCLCPUDev = (deviceDesc.deviceType == "OPENCL_CPU");
 		// The default mode is GPU-only
-		bool enabledDev = isCPUDev ? false : true;
+		bool enabledDev = isCUDADev || !isOpenCLCPUDev;
 
 		if ((enabledDevices != "") && (i < enabledDevices.length()))
 			enabledDev = (enabledDevices.at(i) == '1');
 
 		newNode->setChecked(enabledDev);
 
-		if (isCPUDev)
-			oclCPUDev->appendChild(newNode);
-		else
-			oclGPUDev->appendChild(newNode);
+		if (isCUDADev)
+			cudaDev->appendChild(newNode);
+		else {
+			if (isOpenCLCPUDev)
+				oclCPUDev->appendChild(newNode);
+			else
+				oclGPUDev->appendChild(newNode);
+		}
 
 		deviceDescs.push_back(deviceDesc);
-		deviceSelection.push_back(!isCPUDev);
-		isCPU.push_back(isCPUDev);
+		deviceSelection.push_back(!isOpenCLCPUDev);
+		isOpenCLCPU.push_back(isOpenCLCPUDev);
 	}
 }
 
@@ -332,7 +401,7 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
         case BENCHMARK_OCL_GPU:
 		case BENCHMARK_HYBRID:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (!isCPU[i])
+                if (!isOpenCLCPU[i])
                     descs.push_back(deviceDescs[i]);
             }
             break;
@@ -344,7 +413,7 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
         case STRESSTEST_OCL_CPU:
         case BENCHMARK_OCL_CPU:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (isCPU[i])
+                if (isOpenCLCPU[i])
                     descs.push_back(deviceDescs[i]);
             }
             break;

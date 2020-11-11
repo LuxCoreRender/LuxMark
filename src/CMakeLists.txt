@@ -79,13 +79,31 @@ QT5_WRAP_UI(LUXMARK_UI_HDRS ${LUXMARK_UIS})
 QT5_WRAP_CPP(LUXMARK_MOC_SRCS ${LUXMARK_MOC})
 
 include_directories(".")
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+include_directories("libcpuid")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# libcpuid library
+set(LIBCPUID_SRCS
+	libcpuid/asm-bits.c
+    libcpuid/cpuid_main.c
+    libcpuid/libcpuid_util.c
+    libcpuid/msrdriver.c
+    libcpuid/recog_intel.c
+    libcpuid/recog_amd.c
+    libcpuid/rdtsc.c
+    libcpuid/rdmsr.c
+	)
+
+if("${MSVC_CXX_ARCHITECTURE_ID}" MATCHES "x64")
+  list(APPEND LIBCPUID_SRCS masm-x64.asm)
+endif()
 
 set(LUXMARK_SRCS
 	${LUXMARK_SRCS}
 	${LUXMARK_UI_HDRS}
 	${LUXMARK_RC_SRCS}
 	${LUXMARK_MOC_SRCS}
+	${LIBCPUID_SRCS}
 	)
 
 #############################################################################

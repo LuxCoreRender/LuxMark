@@ -120,7 +120,7 @@ private:
 
     vector<BenchmarkDeviceDescription> deviceDescs;
 	vector<bool> deviceSelection;
-	vector<bool> isCPU;
+	vector<bool> isOpenCLCPU;
 };
 
 //------------------------------------------------------------------------------
