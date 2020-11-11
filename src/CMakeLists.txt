@@ -95,7 +95,8 @@ set(LIBCPUID_SRCS
 	)
 
 if("${MSVC_CXX_ARCHITECTURE_ID}" MATCHES "x64")
-  list(APPEND LIBCPUID_SRCS masm-x64.asm)
+  list(APPEND LIBCPUID_SRCS libcpuid/masm-x64.asm)
+  set_property(SOURCE libcpuid/masm-x64.asm PROPERTY LANGUAGE ASM_MASM)
 endif()
 
 set(LUXMARK_SRCS
