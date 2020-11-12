@@ -90,25 +90,16 @@ private slots:
 	void setHallBenchScene();
 	void setWallPaperScene();
 
+	void setMode_BENCHMARK_CUDA_GPU();
 	void setMode_BENCHMARK_OCL_GPU();
-	void setMode_BENCHMARK_OCL_CPUGPU();
-	void setMode_BENCHMARK_OCL_CPU();
-	void setMode_BENCHMARK_OCL_CUSTOM();
-	void setMode_BENCHMARK_HYBRID();
-	void setMode_BENCHMARK_HYBRID_CUSTOM();
 	void setMode_BENCHMARK_NATIVE();
+	void setMode_BENCHMARK_CUSTOM();
+	void setMode_STRESSTEST_CUDA_GPU();
 	void setMode_STRESSTEST_OCL_GPU();
-	void setMode_STRESSTEST_OCL_CPUGPU();
-	void setMode_STRESSTEST_OCL_CPU();
-	void setMode_STRESSTEST_HYBRID();
 	void setMode_STRESSTEST_NATIVE();
+	void setMode_STRESSTEST_CUSTOM();
 	void setMode_DEMO_LUXCOREUI();
 	void setMode_PAUSE();
-	
-	void setOCLOpts_cl_fast_relaxed_math(bool enable);
-	void setOCLOpts_cl_mad_enable(bool enable);
-	void setOCLOpts_cl_strict_aliasing(bool enable);
-	void setOCLOpts_cl_no_signed_zeros(bool enable);
 };
 
 //------------------------------------------------------------------------------

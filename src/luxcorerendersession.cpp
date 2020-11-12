@@ -34,12 +34,11 @@ using namespace luxrays;
 using namespace luxcore;
 
 LuxCoreRenderSession::LuxCoreRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
-		const string &devSel, const string &oclCompOpts) {
+		const string &devSel) {
     renderMode = mode;
     
     sceneFileName = fileName;
     deviceSelection = devSel;
-	oclCompilerOpts = oclCompOpts;
 
 	config = NULL;
 	session = NULL;
@@ -73,88 +72,28 @@ void LuxCoreRenderSession::Start() {
 	//--------------------------------------------------------------------------
 
 	switch (renderMode) {
-		case STRESSTEST_OCL_GPU:
-		case BENCHMARK_OCL_GPU: {
+		case BENCHMARK_CUDA_GPU:
+		case STRESSTEST_CUDA_GPU: {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(false) <<
 					Property("opencl.native.threads.count")(0) <<
 					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
-		case STRESSTEST_OCL_CPUGPU:
-		case BENCHMARK_OCL_CPUGPU: {
-			props <<
-					Property("opencl.gpu.use")(true) <<
-					Property("opencl.cpu.use")(true) <<
-					Property("opencl.native.threads.count")(0) <<
-					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
-					Property("renderengine.type")("PATHOCL");
-			break;
-		}
-		case STRESSTEST_OCL_CPU:
-		case BENCHMARK_OCL_CPU: {
-			props <<
-					Property("opencl.gpu.use")(false) <<
-					Property("opencl.cpu.use")(true) <<
-					Property("opencl.native.threads.count")(0) <<
-					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
-					Property("renderengine.type")("PATHOCL");
-			break;
-		}
-		case BENCHMARK_OCL_CUSTOM: {
-			// At the first run, hardwareTreeModel is NULL
-			if (deviceSelection == "") {
-				props <<
-						Property("opencl.gpu.use")(true) <<
-						Property("opencl.cpu.use")(false);
-			} else {
-				props <<
-						Property("opencl.devices.select")(deviceSelection);
-			}
-
-			props <<
-					Property("opencl.native.threads.count")(0) <<
-					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
-					Property("renderengine.type")("PATHOCL");
-			break;
-		}
-		case STRESSTEST_HYBRID:
-		case BENCHMARK_HYBRID: {
+		case BENCHMARK_OCL_GPU:
+		case STRESSTEST_OCL_GPU: {
 			props <<
 					Property("opencl.gpu.use")(true) <<
 					Property("opencl.cpu.use")(false) <<
-					Property("opencl.native.threads.count")(boost::thread::hardware_concurrency()) <<
+					Property("opencl.native.threads.count")(0) <<
 					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}
-		case BENCHMARK_HYBRID_CUSTOM: {
-			// At the first run, hardwareTreeModel is NULL
-			if (deviceSelection == "") {
-				props <<
-						Property("opencl.gpu.use")(true) <<
-						Property("opencl.cpu.use")(false);
-			} else {
-				props <<
-						Property("opencl.devices.select")(deviceSelection);
-			}
-
-			props <<
-					Property("opencl.native.threads.count")(boost::thread::hardware_concurrency()) <<
-					Property("native.threads.count")(0) <<
-					Property("opencl.kernel.options")(oclCompilerOpts) <<
-					Property("renderengine.type")("PATHOCL");
-			break;
-		}
-		case STRESSTEST_NATIVE:
-		case BENCHMARK_NATIVE: {
+		case BENCHMARK_NATIVE:
+		case STRESSTEST_NATIVE: {
 			props <<
 				#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
 					Property("native.threads.count")((int)GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)) <<
@@ -162,6 +101,24 @@ void LuxCoreRenderSession::Start() {
 					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<
 				#endif
 					Property("renderengine.type")((sceneFileName == SCENE_WALLPAPER) ? "BIDIRCPU" : "PATHCPU");
+			break;
+		}
+		case BENCHMARK_CUSTOM:
+		case STRESSTEST_CUSTOM: {
+			// At the first run, hardwareTreeModel is NULL
+			if (deviceSelection == "") {
+				props <<
+						Property("opencl.gpu.use")(true) <<
+						Property("opencl.cpu.use")(false);
+			} else {
+				props <<
+						Property("opencl.devices.select")(deviceSelection);
+			}
+
+			props <<
+					Property("opencl.native.threads.count")(0) <<
+					Property("native.threads.count")(0) <<
+					Property("renderengine.type")("PATHOCL");
 			break;
 		}
 		default: {

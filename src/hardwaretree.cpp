@@ -39,6 +39,8 @@ using namespace luxcore;
 // Hardware tree view
 //------------------------------------------------------------------------------
 
+const int HardwareTreeItem::NATIVECPU_INDEX = -1;
+
 HardwareTreeItem::HardwareTreeItem(const QVariant &data, HardwareTreeItem *parent) {
 	deviceIndex = 0;
 	parentItem = parent;
@@ -127,17 +129,17 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 		if (cpuid_get_raw_data(&raw) < 0) {
 			LM_LOG("Error detecting native CPU raw data: " << cpuid_error());
 
-			nativeCPUNode = new HardwareTreeItem(0, "Error detecting CPU raw data");
+			nativeCPUNode = new HardwareTreeItem(HardwareTreeItem::NATIVECPU_INDEX, "Error detecting CPU raw data");
 		} else {
 			struct cpu_id_t data;
 			if (cpu_identify(&raw, &data) < 0) {
 				LM_LOG("Error identifying the native CPU: " << cpuid_error());
 
-				nativeCPUNode = new HardwareTreeItem(0, "Error identifying CPU");
+				nativeCPUNode = new HardwareTreeItem(HardwareTreeItem::NATIVECPU_INDEX, "Error identifying CPU");
 			} else {
 				string cpuName(data.brand_str);
 				boost::trim(cpuName);
-				nativeCPUNode = new HardwareTreeItem(0, cpuName.c_str());
+				nativeCPUNode = new HardwareTreeItem(HardwareTreeItem::NATIVECPU_INDEX, cpuName.c_str());
 				
 				stringstream ss;
 				ss << "Vendor: " << data.vendor_str;
@@ -177,82 +179,95 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 	const Properties hwDevDescs = GetOpenCLDeviceDescs();
 	const vector<string> hwDevDescPrefixs = hwDevDescs.GetAllUniqueSubNames("opencl.device");
 
+	// Build the list of devices
+	bool hasCUDAdevs = false;
 	for (size_t i = 0; i < hwDevDescPrefixs.size(); ++i) {
 		const string &prefix = hwDevDescPrefixs[i];
 
 		BenchmarkDeviceDescription deviceDesc;
 
 		deviceDesc.deviceName = hwDevDescs.Get(prefix + ".name").Get<string>();
+		deviceDesc.platformName = hwDevDescs.Get(prefix + ".platform.name").Get<string>();
+		deviceDesc.platformVersion = hwDevDescs.Get(prefix + ".platform.version").Get<string>();
+		deviceDesc.deviceType = hwDevDescs.Get(prefix + ".type").Get<string>();
+		deviceDesc.units = hwDevDescs.Get(prefix + ".units").Get<int>();
+		deviceDesc.clock = hwDevDescs.Get(prefix + ".clock").Get<int>();
+		deviceDesc.nativeVectorWidthFloat = hwDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
+		deviceDesc.globalMem = hwDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
+		deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
+		deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
+
+		deviceDesc.isCUDA = (deviceDesc.deviceType == "CUDA_GPU");
+		deviceDesc.isOpenCL = !deviceDesc.isCUDA;
+		deviceDesc.isOpenCLCPU = deviceDesc.isOpenCL && (deviceDesc.deviceType == "OPENCL_CPU");
+
+		deviceDescs.push_back(deviceDesc);
+
+		hasCUDAdevs = hasCUDAdevs || deviceDesc.isCUDA;
+	}
+
+	// Create the tree nodes
+	for (size_t i = 0; i < deviceDescs.size(); ++i) {
+		const BenchmarkDeviceDescription &deviceDesc = deviceDescs[i];
+
 		HardwareTreeItem *newNode = new HardwareTreeItem(i, deviceDesc.deviceName.c_str());
 
 		stringstream ss;
-		deviceDesc.platformName = hwDevDescs.Get(prefix + ".platform.name").Get<string>();
 		ss << "Platform: " << deviceDesc.platformName;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.platformVersion = hwDevDescs.Get(prefix + ".platform.version").Get<string>();
 		ss << "Platform Version: " << deviceDesc.platformVersion;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.deviceType = hwDevDescs.Get(prefix + ".type").Get<string>();
 		ss << "Type: " << deviceDesc.deviceType;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.units = hwDevDescs.Get(prefix + ".units").Get<int>();
 		ss << "Compute Units: " << deviceDesc.units;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.clock = hwDevDescs.Get(prefix + ".clock").Get<int>();
 		ss << "Clock: " << deviceDesc.clock << " MHz";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.nativeVectorWidthFloat = hwDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
 		ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.globalMem = hwDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
 		ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
 		ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
 		ss.str("");
-		deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
 		ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		const bool isCUDADev = (deviceDesc.deviceType == "CUDA_GPU");
-		const bool isOpenCLCPUDev = (deviceDesc.deviceType == "OPENCL_CPU");
 		// The default mode is GPU-only
-		bool enabledDev = isCUDADev || !isOpenCLCPUDev;
+		bool enabledDev = (hasCUDAdevs && deviceDesc.isCUDA) ||
+				(!hasCUDAdevs && deviceDesc.isOpenCL && !deviceDesc.isOpenCLCPU );
 
 		if ((enabledDevices != "") && (i < enabledDevices.length()))
 			enabledDev = (enabledDevices.at(i) == '1');
 
 		newNode->setChecked(enabledDev);
 
-		if (isCUDADev)
+		if (deviceDesc.isCUDA)
 			cudaDev->appendChild(newNode);
 		else {
-			if (isOpenCLCPUDev)
+			if (deviceDesc.isOpenCLCPU)
 				oclCPUDev->appendChild(newNode);
 			else
 				oclGPUDev->appendChild(newNode);
 		}
-
-		deviceDescs.push_back(deviceDesc);
-		deviceSelection.push_back(!isOpenCLCPUDev);
-		isOpenCLCPU.push_back(isOpenCLCPUDev);
 	}
+	
+	useNativeCPU = false;
 }
 
 HardwareTreeModel::~HardwareTreeModel() {
@@ -373,7 +388,10 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 			// Set pause mode
 			win->Pause();
 
-			deviceSelection[item->getDeviceIndex()] = v;
+			if (item->isNativeCPU())
+				useNativeCPU = true;
+			else
+				deviceSelection[item->getDeviceIndex()] = v;
 		}
 
 		return true;
@@ -390,43 +408,40 @@ string HardwareTreeModel::getDeviceSelectionString() const {
 	return ss.str();
 }
 
+bool HardwareTreeModel::getUseNativeCPU() const {
+	return useNativeCPU;
+}
+
 vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
     const LuxMarkAppMode mode) const {
     vector<BenchmarkDeviceDescription> descs;
 
     switch (mode) {
-        case DEMO_LUXCOREUI:
-        case STRESSTEST_OCL_GPU:
-		case STRESSTEST_HYBRID:
+        case DEMO_LUXCOREUI: // TODO
+		case BENCHMARK_CUDA_GPU:
+		case STRESSTEST_CUDA_GPU:
+            for (size_t i = 0; i < deviceSelection.size(); ++i) {
+                if (deviceDescs[i].isCUDA)
+                    descs.push_back(deviceDescs[i]);
+            }
+            break;
         case BENCHMARK_OCL_GPU:
-		case BENCHMARK_HYBRID:
+		case STRESSTEST_OCL_GPU:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (!isOpenCLCPU[i])
+                if (deviceDescs[i].isOpenCL && !deviceDescs[i].isOpenCLCPU)
                     descs.push_back(deviceDescs[i]);
             }
             break;
-        case STRESSTEST_OCL_CPUGPU:
-        case BENCHMARK_OCL_CPUGPU:
-            for (size_t i = 0; i < deviceSelection.size(); ++i)
-                descs.push_back(deviceDescs[i]);
-            break;
-        case STRESSTEST_OCL_CPU:
-        case BENCHMARK_OCL_CPU:
-            for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (isOpenCLCPU[i])
-                    descs.push_back(deviceDescs[i]);
-            }
-            break;
-		case BENCHMARK_HYBRID_CUSTOM:
-        case BENCHMARK_OCL_CUSTOM:
+		case BENCHMARK_CUSTOM:
+		case STRESSTEST_CUSTOM:
             for (size_t i = 0; i < deviceSelection.size(); ++i) {
                 if (deviceSelection[i])
                     descs.push_back(deviceDescs[i]);
             }
             break;
-        case PAUSE:
-		case STRESSTEST_NATIVE:
         case BENCHMARK_NATIVE:
+		case STRESSTEST_NATIVE:
+        case PAUSE:
             break;
     }
 

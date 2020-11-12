@@ -283,16 +283,12 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
 				!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
 			boost::filesystem::path fileName;
-			if ((resultDialog->mode == BENCHMARK_OCL_GPU) ||
-					(resultDialog->mode == BENCHMARK_OCL_CPUGPU) ||
-					(resultDialog->mode == BENCHMARK_OCL_CPU) ||
-					(resultDialog->mode == BENCHMARK_HYBRID) ||
-					(resultDialog->mode == BENCHMARK_HYBRID_CUSTOM) ||
-					(resultDialog->mode == BENCHMARK_OCL_CUSTOM)) {
+			if ((resultDialog->mode == BENCHMARK_CUDA_GPU) ||
+					(resultDialog->mode == BENCHMARK_OCL_GPU) ||
+					(resultDialog->mode == BENCHMARK_NATIVE) ||
+					(resultDialog->mode == BENCHMARK_CUSTOM))
                 fileName = scenePath / "reference.raw";
-            } else if (resultDialog->mode == BENCHMARK_NATIVE) {
-				fileName = scenePath / "reference.raw";
-			} else
+			else
 				throw std::runtime_error("Internal error in ResultDialog::ImageThreadImpl(): unknown mode");
 			LM_LOG("Image validation file name: [" << fileName << "]");
 

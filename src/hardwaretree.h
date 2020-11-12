@@ -45,12 +45,15 @@ class MainWindow;
 
 class HardwareTreeItem {
 public:
+	static const int NATIVECPU_INDEX;
+
 	HardwareTreeItem(const QVariant &data,
 			HardwareTreeItem *parent = 0);
 	HardwareTreeItem(const int deviceIndex, const QVariant &data,
 			HardwareTreeItem *parent = 0);
 	~HardwareTreeItem();
 
+	bool isNativeCPU() const { return (deviceIndex == NATIVECPU_INDEX); }
 	int getDeviceIndex() const { return deviceIndex; }
 
 	void appendChild(HardwareTreeItem *child);
@@ -91,6 +94,7 @@ typedef struct {
 	unsigned long long globalMem;
 	unsigned long long localMem;
 	unsigned long long constantMem;
+	bool isOpenCL, isOpenCLCPU, isCUDA, hasRTX;
 } BenchmarkDeviceDescription;
 
 
@@ -111,6 +115,7 @@ public:
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
 	string getDeviceSelectionString() const;
+	bool getUseNativeCPU() const;
     vector<BenchmarkDeviceDescription> getSelectedDeviceDescs(const LuxMarkAppMode mode) const;
 
 private:
@@ -120,7 +125,7 @@ private:
 
     vector<BenchmarkDeviceDescription> deviceDescs;
 	vector<bool> deviceSelection;
-	vector<bool> isOpenCLCPU;
+	bool useNativeCPU;
 };
 
 //------------------------------------------------------------------------------

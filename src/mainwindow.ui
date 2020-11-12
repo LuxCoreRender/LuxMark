@@ -157,19 +157,15 @@
     <property name="title">
      <string>&amp;Mode</string>
     </property>
+    <addaction name="action_CUDA_GPUs"/>
     <addaction name="action_OpenCL_GPUs"/>
-    <addaction name="action_OpenCL_CPUs_GPUs"/>
-    <addaction name="action_OpenCL_CPUs"/>
-    <addaction name="action_OpenCL_Custom"/>
-    <addaction name="action_Hybrid"/>
-    <addaction name="action_Hybrid_Custom"/>
-    <addaction name="action_NativeCPP"/>
+    <addaction name="action_Native"/>
+    <addaction name="action_Custom"/>
     <addaction name="separator"/>
+    <addaction name="action_StressTest_CUDA_GPUs"/>
     <addaction name="action_StressTest_OpenCL_GPUs"/>
-    <addaction name="action_StressTest_OpenCL_CPUs_GPUs"/>
-    <addaction name="action_StressTest_OpenCL_CPUs"/>
-    <addaction name="action_StressTest_Hybrid"/>
     <addaction name="action_StressTest_Native"/>
+    <addaction name="action_StressTest_Custom"/>
     <addaction name="separator"/>
     <addaction name="action_LuxCoreUI"/>
     <addaction name="separator"/>
@@ -183,19 +179,9 @@
     <addaction name="action_HallBench"/>
     <addaction name="action_Food"/>
    </widget>
-   <widget class="QMenu" name="menuOpenCL_Compiler_Opts">
-    <property name="title">
-     <string>OpenCL Compiler Options</string>
-    </property>
-    <addaction name="action_cl_fast_relaxed_math"/>
-    <addaction name="action_cl_mad_enable"/>
-    <addaction name="action_cl_no_signed_zeros"/>
-    <addaction name="action_cl_strict_aliasing"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Mode"/>
    <addaction name="menu_Scene"/>
-   <addaction name="menuOpenCL_Compiler_Opts"/>
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -212,12 +198,12 @@
     <string>About</string>
    </property>
   </action>
-  <action name="action_OpenCL_GPUs">
+  <action name="action_CUDA_GPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL GPUs)</string>
+    <string>Benchmark (CUDA GPUs)</string>
    </property>
   </action>
   <action name="action_Food">
@@ -234,12 +220,12 @@
     <string>Ctrl+L</string>
    </property>
   </action>
-  <action name="action_OpenCL_CPUs_GPUs">
+  <action name="action_OpenCL_GPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL CPUs + GPUs)</string>
+    <string>Benchmark (OpenCL GPUs)</string>
    </property>
   </action>
   <action name="action_Pause">
@@ -250,12 +236,12 @@
     <string>&amp;Pause</string>
    </property>
   </action>
-  <action name="action_OpenCL_CPUs">
+  <action name="action_Native">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL CPUs)</string>
+    <string>Benchmark (Native C++)</string>
    </property>
   </action>
   <action name="action_HallBench">
@@ -272,12 +258,12 @@
     <string>Ctrl+M</string>
    </property>
   </action>
-  <action name="action_OpenCL_Custom">
+  <action name="action_Custom">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL selected devices only)</string>
+    <string>Benchmark (Selected devices only)</string>
    </property>
   </action>
   <action name="action_WallPaper">
@@ -297,111 +283,41 @@
     <string>Ctrl+R</string>
    </property>
   </action>
-  <action name="action_NativeCPP">
+  <action name="action_StressTest_CUDA_GPUs">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (Native C++)</string>
+    <string>Stress Test (CUDA GPUs)</string>
    </property>
   </action>
   <action name="action_StressTest_OpenCL_GPUs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Stress Test (OpenCL GPUs)</string>
    </property>
   </action>
-  <action name="action_StressTest_OpenCL_CPUs_GPUs">
-   <property name="text">
-    <string>Stress Test (OpenCL CPUs+GPUs)</string>
+  <action name="action_StressTest_Native">
+   <property name="checkable">
+    <bool>true</bool>
    </property>
-  </action>
-  <action name="action_StressTest_OpenCL_CPUs">
    <property name="text">
-    <string>Stress Test (OpenCL CPUs)</string>
+    <string>Stress Test (Native C++)</string>
    </property>
   </action>
   <action name="action_LuxCoreUI">
    <property name="text">
-    <string>LuxCoreUI (OpenCL GPUs)</string>
+    <string>LuxCoreUI (CUDA or OpenCL GPUs)</string>
    </property>
   </action>
-  <action name="action_cl_fast_relaxed_math">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>-cl-fast-relaxed-math</string>
-   </property>
-  </action>
-  <action name="action_cl_mad_enable">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>-cl-mad-enable</string>
-   </property>
-  </action>
-  <action name="action_cl_strict_aliasing">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>-cl-strict-aliasing</string>
-   </property>
-  </action>
-  <action name="action_cl_no_signed_zeros">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>-cl-no-signed-zeros</string>
-   </property>
-  </action>
-  <action name="action_Hybrid">
+  <action name="action_StressTest_Custom">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Benchmark (OpenCL GPUs + Native C++)</string>
-   </property>
-  </action>
-  <action name="action_Hybrid_Custom">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Benchmark (OpenCL selected devices only + Native C++)</string>
-   </property>
-   <property name="toolTip">
-    <string>Benchmark (OpenCL selected devices only + Native C++)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_Hybrid">
-   <property name="text">
-    <string>Stress Test (Hybrid OpenCL GPUs + Native C++)</string>
-   </property>
-   <property name="toolTip">
-    <string>Stress Test (Hybrid OpenCL GPUs + Native C++)</string>
-   </property>
-  </action>
-  <action name="action_StressTest_Native">
-   <property name="text">
-    <string>Stress Test (Native C++)</string>
-   </property>
-   <property name="toolTip">
-    <string>Stress Test (Native C++)</string>
+    <string>Stress Test (Selected devices only)</string>
    </property>
   </action>
  </widget>
@@ -458,10 +374,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_OpenCL_CPUs_GPUs</sender>
+   <sender>action_OpenCL_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
+   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -474,10 +390,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_OpenCL_GPUs</sender>
+   <sender>action_CUDA_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
+   <slot>setMode_BENCHMARK_CUDA_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -506,10 +422,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_OpenCL_CPUs</sender>
+   <sender>action_Native</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_OCL_CPU()</slot>
+   <slot>setMode_BENCHMARK_NATIVE()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -538,10 +454,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_OpenCL_Custom</sender>
+   <sender>action_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_OCL_CUSTOM()</slot>
+   <slot>setMode_BENCHMARK_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -570,10 +486,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_NativeCPP</sender>
+   <sender>action_StressTest_CUDA_GPUs</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_NATIVE()</slot>
+   <slot>setMode_STRESSTEST_CUDA_GPU()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -602,26 +518,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_StressTest_OpenCL_CPUs_GPUs</sender>
+   <sender>action_StressTest_Native</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_OpenCL_CPUs</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_OCL_CPU()</slot>
+   <slot>setMode_STRESSTEST_NATIVE()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -650,122 +550,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_cl_fast_relaxed_math</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_cl_mad_enable</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setOCLOpts_cl_mad_enable(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_cl_strict_aliasing</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setOCLOpts_cl_strict_aliasing(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_cl_no_signed_zeros</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setOCLOpts_cl_no_signed_zeros(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_Hybrid</sender>
+   <sender>action_StressTest_Custom</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_HYBRID()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_Hybrid_Custom</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_Hybrid</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_HYBRID()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>511</x>
-     <y>383</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>action_StressTest_Native</sender>
-   <signal>triggered(bool)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setMode_STRESSTEST_NATIVE()</slot>
+   <slot>setMode_STRESSTEST_CUSTOM()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -785,22 +573,14 @@
   <slot>setHallBenchScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setWallPaperScene()</slot>
+  <slot>setMode_BENCHMARK_CUDA_GPU()</slot>
   <slot>setMode_BENCHMARK_OCL_GPU()</slot>
-  <slot>setMode_BENCHMARK_OCL_CPUGPU()</slot>
-  <slot>setMode_BENCHMARK_OCL_CPU()</slot>
-  <slot>setMode_BENCHMARK_OCL_CUSTOM()</slot>
-  <slot>setMode_BENCHMARK_HYBRID()</slot>
-  <slot>setMode_BENCHMARK_HYBRID_CUSTOM()</slot>
   <slot>setMode_BENCHMARK_NATIVE()</slot>
+  <slot>setMode_BENCHMARK_CUSTOM()</slot>
+  <slot>setMode_STRESSTEST_CUDA_GPU()</slot>
   <slot>setMode_STRESSTEST_OCL_GPU()</slot>
-  <slot>setMode_STRESSTEST_OCL_CPUGPU()</slot>
-  <slot>setMode_STRESSTEST_OCL_CPU()</slot>
-  <slot>setMode_STRESSTEST_HYBRID()</slot>
   <slot>setMode_STRESSTEST_NATIVE()</slot>
+  <slot>setMode_STRESSTEST_CUSTOM()</slot>
   <slot>setMode_DEMO_LUXCOREUI()</slot>
-  <slot>setOCLOpts_cl_fast_relaxed_math(bool)</slot>
-  <slot>setOCLOpts_cl_mad_enable(bool)</slot>
-  <slot>setOCLOpts_cl_strict_aliasing(bool)</slot>
-  <slot>setOCLOpts_cl_no_signed_zeros(bool)</slot>
  </slots>
 </ui>

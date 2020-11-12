@@ -64,11 +64,6 @@ LuxMarkApp::LuxMarkApp(int &argc, char **argv) : QApplication(argc, argv) {
 	singleRun = false;
 	singleRunExtInfo = false;
 
-	oclOptFastRelaxedMath = true;
-	oclOptMadEnabled = true;
-	oclOptStrictAliasing = false;
-	oclOptNoSignedZeros = true;
-
 	mainWin = NULL;
 	engineInitThread = NULL;
 	engineInitDone = false;
@@ -132,26 +127,6 @@ void LuxMarkApp::SetScene(const char *scnName) {
 	InitRendering(mode, scnName);
 }
 
-void  LuxMarkApp::SetOpenCLCompilerOpts(const OCLCompilerOpts opt, const bool enable) {
-	switch (opt) {
-		case FAST_RELAXED_MATH:
-			oclOptFastRelaxedMath = enable;
-			break;
-		case MAD_ENABLED:
-			oclOptMadEnabled = enable;
-			break;
-		case STRICT_ALIASING:
-			oclOptStrictAliasing = enable;
-			break;
-		case NO_SIGNED_ZEROS:
-			oclOptNoSignedZeros = enable;
-			break;
-		default:
-			LM_LOG("<FONT COLOR=\"#ff0000\">Unknown OpenCL compiler option in LuxMarkApp::SetOpenCLCompilerOpts(): " << opt << "</FONT>");
-			break;
-	}
-}
-
 void LuxMarkApp::Stop() {
 	delete renderRefreshTimer;
 	renderRefreshTimer = NULL;
@@ -180,19 +155,14 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 
 		// Wall Paper scene can be rendered only with BiDir
 		switch (mode) {
+			case BENCHMARK_CUDA_GPU:
 			case BENCHMARK_OCL_GPU:
-			case BENCHMARK_OCL_CPUGPU:
-			case BENCHMARK_OCL_CPU:
-			case BENCHMARK_OCL_CUSTOM:
-			case BENCHMARK_HYBRID:
-			case BENCHMARK_HYBRID_CUSTOM:
+			case BENCHMARK_CUSTOM:
 				mode = BENCHMARK_NATIVE;
 				break;
+			case STRESSTEST_CUDA_GPU:
 			case STRESSTEST_OCL_GPU:
-			case STRESSTEST_OCL_CPUGPU:
-			case STRESSTEST_OCL_CPU:
-			case STRESSTEST_HYBRID:
-			case STRESSTEST_NATIVE:
+			case STRESSTEST_CUSTOM:
 				mode = STRESSTEST_NATIVE;
 				break;
 			case DEMO_LUXCOREUI:
@@ -249,30 +219,7 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		const string deviceSelection = (app->hardwareTreeModel) ?
 			(app->hardwareTreeModel->getDeviceSelectionString()) : "";
 
-		// Set OpenCL compiler options
-		string oclCompilerOpts = "";
-		if (app->oclOptFastRelaxedMath) {
-			if (oclCompilerOpts != "")
-				oclCompilerOpts += " ";
-			oclCompilerOpts += "-cl-fast-relaxed-math";
-		}
-		if (app->oclOptMadEnabled) {
-			if (oclCompilerOpts != "")
-				oclCompilerOpts += " ";
-			oclCompilerOpts += "-cl-mad-enable";
-		}
-		if (app->oclOptStrictAliasing) {
-			if (oclCompilerOpts != "")
-				oclCompilerOpts += " ";
-			oclCompilerOpts += "-cl-strict-aliasing";
-		}
-		if (app->oclOptNoSignedZeros) {
-			if (oclCompilerOpts != "")
-				oclCompilerOpts += " ";
-			oclCompilerOpts += "-cl-no-signed-zeros";
-		}
-
-		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection, oclCompilerOpts);
+		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection);
 
 		// Start the rendering
 		app->luxSession->Start();
@@ -292,11 +239,10 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	if (!engineInitDone)
 		return;
 
-	const bool isStressTest = (mode == STRESSTEST_OCL_GPU) ||
-		(mode == STRESSTEST_OCL_CPUGPU) ||
+	const bool isStressTest = (mode == STRESSTEST_CUDA_GPU) ||
 		(mode == STRESSTEST_OCL_GPU) ||
-		(mode == STRESSTEST_HYBRID) ||
-		(mode == STRESSTEST_NATIVE);
+		(mode == STRESSTEST_NATIVE) ||
+		(mode == STRESSTEST_CUSTOM);
 
 	const Properties &stats = luxSession->GetStats();
 	const double renderingTime = stats.Get("stats.renderengine.time").Get<double>();

@@ -31,10 +31,8 @@ static void PrintCmdLineHelp(const QString &cmd) {
 			" --help (display this help and exit)" << endl <<
 			" --scene=FOOD|HALLBENCH|WALLPAPER (select the scene to use)" << endl <<
 			" --mode="
-                "BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|BENCHMARK_OCL_CUSTOM|"
-				"BENCHMARK_HYBRID|BENCHMARK_HYBRID_CUSTOM|BENCHMARK_NATIVE|"
-				"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
-				"STRESSTEST_HYBRID|STRESSTEST_NATIVE|"
+                "BENCHMARK_CUDA_GPU|BENCHMARK_OCL_GPU|BENCHMARK_NATIVE|BENCHMARK_CUSTOM|"
+				"STRESSTEST_CUDA_GPU|STRESSTEST_OCL_GPU|STRESSTEST_CUSTOM|STRESSTEST_NATIVE|"
 				"DEMO_LUXCOREUI|PAUSE"
 				" (select the mode to use)" << endl <<
 			" --devices=<a string of 1 or 0 to enable/disable each OpenCL device in CUSTOM modes>" << endl <<
@@ -60,10 +58,8 @@ int main(int argc, char **argv) {
 	QRegExp argHelp("--help");
 	QRegExp argScene("--scene=(FOOD|HALLBENCH|WALLPAPER)");
 	QRegExp argMode("--mode=("
-		"BENCHMARK_OCL_GPU|BENCHMARK_OCL_CPUGPU|BENCHMARK_OCL_CPU|BENCHMARK_OCL_CUSTOM|"
-		"BENCHMARK_HYBRID|BENCHMARK_HYBRID_CUSTOM|BENCHMARK_NATIVE|"
-		"STRESSTEST_OCL_GPU|STRESSTEST_OCL_CPUGPU|STRESSTEST_OCL_CPU|"
-		"STRESSTEST_HYBRID|STRESSTEST_NATIVE|"
+		"BENCHMARK_CUDA_GPU|BENCHMARK_OCL_GPU|BENCHMARK_NATIVE|BENCHMARK_CUSTOM|"
+		"STRESSTEST_CUDA_GPU|STRESSTEST_OCL_GPU|STRESSTEST_CUSTOM|STRESSTEST_NATIVE|"
 		"DEMO_LUXCOREUI|PAUSE"
 		")");
 	QRegExp argDevices("--devices=([01]+)");
@@ -95,30 +91,22 @@ int main(int argc, char **argv) {
 			}
 		} else if (argMode.indexIn(argsList.at(i)) != -1 ) {   
             QString scene = argMode.cap(1);
-			if (scene.compare("BENCHMARK_OCL_GPU", Qt::CaseInsensitive) == 0)
+			if (scene.compare("BENCHMARK_CUDA_GPU", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_CUDA_GPU;
+			else if (scene.compare("BENCHMARK_OCL_GPU", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_OCL_GPU;
-			else if (scene.compare("BENCHMARK_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_CPUGPU;
-			else if (scene.compare("BENCHMARK_OCL_CPU", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_CPU;
-			else if (scene.compare("BENCHMARK_OCL_CUSTOM", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_OCL_CUSTOM;
-			else if (scene.compare("BENCHMARK_HYBRID", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_HYBRID;
-			else if (scene.compare("BENCHMARK_HYBRID_CUSTOM", Qt::CaseInsensitive) == 0)
-				mode = BENCHMARK_HYBRID_CUSTOM;
 			else if (scene.compare("BENCHMARK_NATIVE", Qt::CaseInsensitive) == 0)
 				mode = BENCHMARK_NATIVE;
+			else if (scene.compare("BENCHMARK_CUSTOM", Qt::CaseInsensitive) == 0)
+				mode = BENCHMARK_CUSTOM;
+			else if (scene.compare("STRESSTEST_CUDA_GPU", Qt::CaseInsensitive) == 0)
+				mode = STRESSTEST_CUDA_GPU;
 			else if (scene.compare("STRESSTEST_OCL_GPU", Qt::CaseInsensitive) == 0)
 				mode = STRESSTEST_OCL_GPU;
-			else if (scene.compare("STRESSTEST_OCL_CPUGPU", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_OCL_CPUGPU;
-			else if (scene.compare("STRESSTEST_OCL_CPU", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_OCL_CPU;
-			else if (scene.compare("STRESSTEST_HYBRID", Qt::CaseInsensitive) == 0)
-				mode = STRESSTEST_HYBRID;
 			else if (scene.compare("STRESSTEST_NATIVE", Qt::CaseInsensitive) == 0)
 				mode = STRESSTEST_NATIVE;
+			else if (scene.compare("STRESSTEST_CUSTOM", Qt::CaseInsensitive) == 0)
+				mode = STRESSTEST_CUSTOM;
 			else if (scene.compare("DEMO_LUXCOREUI", Qt::CaseInsensitive) == 0)
 				mode = DEMO_LUXCOREUI;
 			else if (scene.compare("PAUSE", Qt::CaseInsensitive) == 0)
@@ -130,8 +118,8 @@ int main(int argc, char **argv) {
 				break;
 			}
 		} else if (argDevices.indexIn(argsList.at(i)) != -1) {   
-			if ((mode != BENCHMARK_OCL_CUSTOM) && (mode != BENCHMARK_HYBRID_CUSTOM)) {
-				cerr << "--devices can be used only after a --mode=BENCHMARK_OCL_CUSTOM or --mode=BENCHMARK_HYBRID_CUSTOM" << endl;
+			if (mode != BENCHMARK_CUSTOM) {
+				cerr << "--devices can be used only after a --mode=BENCHMARK_CUSTOM" << endl;
 				PrintCmdLineHelp(argsList.at(0));
 				exit = true;
 				break;

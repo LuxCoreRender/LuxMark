@@ -193,34 +193,14 @@ void MainWindow::setWallPaperScene() {
 	((LuxMarkApp *)qApp)->SetScene(SCENE_WALLPAPER);
 }
 
+void MainWindow::setMode_BENCHMARK_CUDA_GPU() {
+	LM_LOG("Set mode: BENCHMARK_CUDA_GPU");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_CUDA_GPU);
+}
+
 void MainWindow::setMode_BENCHMARK_OCL_GPU() {
 	LM_LOG("Set mode: BENCHMARK_OCL_GPU");
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_GPU);
-}
-
-void MainWindow::setMode_BENCHMARK_OCL_CPUGPU() {
-	LM_LOG("Set mode: BENCHMARK_OCL_CPUGPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPUGPU);
-}
-
-void MainWindow::setMode_BENCHMARK_OCL_CPU() {
-	LM_LOG("Set mode: BENCHMARK_OCL_CPU");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CPU);
-}
-
-void MainWindow::setMode_BENCHMARK_OCL_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_OCL_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_OCL_CUSTOM);
-}
-
-void MainWindow::setMode_BENCHMARK_HYBRID() {
-	LM_LOG("Set mode: BENCHMARK_HYBRID");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID);
-}
-
-void MainWindow::setMode_BENCHMARK_HYBRID_CUSTOM() {
-	LM_LOG("Set mode: BENCHMARK_HYBRID_CUSTOM");
-	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_HYBRID_CUSTOM);
 }
 
 void MainWindow::setMode_BENCHMARK_NATIVE() {
@@ -228,29 +208,29 @@ void MainWindow::setMode_BENCHMARK_NATIVE() {
 	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_NATIVE);
 }
 
+void MainWindow::setMode_BENCHMARK_CUSTOM() {
+	LM_LOG("Set mode: BENCHMARK_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(BENCHMARK_CUSTOM);
+}
+
+void MainWindow::setMode_STRESSTEST_CUDA_GPU() {
+	LM_LOG("Set mode: STRESSTEST_CUDA_GPU");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_CUDA_GPU);
+}
+
 void MainWindow::setMode_STRESSTEST_OCL_GPU() {
 	LM_LOG("Set mode: STRESSTEST_OCL_GPU");
 	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_GPU);
 }
 
-void MainWindow::setMode_STRESSTEST_OCL_CPUGPU() {
-	LM_LOG("Set mode: STRESSTEST_OCL_CPUGPU");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_CPUGPU);
-}
-
-void MainWindow::setMode_STRESSTEST_OCL_CPU() {
-	LM_LOG("Set mode: STRESSTEST_OCL_CPU");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_OCL_CPU);
-}
-
-void MainWindow::setMode_STRESSTEST_HYBRID() {
-	LM_LOG("Set mode: STRESSTEST_HYBRID");
-	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_HYBRID);
-}
-
 void MainWindow::setMode_STRESSTEST_NATIVE() {
 	LM_LOG("Set mode: STRESSTEST_NATIVE");
 	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_NATIVE);
+}
+
+void MainWindow::setMode_STRESSTEST_CUSTOM() {
+	LM_LOG("Set mode: STRESSTEST_CUSTOM");
+	((LuxMarkApp *)qApp)->SetMode(STRESSTEST_CUSTOM);
 }
 
 void MainWindow::setMode_DEMO_LUXCOREUI() {
@@ -261,30 +241,6 @@ void MainWindow::setMode_DEMO_LUXCOREUI() {
 void MainWindow::setMode_PAUSE() {
 	LM_LOG("Set Pause mode");
 	((LuxMarkApp *)qApp)->SetMode(PAUSE);
-}
-
-void MainWindow::setOCLOpts_cl_fast_relaxed_math(bool enable) {
-	LM_LOG("Toggle OpenCL compiler option: -cl-fast-relaxed-math");
-	((LuxMarkApp *)qApp)->SetMode(PAUSE);
-	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(FAST_RELAXED_MATH, enable);
-}
-
-void MainWindow::setOCLOpts_cl_mad_enable(bool enable) {
-	LM_LOG("Toggle OpenCL compiler option: -cl-mad-enabled");
-	((LuxMarkApp *)qApp)->SetMode(PAUSE);
-	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(MAD_ENABLED, enable);
-}
-
-void MainWindow::setOCLOpts_cl_strict_aliasing(bool enable) {
-	LM_LOG("Toggle OpenCL compiler option: -cl-strict-aliasing");
-	((LuxMarkApp *)qApp)->SetMode(PAUSE);
-	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(STRICT_ALIASING, enable);
-}
-
-void MainWindow::setOCLOpts_cl_no_signed_zeros(bool enable) {
-	LM_LOG("Toggle OpenCL compiler option: -cl-no-signed-zeros");
-	((LuxMarkApp *)qApp)->SetMode(PAUSE);
-	((LuxMarkApp *)qApp)->SetOpenCLCompilerOpts(NO_SIGNED_ZEROS, enable);	
 }
 
 //------------------------------------------------------------------------------
@@ -315,19 +271,15 @@ void MainWindow::ShowLogo() {
 }
 
 void MainWindow::SetModeCheck(const LuxMarkAppMode mode) {
+	ui->action_CUDA_GPUs->setChecked(mode == BENCHMARK_CUDA_GPU);
 	ui->action_OpenCL_GPUs->setChecked(mode == BENCHMARK_OCL_GPU);
-	ui->action_OpenCL_CPUs_GPUs->setChecked(mode == BENCHMARK_OCL_CPUGPU);
-	ui->action_OpenCL_CPUs->setChecked(mode == BENCHMARK_OCL_CPU);
-	ui->action_OpenCL_Custom->setChecked(mode == BENCHMARK_OCL_CUSTOM);
-	ui->action_Hybrid->setChecked(mode == BENCHMARK_HYBRID);
-	ui->action_Hybrid_Custom->setChecked(mode == BENCHMARK_HYBRID_CUSTOM);
-	ui->action_NativeCPP->setChecked(mode == BENCHMARK_NATIVE);
+	ui->action_Native->setChecked(mode == BENCHMARK_NATIVE);
+	ui->action_Custom->setChecked(mode == BENCHMARK_CUSTOM);
 
+	ui->action_StressTest_CUDA_GPUs->setChecked(mode == STRESSTEST_CUDA_GPU);
 	ui->action_StressTest_OpenCL_GPUs->setChecked(mode == STRESSTEST_OCL_GPU);
-	ui->action_StressTest_OpenCL_CPUs_GPUs->setChecked(mode == STRESSTEST_OCL_CPUGPU);
-	ui->action_StressTest_OpenCL_CPUs->setChecked(mode == STRESSTEST_OCL_CPU);
-	ui->action_StressTest_Hybrid->setChecked(mode == STRESSTEST_HYBRID);
 	ui->action_StressTest_Native->setChecked(mode == STRESSTEST_NATIVE);
+	ui->action_StressTest_Custom->setChecked(mode == STRESSTEST_CUSTOM);
 
 	ui->action_LuxCoreUI->setChecked(mode == DEMO_LUXCOREUI);
 
@@ -340,37 +292,43 @@ void MainWindow::SetSceneCheck(const int index) {
 		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(false);
 		
+		ui->action_CUDA_GPUs->setEnabled(false);
 		ui->action_OpenCL_GPUs->setEnabled(false);
-		ui->action_OpenCL_CPUs->setEnabled(false);
-		ui->action_OpenCL_CPUs_GPUs->setEnabled(false);
-		ui->action_OpenCL_Custom->setEnabled(false);
-		ui->action_Hybrid->setEnabled(false);
-		ui->action_Hybrid_Custom->setEnabled(false);
-		ui->action_NativeCPP->setChecked(true);
+		ui->action_Native->setEnabled(true);
+		ui->action_Custom->setEnabled(false);
+
+		ui->action_StressTest_CUDA_GPUs->setEnabled(false);
+		ui->action_StressTest_OpenCL_GPUs->setEnabled(false);
+		ui->action_StressTest_Native->setEnabled(true);
+		ui->action_StressTest_Custom->setEnabled(false);
 	} else if (index == 1) {
 		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(true);
 		ui->action_Food->setChecked(false);
 
+		ui->action_CUDA_GPUs->setEnabled(true);
 		ui->action_OpenCL_GPUs->setEnabled(true);
-		ui->action_OpenCL_CPUs->setEnabled(true);
-		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
-		ui->action_OpenCL_Custom->setEnabled(true);
-		ui->action_Hybrid->setEnabled(true);
-		ui->action_Hybrid_Custom->setEnabled(true);
-		ui->action_NativeCPP->setEnabled(true);
+		ui->action_Native->setEnabled(true);
+		ui->action_Custom->setEnabled(true);
+
+		ui->action_StressTest_CUDA_GPUs->setEnabled(true);
+		ui->action_StressTest_OpenCL_GPUs->setEnabled(true);
+		ui->action_StressTest_Native->setEnabled(true);
+		ui->action_StressTest_Custom->setEnabled(true);
 	} else if (index == 2) {
 		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(false);
 		ui->action_Food->setChecked(true);
 
+		ui->action_CUDA_GPUs->setEnabled(true);
 		ui->action_OpenCL_GPUs->setEnabled(true);
-		ui->action_OpenCL_CPUs->setEnabled(true);
-		ui->action_OpenCL_CPUs_GPUs->setEnabled(true);
-		ui->action_OpenCL_Custom->setEnabled(true);
-		ui->action_Hybrid->setEnabled(true);
-		ui->action_Hybrid_Custom->setEnabled(true);
-		ui->action_NativeCPP->setEnabled(true);
+		ui->action_Native->setEnabled(true);
+		ui->action_Custom->setEnabled(true);
+
+		ui->action_StressTest_CUDA_GPUs->setEnabled(true);
+		ui->action_StressTest_OpenCL_GPUs->setEnabled(true);
+		ui->action_StressTest_Native->setEnabled(true);
+		ui->action_StressTest_Custom->setEnabled(true);
 	} else
 		assert(false);
 }

@@ -95,17 +95,17 @@ void SubmitDialog::genericButton() {
 
         QString benchMode;
         switch (mode) {
+            case BENCHMARK_CUDA_GPU:
+                benchMode = "CUDA";
+                break;
             case BENCHMARK_OCL_GPU:
-            case BENCHMARK_OCL_CPUGPU:
-            case BENCHMARK_OCL_CPU:
-            case BENCHMARK_OCL_CUSTOM:
                 benchMode = "OpenCL";
                 break;
             case BENCHMARK_NATIVE:
                 benchMode = "C++";
                 break;
-            case BENCHMARK_HYBRID:
-                benchMode = "Hybrid";
+            case BENCHMARK_CUSTOM:
+                benchMode = "Custom";
                 break;
             default:
                 benchMode = "Unknown";

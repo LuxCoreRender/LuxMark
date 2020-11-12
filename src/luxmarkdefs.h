@@ -35,36 +35,25 @@
 #elif defined (WIN32)
 #include <windows.h>
 #else
-	Unsupported Platform !!!
+#error "Unsupported Platform !!!"
 #endif
 
 #include <luxrays/luxrays.h>
 #endif
-			
+		
 using namespace std;
 
 enum LuxMarkAppMode {
+	BENCHMARK_CUDA_GPU,
 	BENCHMARK_OCL_GPU,
-	BENCHMARK_OCL_CPUGPU,
-	BENCHMARK_OCL_CPU,
-	BENCHMARK_OCL_CUSTOM,
-	BENCHMARK_HYBRID,
-	BENCHMARK_HYBRID_CUSTOM,
 	BENCHMARK_NATIVE,
+	BENCHMARK_CUSTOM,
+	STRESSTEST_CUDA_GPU,
 	STRESSTEST_OCL_GPU,
-	STRESSTEST_OCL_CPUGPU,
-	STRESSTEST_OCL_CPU,
-	STRESSTEST_HYBRID,
 	STRESSTEST_NATIVE,
+	STRESSTEST_CUSTOM,
 	DEMO_LUXCOREUI,
 	PAUSE
-};
-
-enum OCLCompilerOpts {
-	FAST_RELAXED_MATH,
-	MAD_ENABLED,
-	STRICT_ALIASING,
-	NO_SIGNED_ZEROS
 };
 
 inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
@@ -72,33 +61,25 @@ inline string LuxMarkAppMode2String(const LuxMarkAppMode mode) {
 		//----------------------------------------------------------------------
 		// Benchmark
 		//----------------------------------------------------------------------
+		case BENCHMARK_CUDA_GPU:
+			return "CUDA GPUs";
 		case BENCHMARK_OCL_GPU:
 			return "OpenCL GPUs";
-		case BENCHMARK_OCL_CPUGPU:
-			return "OpenCL CPUs+GPUs";
-		case BENCHMARK_OCL_CPU:
-			return "OpenCL CPUs";
-		case BENCHMARK_OCL_CUSTOM:
-			return "OpenCL Custom";
-		case BENCHMARK_HYBRID:
-			return "Hybrid OpenCL/C++";
-		case BENCHMARK_HYBRID_CUSTOM:
-			return "Hybrid OpenCL Custom/C++";
 		case BENCHMARK_NATIVE:
 			return "C++";
+		case BENCHMARK_CUSTOM:
+			return "Custom";
 		//----------------------------------------------------------------------
 		// Stress test
 		//----------------------------------------------------------------------
+		case STRESSTEST_CUDA_GPU:
+			return "CUDA GPUs (stress test)";
 		case STRESSTEST_OCL_GPU:
 			return "OpenCL GPUs (stress test)";
-		case STRESSTEST_OCL_CPUGPU:
-			return "OpenCL CPUs+GPUs (stress test)";
-		case STRESSTEST_OCL_CPU:
-			return "OpenCL CPUs (stress test)";
-		case STRESSTEST_HYBRID:
-			return "Hybrid OpenCL GPUs + Native C++ (stress test)";
 		case STRESSTEST_NATIVE:
 			return "Native C++ (stress test)";
+		case STRESSTEST_CUSTOM:
+			return "Custom (stress test)";
 		case PAUSE:
 			return "Pause";
 		default:

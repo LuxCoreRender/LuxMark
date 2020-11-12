@@ -60,8 +60,6 @@ public:
 	void SetMode(LuxMarkAppMode m);
 	void SetScene(const char *scnName);
 
-	void SetOpenCLCompilerOpts(const OCLCompilerOpts opt, const bool enable);
-
 	bool IsSingleRun() const { return singleRun; }
 
 	const boost::filesystem::path &GetExePath() const { return exePath; }
@@ -76,8 +74,6 @@ private:
 	LuxMarkAppMode mode;
 	const char *sceneName;
 	bool singleRun, singleRunExtInfo;
-	
-	bool oclOptFastRelaxedMath, oclOptMadEnabled, oclOptStrictAliasing, oclOptNoSignedZeros;
 
 	HardwareTreeModel *hardwareTreeModel;
 
