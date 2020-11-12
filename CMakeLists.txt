@@ -30,10 +30,16 @@ MESSAGE(STATUS "CMAKE VERSION DETECTED " ${CMAKE_VERSION})
 # Fresh start
 cmake_minimum_required(VERSION 3.5.1)
 cmake_policy(VERSION 3.0)
+
 #Remove the following when the version check is at least 2.8.4
 SET(CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project(LuxMark)
+
+# Explicitly enable ASM language for Windows
+if(WIN32)
+    enable_language(ASM_MASM)
+endif(WIN32)
 
 # Dont overconfigure
 SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "limit configs" FORCE)
