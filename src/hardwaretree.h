@@ -53,8 +53,15 @@ public:
 			HardwareTreeItem *parent = 0);
 	~HardwareTreeItem();
 
-	bool isNativeCPU() const { return (deviceIndex == NATIVECPU_INDEX); }
+	//const QVariant &GetItemData() const { return itemData; }
+		
+	bool isNativeCPUNode() const { return (deviceIndex == NATIVECPU_INDEX); }
+	bool isOptixNode() const {
+		return (itemData.toString().toStdString() == "Use Optix/RTX");
+	}
+
 	int getDeviceIndex() const { return deviceIndex; }
+	
 
 	void appendChild(HardwareTreeItem *child);
 
@@ -65,9 +72,14 @@ public:
 	int row() const;
 	HardwareTreeItem *parent();
 
+	bool isEnabled() const { return enabled; }
+	void setEnabled(const bool e) {  enabled = e; }
+	
 	bool isCheckable() const { return checkable; }
+	void setCheckable(const bool c) { checkable = c; }
+
 	bool isChecked() const { return checked; }
-	void setChecked(bool c) { checked = c; }
+	void setChecked(const bool c) { checked = c; }
 
 private:
 	int deviceIndex;
@@ -76,7 +88,7 @@ private:
 	QVariant itemData;
 	HardwareTreeItem *parentItem;
 
-	bool checkable, checked;
+	bool enabled, checkable, checked;
 };
 
 //------------------------------------------------------------------------------
@@ -94,7 +106,7 @@ typedef struct {
 	unsigned long long globalMem;
 	unsigned long long localMem;
 	unsigned long long constantMem;
-	bool isOpenCL, isOpenCLCPU, isCUDA, hasRTX;
+	bool isOpenCL, isOpenCLCPU, isCUDA, useOptix;
 } BenchmarkDeviceDescription;
 
 
@@ -115,6 +127,7 @@ public:
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
 	string getDeviceSelectionString() const;
+	string getOptixSelectionString() const;
 	bool getUseNativeCPU() const;
     vector<BenchmarkDeviceDescription> getSelectedDeviceDescs(const LuxMarkAppMode mode) const;
 

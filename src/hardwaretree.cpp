@@ -45,6 +45,7 @@ HardwareTreeItem::HardwareTreeItem(const QVariant &data, HardwareTreeItem *paren
 	deviceIndex = 0;
 	parentItem = parent;
 	itemData = data;
+	enabled = true;
 	checkable = false;
 	checked = false;
 }
@@ -54,6 +55,7 @@ HardwareTreeItem::HardwareTreeItem(const int index, const QVariant &data,
 	deviceIndex = index;
 	parentItem = parent;
 	itemData = data;
+	enabled = true;
 	checkable = true;
 	checked = true;
 }
@@ -181,6 +183,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 
 	// Build the list of devices
 	bool hasCUDAdevs = false;
+	const bool isOptixAvailable = luxcore::GetPlatformDesc().Get("compile.LUXRAYS_ENABLE_CUDA").Get<bool>() &&
+		luxcore::GetPlatformDesc().Get("compile.LUXRAYS_ENABLE_OPTIX").Get<bool>();
 	for (size_t i = 0; i < hwDevDescPrefixs.size(); ++i) {
 		const string &prefix = hwDevDescPrefixs[i];
 
@@ -201,6 +205,18 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 		deviceDesc.isOpenCL = !deviceDesc.isCUDA;
 		deviceDesc.isOpenCLCPU = deviceDesc.isOpenCL && (deviceDesc.deviceType == "OPENCL_CPU");
 
+		if (deviceDesc.isCUDA) {
+			const int cudaVersionMajor = hwDevDescs.Get(prefix + ".cuda.compute.major").Get<int>();
+			const int cudaVersionMinor = hwDevDescs.Get(prefix + ".cuda.compute.minor").Get<int>();
+			
+			stringstream ss;
+			ss << "CUDA " << cudaVersionMajor << "." << cudaVersionMinor;
+			deviceDesc.platformVersion = ss.str();
+			
+			deviceDesc.useOptix = isOptixAvailable &&
+					((cudaVersionMajor > 7) || ((cudaVersionMajor == 7) && (cudaVersionMinor >= 5)));
+		}
+		
 		deviceDescs.push_back(deviceDesc);
 
 		hasCUDAdevs = hasCUDAdevs || deviceDesc.isCUDA;
@@ -248,6 +264,15 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 		ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
+		if (deviceDesc.isCUDA) {
+			HardwareTreeItem *useOptixNode = new HardwareTreeItem("Use Optix/RTX");
+			useOptixNode->setCheckable(true);
+			useOptixNode->setChecked(deviceDesc.useOptix);
+			useOptixNode->setEnabled(isOptixAvailable);
+
+			newNode->appendChild(useOptixNode);
+		}
+
 		// The default mode is GPU-only
 		bool enabledDev = (hasCUDAdevs && deviceDesc.isCUDA) ||
 				(!hasCUDAdevs && deviceDesc.isOpenCL && !deviceDesc.isOpenCLCPU );
@@ -256,6 +281,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 			enabledDev = (enabledDevices.at(i) == '1');
 
 		newNode->setChecked(enabledDev);
+		
+		deviceSelection.push_back(enabledDev);
 
 		if (deviceDesc.isCUDA)
 			cudaDev->appendChild(newNode);
@@ -303,8 +330,17 @@ QVariant HardwareTreeModel::data(const QModelIndex &index, int role) const {
 		HardwareTreeItem *item = static_cast<HardwareTreeItem *>(index.internalPointer());
 
 		if (item->isCheckable()) {
-			// It is a device node
-			return QVariant(QColor(Qt::blue));
+			if (item->isOptixNode()) {
+				// It is a "Use Optix/RTX" node
+
+				if (item->isEnabled())
+					return QVariant(QColor(Qt::green));
+				else
+					return QVariant(QColor(Qt::darkGray));
+			} else {
+				// It is a device node
+				return QVariant(QColor(Qt::blue));
+			}
 		} else {
 			if (item->childCount() == 0) {
 				return QVariant(QColor(Qt::darkGray));
@@ -367,10 +403,13 @@ Qt::ItemFlags HardwareTreeModel::flags(const QModelIndex &index) const {
 
 	HardwareTreeItem *item = static_cast<HardwareTreeItem *>(index.internalPointer());
 
-	if (item->isCheckable())
-		return Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-	else
-		return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+	if (item->isEnabled()) {
+		if (item->isCheckable())
+			return Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+		else
+			return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+	} else
+		return Qt::NoItemFlags;
 }
 
 bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
@@ -388,8 +427,13 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 			// Set pause mode
 			win->Pause();
 
-			if (item->isNativeCPU())
+			if (item->isNativeCPUNode())
 				useNativeCPU = true;
+			else if (item->isOptixNode()) {
+				// Retrieve the device index from the parent
+				if (item->parent())
+					deviceDescs[item->parent()->getDeviceIndex()].useOptix = v;
+			}
 			else
 				deviceSelection[item->getDeviceIndex()] = v;
 		}
@@ -404,6 +448,17 @@ string HardwareTreeModel::getDeviceSelectionString() const {
 
 	for (size_t i = 0; i < deviceSelection.size(); ++i)
 		ss << (deviceSelection[i] ? "1" : "0");
+
+	return ss.str();
+}
+
+string HardwareTreeModel::getOptixSelectionString() const {
+	stringstream ss;
+
+	for (auto const &deviceDesc : deviceDescs) {
+		if (deviceDesc.isCUDA)
+			ss << (deviceDesc.useOptix ? "1" : "0");
+	}
 
 	return ss.str();
 }

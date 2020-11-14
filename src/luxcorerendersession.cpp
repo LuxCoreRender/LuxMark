@@ -34,11 +34,12 @@ using namespace luxrays;
 using namespace luxcore;
 
 LuxCoreRenderSession::LuxCoreRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
-		const string &devSel) {
+		const string &devSel, const string &optixSel) {
     renderMode = mode;
     
     sceneFileName = fileName;
     deviceSelection = devSel;
+	optixSelection = optixSel;
 
 	config = NULL;
 	session = NULL;
@@ -114,6 +115,9 @@ void LuxCoreRenderSession::Start() {
 				props <<
 						Property("opencl.devices.select")(deviceSelection);
 			}
+			
+			if (optixSelection != "")
+				props << Property("cuda.optix.devices.select")(optixSelection);
 
 			props <<
 					Property("opencl.native.threads.count")(0) <<

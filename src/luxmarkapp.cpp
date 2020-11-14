@@ -218,8 +218,10 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		// At the first run, hardwareTreeModel is NULL
 		const string deviceSelection = (app->hardwareTreeModel) ?
 			(app->hardwareTreeModel->getDeviceSelectionString()) : "";
+		const string optixSelection = (app->hardwareTreeModel) ?
+			(app->hardwareTreeModel->getOptixSelectionString()) : "";
 
-		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection);
+		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection, optixSelection);
 
 		// Start the rendering
 		app->luxSession->Start();
