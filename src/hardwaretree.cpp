@@ -428,7 +428,7 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 			win->Pause();
 
 			if (item->isNativeCPUNode())
-				useNativeCPU = true;
+				useNativeCPU = v;
 			else if (item->isOptixNode()) {
 				// Retrieve the device index from the parent
 				if (item->parent())

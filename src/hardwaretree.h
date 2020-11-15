@@ -53,8 +53,6 @@ public:
 			HardwareTreeItem *parent = 0);
 	~HardwareTreeItem();
 
-	//const QVariant &GetItemData() const { return itemData; }
-		
 	bool isNativeCPUNode() const { return (deviceIndex == NATIVECPU_INDEX); }
 	bool isOptixNode() const {
 		return (itemData.toString().toStdString() == "Use Optix/RTX");

@@ -34,12 +34,13 @@ using namespace luxrays;
 using namespace luxcore;
 
 LuxCoreRenderSession::LuxCoreRenderSession(const std::string &fileName, const LuxMarkAppMode mode,
-		const string &devSel, const string &optixSel) {
+		const string &devSel, const string &optixSel, const bool cpuSel) {
     renderMode = mode;
     
     sceneFileName = fileName;
     deviceSelection = devSel;
 	optixSelection = optixSel;
+	cpuSelection = cpuSel;
 
 	config = NULL;
 	session = NULL;
@@ -72,6 +73,13 @@ void LuxCoreRenderSession::Start() {
 	// BENCHMARK and STRESSTEST render modes
 	//--------------------------------------------------------------------------
 
+	const unsigned int threadsCount =
+#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
+		(unsigned int)GetActiveProcessorCount(ALL_PROCESSOR_GROUPS);
+#else
+		boost::thread::hardware_concurrency();
+#endif
+	
 	switch (renderMode) {
 		case BENCHMARK_CUDA_GPU:
 		case STRESSTEST_CUDA_GPU: {
@@ -96,11 +104,7 @@ void LuxCoreRenderSession::Start() {
 		case BENCHMARK_NATIVE:
 		case STRESSTEST_NATIVE: {
 			props <<
-				#if defined(_WIN32) || defined(WIN32) || defined(_WIN64) || defined(WIN64)
-					Property("native.threads.count")((int)GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)) <<
-				#else
-					Property("native.threads.count")(boost::thread::hardware_concurrency()) <<
-				#endif
+					Property("native.threads.count")(threadsCount) <<
 					Property("renderengine.type")((sceneFileName == SCENE_WALLPAPER) ? "BIDIRCPU" : "PATHCPU");
 			break;
 		}
@@ -116,12 +120,23 @@ void LuxCoreRenderSession::Start() {
 						Property("opencl.devices.select")(deviceSelection);
 			}
 			
-			if (optixSelection != "")
-				props << Property("cuda.optix.devices.select")(optixSelection);
+			if (optixSelection != "") {
+				props <<
+						Property("cuda.optix.devices.select")(optixSelection);
+			}
 
-			props <<
+			if (cpuSelection) {
+				props <<
+					Property("opencl.native.threads.count")(threadsCount) <<
+					Property("native.threads.count")(threadsCount);
+			} else {
+				props <<
 					Property("opencl.native.threads.count")(0) <<
-					Property("native.threads.count")(0) <<
+					Property("native.threads.count")(0);
+			
+			}
+			
+			props <<
 					Property("renderengine.type")("PATHOCL");
 			break;
 		}

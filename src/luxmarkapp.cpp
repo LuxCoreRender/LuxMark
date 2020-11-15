@@ -220,8 +220,11 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 			(app->hardwareTreeModel->getDeviceSelectionString()) : "";
 		const string optixSelection = (app->hardwareTreeModel) ?
 			(app->hardwareTreeModel->getOptixSelectionString()) : "";
+		const bool cpuSelection = (app->hardwareTreeModel) ?
+			(app->hardwareTreeModel->getUseNativeCPU()) : false;
 
-		app->luxSession = new LuxCoreRenderSession(sname, app->mode, deviceSelection, optixSelection);
+		app->luxSession = new LuxCoreRenderSession(sname, app->mode,
+				deviceSelection, optixSelection, cpuSelection);
 
 		// Start the rendering
 		app->luxSession->Start();
