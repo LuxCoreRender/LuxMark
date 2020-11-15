@@ -100,7 +100,8 @@ int HardwareTreeItem::row() const {
 // HardwareTreeModel
 //------------------------------------------------------------------------------
 
-HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices) :
+HardwareTreeModel::HardwareTreeModel(MainWindow *w, const bool useCPU,
+		const string &enabledDevices, const string &enabledOptixDevices) :
 		QAbstractItemModel() {
 	// Build the gui
 	win = w;
@@ -110,10 +111,6 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 	// Native CPU
 	HardwareTreeItem *nativeDev = new HardwareTreeItem("Native CPU");
 	rootItem->appendChild(nativeDev);
-
-	// CUDA devices
-	HardwareTreeItem *cudaDev = new HardwareTreeItem("CUDA");
-	rootItem->appendChild(cudaDev);
 	
 	// OpenCL devices
 	HardwareTreeItem *oclDev = new HardwareTreeItem("OpenCL");
@@ -123,6 +120,10 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 	oclDev->appendChild(oclCPUDev);
 	HardwareTreeItem *oclGPUDev = new HardwareTreeItem("GPUs and Accelerators");
 	oclDev->appendChild(oclGPUDev);
+
+	// CUDA devices
+	HardwareTreeItem *cudaDev = new HardwareTreeItem("CUDA");
+	rootItem->appendChild(cudaDev);
 
 	// Retrieve native CPU information with LibCPUID
 	HardwareTreeItem *nativeCPUNode = nullptr;
@@ -174,7 +175,7 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 	} else
 		nativeCPUNode = new HardwareTreeItem(0, "Unknown CPU");
 
-	nativeCPUNode->setChecked(false);
+	nativeCPUNode->setChecked(useCPU);
 	nativeDev->appendChild(nativeCPUNode);
 	
 	// Retrieve the hardware information with LuxCore
@@ -201,25 +202,48 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 		deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
 		deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
 
+		deviceDesc.cudaMajorVersion = 0;
+		deviceDesc.cudaMinorVersion = 0;
+
 		deviceDesc.isCUDA = (deviceDesc.deviceType == "CUDA_GPU");
 		deviceDesc.isOpenCL = !deviceDesc.isCUDA;
 		deviceDesc.isOpenCLCPU = deviceDesc.isOpenCL && (deviceDesc.deviceType == "OPENCL_CPU");
 
 		if (deviceDesc.isCUDA) {
-			const int cudaVersionMajor = hwDevDescs.Get(prefix + ".cuda.compute.major").Get<int>();
-			const int cudaVersionMinor = hwDevDescs.Get(prefix + ".cuda.compute.minor").Get<int>();
-			
+			deviceDesc.cudaMajorVersion = hwDevDescs.Get(prefix + ".cuda.compute.major").Get<int>();
+			deviceDesc.cudaMinorVersion = hwDevDescs.Get(prefix + ".cuda.compute.minor").Get<int>();
+
 			stringstream ss;
-			ss << "CUDA " << cudaVersionMajor << "." << cudaVersionMinor;
+			ss << "CUDA " << deviceDesc.cudaMajorVersion << "." << deviceDesc.cudaMinorVersion;
 			deviceDesc.platformVersion = ss.str();
-			
-			deviceDesc.useOptix = isOptixAvailable &&
-					((cudaVersionMajor > 7) || ((cudaVersionMajor == 7) && (cudaVersionMinor >= 5)));
 		}
-		
+
 		deviceDescs.push_back(deviceDesc);
 
 		hasCUDAdevs = hasCUDAdevs || deviceDesc.isCUDA;
+	}
+	
+	size_t cudaDeviceIndex = 0;
+	for (size_t i = 0; i < deviceDescs.size(); ++i) {
+		BenchmarkDeviceDescription &deviceDesc = deviceDescs[i];
+
+		// The default mode is GPU-only
+		deviceDesc.enabledDevice = (hasCUDAdevs && deviceDesc.isCUDA) ||
+				(!hasCUDAdevs && deviceDesc.isOpenCL && !deviceDesc.isOpenCLCPU );
+
+		if ((enabledDevices != "") && (i < enabledDevices.length()))
+			deviceDesc.enabledDevice = (enabledDevices.at(i) == '1');
+
+		if (deviceDesc.isCUDA) {
+			deviceDesc.useOptix = isOptixAvailable &&
+					((deviceDesc.cudaMajorVersion > 7) || ((deviceDesc.cudaMajorVersion == 7) && (deviceDesc.cudaMinorVersion >= 5)));
+
+			if ((enabledOptixDevices != "") && (cudaDeviceIndex < enabledOptixDevices.length()))
+				deviceDesc.useOptix = (enabledOptixDevices.at(cudaDeviceIndex) == '1');
+
+			cudaDeviceIndex++;
+		} else
+			deviceDesc.useOptix = false;
 	}
 
 	// Create the tree nodes
@@ -273,17 +297,8 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const string &enabledDevices
 			newNode->appendChild(useOptixNode);
 		}
 
-		// The default mode is GPU-only
-		bool enabledDev = (hasCUDAdevs && deviceDesc.isCUDA) ||
-				(!hasCUDAdevs && deviceDesc.isOpenCL && !deviceDesc.isOpenCLCPU );
-
-		if ((enabledDevices != "") && (i < enabledDevices.length()))
-			enabledDev = (enabledDevices.at(i) == '1');
-
-		newNode->setChecked(enabledDev);
+		newNode->setChecked(deviceDesc.enabledDevice);
 		
-		deviceSelection.push_back(enabledDev);
-
 		if (deviceDesc.isCUDA)
 			cudaDev->appendChild(newNode);
 		else {
@@ -435,7 +450,7 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 					deviceDescs[item->parent()->getDeviceIndex()].useOptix = v;
 			}
 			else
-				deviceSelection[item->getDeviceIndex()] = v;
+				deviceDescs[item->getDeviceIndex()].enabledDevice = v;
 		}
 
 		return true;
@@ -446,8 +461,8 @@ bool HardwareTreeModel::setData(const QModelIndex &index, const QVariant &value,
 string HardwareTreeModel::getDeviceSelectionString() const {
 	stringstream ss;
 
-	for (size_t i = 0; i < deviceSelection.size(); ++i)
-		ss << (deviceSelection[i] ? "1" : "0");
+	for (auto const &deviceDesc : deviceDescs)
+		ss << (deviceDesc.enabledDevice ? "1" : "0");
 
 	return ss.str();
 }
@@ -475,23 +490,23 @@ vector<BenchmarkDeviceDescription> HardwareTreeModel::getSelectedDeviceDescs(
         case DEMO_LUXCOREUI: // TODO
 		case BENCHMARK_CUDA_GPU:
 		case STRESSTEST_CUDA_GPU:
-            for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (deviceDescs[i].isCUDA)
-                    descs.push_back(deviceDescs[i]);
+            for (auto const &deviceDesc : deviceDescs) {
+                if (deviceDesc.isCUDA)
+                    descs.push_back(deviceDesc);
             }
             break;
         case BENCHMARK_OCL_GPU:
 		case STRESSTEST_OCL_GPU:
-            for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (deviceDescs[i].isOpenCL && !deviceDescs[i].isOpenCLCPU)
-                    descs.push_back(deviceDescs[i]);
+            for (auto const &deviceDesc : deviceDescs) {
+                if (deviceDesc.isOpenCL && !deviceDesc.isOpenCLCPU)
+                    descs.push_back(deviceDesc);
             }
             break;
 		case BENCHMARK_CUSTOM:
 		case STRESSTEST_CUSTOM:
-            for (size_t i = 0; i < deviceSelection.size(); ++i) {
-                if (deviceSelection[i])
-                    descs.push_back(deviceDescs[i]);
+			for (auto const &deviceDesc : deviceDescs) {
+                if (deviceDesc.enabledDevice)
+                    descs.push_back(deviceDesc);
             }
             break;
         case BENCHMARK_NATIVE:

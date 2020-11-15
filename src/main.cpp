@@ -35,7 +35,9 @@ static void PrintCmdLineHelp(const QString &cmd) {
 				"STRESSTEST_CUDA_GPU|STRESSTEST_OCL_GPU|STRESSTEST_CUSTOM|STRESSTEST_NATIVE|"
 				"DEMO_LUXCOREUI|PAUSE"
 				" (select the mode to use)" << endl <<
-			" --devices=<a string of 1 or 0 to enable/disable each OpenCL device in CUSTOM modes>" << endl <<
+			" --devices=<a string of 1 or 0 to enable/disable each OpenCL/CUDA device in CUSTOM modes>" << endl <<
+			" --optix-devices=<a string of 1 or 0 to enable/disable Optix on each CUDA device in CUSTOM modes>" << endl <<
+			" --use-cpu (enable the CPU use in CUSTOM modes, disabled by default)" << endl <<
 			" --single-run (run the benchmark, print the result to the stdout and exit)" << endl <<
 			" --ext-info (print scene and image verification too with --single-run)" <<endl;
 }
@@ -50,10 +52,6 @@ int main(int argc, char **argv) {
 	LuxMarkApp app(argc, argv);
 
 	// Get the arguments into a list
-	bool exit = false;
-	bool singleRun = false;
-	bool singleRunExtInfo = false;
-
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
 	QRegExp argScene("--scene=(FOOD|HALLBENCH|WALLPAPER)");
@@ -63,11 +61,19 @@ int main(int argc, char **argv) {
 		"DEMO_LUXCOREUI|PAUSE"
 		")");
 	QRegExp argDevices("--devices=([01]+)");
+	QRegExp argOptixDevices("--optix-devices=([01]+)");
+	QRegExp argUseCPU("--use-cpu");
 	QRegExp argSingleRun("--single-run");
 	QRegExp argSingleRunExtInfo("--ext-info");
 
 	LuxMarkAppMode mode = BENCHMARK_OCL_GPU;
-	string devices="";
+	bool exit = false;
+	string devices = "";
+	string optixDevices = "";
+	bool useCPU = false;
+	bool singleRun = false;
+	bool singleRunExtInfo = false;
+
 	// Remember to change the default label in mainwindow.cpp too
 	const char *scnName = SCENE_FOOD;
     for (int i = 1; i < argsList.size(); ++i) {
@@ -126,6 +132,17 @@ int main(int argc, char **argv) {
 			}
 
             devices = argDevices.cap(1).toLatin1().data();
+		} else if (argOptixDevices.indexIn(argsList.at(i)) != -1) {   
+			if (mode != BENCHMARK_CUSTOM) {
+				cerr << "--optix-devices can be used only after a --mode=BENCHMARK_CUSTOM" << endl;
+				PrintCmdLineHelp(argsList.at(0));
+				exit = true;
+				break;
+			}
+
+            optixDevices = argOptixDevices.cap(1).toLatin1().data();
+		} else if (argUseCPU.indexIn(argsList.at(i)) != -1 ) {   
+			useCPU = true;
 		} else if (argSingleRun.indexIn(argsList.at(i)) != -1 ) {   
 			singleRun = true;
 		} else if (argSingleRunExtInfo.indexIn(argsList.at(i)) != -1 ) {   
@@ -146,7 +163,7 @@ int main(int argc, char **argv) {
 	if (exit)
 		return EXIT_SUCCESS;
 	else {
-		app.Init(mode, devices, scnName, singleRun, singleRunExtInfo);
+		app.Init(mode, useCPU, devices, optixDevices, scnName, singleRun, singleRunExtInfo);
 
 		// If current directory doesn't have the "scenes" directory, move
 		// to where the executable is

@@ -104,7 +104,10 @@ typedef struct {
 	unsigned long long globalMem;
 	unsigned long long localMem;
 	unsigned long long constantMem;
-	bool isOpenCL, isOpenCLCPU, isCUDA, useOptix;
+	int cudaMajorVersion, cudaMinorVersion;
+	bool isOpenCL, isOpenCLCPU, isCUDA;
+
+	bool enabledDevice, useOptix;
 } BenchmarkDeviceDescription;
 
 
@@ -112,7 +115,8 @@ class HardwareTreeModel : public QAbstractItemModel {
 	Q_OBJECT
 
 public:
-	HardwareTreeModel(MainWindow *win, const string &enabledDevices);
+	HardwareTreeModel(MainWindow *win, const bool useCPU,
+			const string &enabledDevices, const string &enabledOptixDevices);
 	~HardwareTreeModel();
 
 	bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -135,7 +139,6 @@ private:
 	HardwareTreeItem *rootItem;
 
     vector<BenchmarkDeviceDescription> deviceDescs;
-	vector<bool> deviceSelection;
 	bool useNativeCPU;
 };
 
