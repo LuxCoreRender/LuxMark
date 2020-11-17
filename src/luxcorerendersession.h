@@ -35,8 +35,11 @@ public:
 			const string &devSel, const string &optixSel, const bool cpuSel);
 	~LuxCoreRenderSession();
 
+	void SetUp();
 	void Start();
 	void Stop();
+	
+	bool HasCachedKernels() const { return config->HasCachedKernels(); }
 
 	const float *UpdateFrameBuffer(const u_int imagePipelineIndex);
 	const float *GetFrameBufferPtr(const u_int imagePipelineIndex);

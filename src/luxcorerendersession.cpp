@@ -53,10 +53,7 @@ LuxCoreRenderSession::~LuxCoreRenderSession() {
 		Stop();
 }
 
-void LuxCoreRenderSession::Start() {
-	assert (!started);
-	started = true;
-
+void LuxCoreRenderSession::SetUp() {
 	// Clear the file name resolver list
 	luxcore::ClearFileNameResolverPaths();
 	// Add the current directory to the list of place where to look for files
@@ -147,6 +144,12 @@ void LuxCoreRenderSession::Start() {
 	}
 
 	config = RenderConfig::Create(props);
+}
+
+void LuxCoreRenderSession::Start() {
+	assert (!started);
+	started = true;
+
 	session = RenderSession::Create(config);
 
 	session->Start();

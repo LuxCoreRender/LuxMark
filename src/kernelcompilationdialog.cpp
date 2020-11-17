@@ -1,4 +1,4 @@
-/***************************************************************************
+ /***************************************************************************
  *   Copyright (C) 1998-2019 by authors (see AUTHORS.txt)                  *
  *                                                                         *
  *   This file is part of LuxMark.                                         *
@@ -19,12 +19,16 @@
  *   LuxMark website: https://www.luxcorerender.org                        *
  ***************************************************************************/
 
-#ifndef _LUXMARK_CFG_H
-#define	_LUXMARK_CFG_H
+#include "luxmarkcfg.h"
+#include "mainwindow.h"
+#include "luxcorerendersession.h"
+#include "kernelcompilationdialog.h"
 
-// The configured options and settings for LuxMark
+KernelCompilationDialog::KernelCompilationDialog(QWidget *parent) :
+		QDialog(parent), ui(new Ui::KernelCompilationDialog) {
+	ui->setupUi(this);
+}
 
-#define LUXMARK_VERSION_MAJOR "4"
-#define LUXMARK_VERSION_MINOR "0alpha1"
-
-#endif	/* _LUXMARK_CFG_H */
+KernelCompilationDialog::~KernelCompilationDialog() {
+	delete ui;
+}

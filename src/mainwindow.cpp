@@ -56,12 +56,22 @@ MainWindow *LogWindow = NULL;
 
 int EVT_LUX_LOG_MESSAGE = QEvent::registerEventType();
 int EVT_LUX_ERR_MESSAGE = QEvent::registerEventType();
+int EVT_SHOW_KERNEL_COMPILE_DIALOG = QEvent::registerEventType();
+int EVT_HIDE_KERNEL_COMPILE_DIALOG = QEvent::registerEventType();
 
 LuxLogEvent::LuxLogEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_LOG_MESSAGE), message(msg) {
 	setAccepted(false);
 }
 
 LuxErrorEvent::LuxErrorEvent(QString msg) : QEvent((QEvent::Type)EVT_LUX_ERR_MESSAGE), message(msg) {
+	setAccepted(false);
+}
+
+ShowKernelCompilationDialogEvent::ShowKernelCompilationDialogEvent() : QEvent((QEvent::Type)EVT_SHOW_KERNEL_COMPILE_DIALOG) {
+	setAccepted(false);
+}
+
+HideKernelCompilationDialogEvent::HideKernelCompilationDialogEvent() : QEvent((QEvent::Type)EVT_HIDE_KERNEL_COMPILE_DIALOG) {
 	setAccepted(false);
 }
 
@@ -75,7 +85,7 @@ LuxFrameBuffer::LuxFrameBuffer(const QPixmap &pixmap) : QGraphicsPixmapItem(pixm
 //------------------------------------------------------------------------------
 
 MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(parent, flags),
-		ui(new Ui::MainWindow) {
+		ui(new Ui::MainWindow), kernelCompilationDialog(nullptr) {
 	ui->setupUi(this);
 
 	// Setup rendering area
@@ -125,6 +135,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags) : QMainWindow(par
 }
 
 MainWindow::~MainWindow() {
+	delete kernelCompilationDialog;
+
 	delete ui;
 	delete statusBarLabel;
 	delete authorLabel;
@@ -440,6 +452,15 @@ bool MainWindow::event(QEvent *event) {
 			cout << "Error: " << ((LuxLogEvent *)event)->getMessage().toStdString() << endl;
 			exit(EXIT_SUCCESS);
 		}
+	} else if (eventtype == EVT_SHOW_KERNEL_COMPILE_DIALOG) {
+		if (!kernelCompilationDialog) {
+			kernelCompilationDialog = new KernelCompilationDialog();
+
+			kernelCompilationDialog->show();
+		}
+	} else if (eventtype == EVT_HIDE_KERNEL_COMPILE_DIALOG) {
+		delete kernelCompilationDialog;
+		kernelCompilationDialog = nullptr;
 	}
 
 	if (retval) {

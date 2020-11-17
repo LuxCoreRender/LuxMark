@@ -29,6 +29,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include "ui_mainwindow.h"
+#include "kernelcompilationdialog.h"
 #include "hardwaretree.h"
 #include "luxmarkdefs.h"
 
@@ -82,6 +83,8 @@ private:
 
 	QGraphicsScene *renderScene;
 
+	KernelCompilationDialog *kernelCompilationDialog;
+
 private slots:
 	void exitApp();
 	void showAbout();
@@ -127,6 +130,19 @@ public:
 private:
 	QString message;
 };
+
+class ShowKernelCompilationDialogEvent: public QEvent {
+public:
+	ShowKernelCompilationDialogEvent();
+};
+
+class HideKernelCompilationDialogEvent: public QEvent {
+public:
+	HideKernelCompilationDialogEvent();
+};
+
+#define LM_SHOW_KERNEL_COMPILATION_DIALOG { if (LogWindow) { qApp->postEvent(LogWindow, new ShowKernelCompilationDialogEvent()); }}
+#define LM_HIDE_KERNEL_COMPILATION_DIALOG { if (LogWindow) { qApp->postEvent(LogWindow, new HideKernelCompilationDialogEvent()); }}
 
 #define LM_LOG(a) { if (LogWindow) { std::stringstream _LM_LOG_LOCAL_SS; _LM_LOG_LOCAL_SS << a; qApp->postEvent(LogWindow, new LuxLogEvent(QString(_LM_LOG_LOCAL_SS.str().c_str()))); }}
 #define LM_LOG_LUXRAYS(a) { LM_LOG("<FONT COLOR=\"#002200\"><B>[LuxRays]</B></FONT> " << a); }

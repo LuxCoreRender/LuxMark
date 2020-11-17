@@ -20,7 +20,7 @@
 ###########################################################################
 
 set(LUXMARK_VERSION_MAJOR 4)
-set(LUXMARK_VERSION_MINOR 0alpha0)
+set(LUXMARK_VERSION_MINOR 0alpha1)
 
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
@@ -46,10 +46,11 @@ set(LUXMARK_SRCS
 	luxmarkapp.cpp
 	main.cpp
 	mainwindow.cpp
+	kernelcompilationdialog.cpp
+	luxcorerendersession.cpp
 	luxcoreuidialog.cpp
     resultdialog.cpp
 	submitdialog.cpp
-	luxcorerendersession.cpp
 	convtest/convtest.cpp
 	convtest/pdiff/lpyramid.cpp
 	convtest/pdiff/metric.cpp
@@ -58,6 +59,7 @@ set(LUXMARK_MOC
 	aboutdialog.h
 	mainwindow.h
     hardwaretree.h
+	kernelcompilationdialog.h
 	luxmarkapp.h
 	luxcoreuidialog.h
     resultdialog.h
@@ -66,6 +68,7 @@ set(LUXMARK_MOC
 set(LUXMARK_UIS
 	aboutdialog.ui
 	mainwindow.ui
+	kernelcompilationdialog.ui
 	luxcoreuidialog.ui
     resultdialog.ui
 	submitdialog.ui

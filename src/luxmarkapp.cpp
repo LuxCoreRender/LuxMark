@@ -227,8 +227,21 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		app->luxSession = new LuxCoreRenderSession(sname, app->mode,
 				deviceSelection, optixSelection, cpuSelection);
 
-		// Start the rendering
-		app->luxSession->Start();
+		// SetUp the rendering
+		app->luxSession->SetUp();
+
+		// Check if I need to show the kernel compilation dialog
+		if (!app->luxSession->HasCachedKernels()) {
+			LM_SHOW_KERNEL_COMPILATION_DIALOG;
+
+			// Start the rendering
+			app->luxSession->Start();
+			
+			LM_HIDE_KERNEL_COMPILATION_DIALOG;
+		} else {
+			// Start the rendering
+			app->luxSession->Start();			
+		}
 
 		// Done
 		app->renderingStartTime = luxrays::WallClockTime();

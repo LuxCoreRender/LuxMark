@@ -19,12 +19,39 @@
  *   LuxMark website: https://www.luxcorerender.org                        *
  ***************************************************************************/
 
-#ifndef _LUXMARK_CFG_H
-#define	_LUXMARK_CFG_H
+#ifndef _KERNELCOMPILATIONDIALOG_H
+#define	_KERNELCOMPILATIONDIALOG_H
 
-// The configured options and settings for LuxMark
+#ifndef Q_MOC_RUN
+#include <cstddef>
+#include <boost/thread.hpp>
+#include <boost/filesystem.hpp>
 
-#define LUXMARK_VERSION_MAJOR "4"
-#define LUXMARK_VERSION_MINOR "0alpha1"
+#include <QtGui/qevent.h>
 
-#endif	/* _LUXMARK_CFG_H */
+#include "luxmarkdefs.h"
+#endif
+
+#include "ui_kernelcompilationdialog.h"
+
+class LuxCoreRenderSession;
+
+class KernelCompilationDialog : public QDialog {
+	Q_OBJECT
+
+public:
+	KernelCompilationDialog(QWidget *parent = NULL);
+	~KernelCompilationDialog();
+
+protected:
+	void closeEvent(QCloseEvent *event) {
+		event->ignore(); // Keep window open
+	}
+
+	void keyPressEvent(QKeyEvent *) { } // To ignore ESC key
+
+private:
+	Ui::KernelCompilationDialog *ui;
+};
+
+#endif	/* _KERNELCOMPILATIONDIALOG_H */

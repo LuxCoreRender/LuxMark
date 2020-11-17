@@ -85,7 +85,7 @@
             <enum>QFrame::Sunken</enum>
            </property>
            <property name="text">
-            <string>Hardware Devices</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hardware Devices&lt;/p&gt;&lt;p&gt;(For selected devices only modes)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
