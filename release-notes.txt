@@ -1,0 +1,29 @@
+### Release v4.0
+
+### New Features
+
+* LuxCoreRender v2.5 render engine
+* CUDA and Optix/RTX support
+* New Brute force path tracing CannelleEtFromage benchmark scene
+* New Path tracing + Global Illumination cache HallBench benchmark scene
+* New Brute force bidirectional path tracing Wall Paper benchmark scene
+* Custom Native, OpenCL, CUDA, CUDA+Optix/RTX, etc. configurable benchmark modes
+* Native, OpenCL, CUDA, CUDA+Optix/RTX, etc. configurable stress test modes
+* Showing Native, OpenCL and CUDA rendering statistics
+* Stress tests now show progressive denoised rendering too
+* Added CUDA and native CPU information to the hardware pannel
+* New command line options to configure devices used and enable/disable RTX
+* Replaced LuxVR with LuxCoreUI
+* Added an information dialog during GPU kernel compilations
+
+### Fixed Bugs
+
+None.
+
+### Known Problems and limitations
+
+None.
+
+**Note for Windows users:** you have to install the [Microsoft Visual C++ Redistributable
+for Visual Studio 2017](https://aka.ms/vs/15/release/vc_redist.x64.exe) and
+[Intel C++ redistributable](https://software.intel.com/sites/default/files/managed/59/aa/ww_icl_redist_msi_2018.3.210.zip).

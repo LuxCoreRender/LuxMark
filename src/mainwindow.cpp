@@ -19,25 +19,6 @@
  *   LuxMark website: https://www.luxcorerender.org                        *
  ***************************************************************************/
 
-// List of new v4.0 features:
-//  - LuxCoreRender v2.2 render engine
-//  - New Brute force path tracing Food benchmark scene
-//  - New Path tracing + Global Illumination cache Wall Bench benchmark scene
-//  - New Brute force bidirectional path tracing Wall Paper benchmark scene
-//  - New BENCHMARK_HYBRID (OpenCL GPUs + Native C++) benchmark mode
-//  - New BENCHMARK_HYBRID_CUSTOM (OpenCL Custom + Native C++) benchmark mode
-//  - New STRESSTEST_HYBRID (OpenCL GPUs + Native C++) stress test mode
-//  - New STRESSTEST_NATIVE (Native C++) stress test mode
-//  - Showing OpenCL and Native C++ rendering statistics
-//  - Stress tests now show progressive denoised rendering too
-//  - BENCHMARK_OCL_CUSTOM and BENCHMARK_HYBRID_CUSTOM can now used as command
-//    line option in combination with "--devices" to enable/disable each
-//    single device
-//  - Replaced LuxVR with LuxCoreUI
-//
-//  ToDo:
-//  - Command line option to select the OpenCL devices to use
-
 #include <QTextEdit>
 #include <QDialogButtonBox>
 #include <QDateTime>
