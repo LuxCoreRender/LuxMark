@@ -319,7 +319,9 @@ void LuxMarkApp::RenderRefreshTimeout() {
 	vector<double> deviceRaysSecs;
 	vector<double> deviceMem, deviceMaxMem;
 	vector<bool> deviceIsOpenCL;
+	vector<bool> deviceIsCUDA;
 	bool hasOpenCLDevices = false;
+	bool hasCUDADevices = false;
 	bool hasNativeDevices = false;
 	double triangleCount = 0.0;
 	double minPerf = 0.0;
@@ -341,11 +343,20 @@ void LuxMarkApp::RenderRefreshTimeout() {
 
 		minPerf = Min(raySecs, minPerf);
 		totalPerf += raySecs;
-		
-		const bool isOpenCLDevice = boost::starts_with(deviceName, "NativeIntersect") ? false : true;
+
+		const string deviceType = stats.Get("stats.renderengine.devices." + deviceName + ".type").Get<string>();
+
+		const bool isOpenCLDevice = boost::starts_with(deviceType, "OPENCL_") ? true : false;
 		deviceIsOpenCL.push_back(isOpenCLDevice);
+
+		const bool isCUDADevice = boost::starts_with(deviceType, "CUDA_") ? true : false;
+		deviceIsCUDA.push_back(isCUDADevice);
+
+		const bool isNativeDevice = boost::starts_with(deviceType, "NATIVE_") ? true : false;
+
 		hasOpenCLDevices = (hasOpenCLDevices || isOpenCLDevice);
-		hasNativeDevices = (hasNativeDevices || !isOpenCLDevice);
+		hasCUDADevices = (hasCUDADevices || isCUDADevice);
+		hasNativeDevices = (hasNativeDevices || isNativeDevice);
 	}
 
 	// Get the list of device names
@@ -393,11 +404,26 @@ void LuxMarkApp::RenderRefreshTimeout() {
 			}
 		}
 	}
-	
+
+	if (hasCUDADevices) {
+		ss << "\n\nCUDA rendering devices:";
+		for (size_t i = 0; i < deviceNames.size(); ++i) {
+			if (deviceIsCUDA[i]) {
+				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
+						deviceNames[i].c_str(),
+						int(deviceRaysSecs[i] / 1000.0),
+						(minPerf > 0.0) ? (deviceRaysSecs[i] / minPerf) : 0.f,
+						(totalPerf > 0.0) ? (100.0 * deviceRaysSecs[i] / totalPerf) : 0.f,
+						deviceMem[i] / (1024 * 1024), int(deviceMaxMem[i] / (1024 * 1024)));
+				ss << buf;
+			}
+		}
+	}
+
 	if (hasNativeDevices) {
 		ss << "\n\nNative C++ rendering devices:";
 		for (size_t i = 0; i < deviceNames.size(); ++i) {
-			if (!deviceIsOpenCL[i]) {
+			if (!deviceIsOpenCL[i] && !deviceIsCUDA[i]) {
 				sprintf(buf, "\n    [%s][Rays/sec % 3dK][Prf Idx %.2f][Wrkld %.1f%%][Mem %.1fM/%dM]",
 						deviceNames[i].c_str(),
 						int(deviceRaysSecs[i] / 1000.0),
