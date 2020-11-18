@@ -11,7 +11,7 @@
 * Native, OpenCL, CUDA, CUDA+Optix/RTX, etc. configurable stress test modes
 * Showing Native, OpenCL and CUDA rendering statistics
 * Stress tests now show progressive denoised rendering too
-* Added CUDA and native CPU information to the hardware pannel
+* Added CUDA and native CPU information to the hardware panel
 * New command line options to configure devices used and enable/disable RTX
 * Replaced LuxVR with LuxCoreUI
 * Added an information dialog during GPU kernel compilations
