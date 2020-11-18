@@ -179,7 +179,7 @@ void MainWindow::UpdateSceneLabel(const char *name) {
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
 		authorLabel->setBrush(Qt::blue);
-	} else if (!strcmp(SCENE_FOOD, name)) {
+	} else if (!strcmp(SCENE_CANNELLE_ET_FROMAGE, name)) {
 		authorLabelBack->setText(QString("Scene designed by Charles \"Sharlybg\" Nandeya Ehouman"));
 		authorLabelBack->setBrush(Qt::black);
 		authorLabel->setText(authorLabelBack->text());
@@ -187,10 +187,10 @@ void MainWindow::UpdateSceneLabel(const char *name) {
 	}
 }
 
-void MainWindow::setFoodScene() {
-	LM_LOG("Set Food scene");
-	UpdateSceneLabel(SCENE_FOOD);
-	((LuxMarkApp *)qApp)->SetScene(SCENE_FOOD);
+void MainWindow::setCannelleEtFromageScene() {
+	LM_LOG("Set CannelleEtFromage scene");
+	UpdateSceneLabel(SCENE_CANNELLE_ET_FROMAGE);
+	((LuxMarkApp *)qApp)->SetScene(SCENE_CANNELLE_ET_FROMAGE);
 }
 
 void MainWindow::setHallBenchScene() {
@@ -302,7 +302,7 @@ void MainWindow::SetSceneCheck(const int index) {
 	if (index == 0) {
 		ui->action_WallPaper->setChecked(true);
 		ui->action_HallBench->setChecked(false);
-		ui->action_Food->setChecked(false);
+		ui->action_CannelleEtFromage->setChecked(false);
 		
 		ui->action_CUDA_GPUs->setEnabled(false);
 		ui->action_OpenCL_GPUs->setEnabled(false);
@@ -316,7 +316,7 @@ void MainWindow::SetSceneCheck(const int index) {
 	} else if (index == 1) {
 		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(true);
-		ui->action_Food->setChecked(false);
+		ui->action_CannelleEtFromage->setChecked(false);
 
 		ui->action_CUDA_GPUs->setEnabled(true);
 		ui->action_OpenCL_GPUs->setEnabled(true);
@@ -330,7 +330,7 @@ void MainWindow::SetSceneCheck(const int index) {
 	} else if (index == 2) {
 		ui->action_WallPaper->setChecked(false);
 		ui->action_HallBench->setChecked(false);
-		ui->action_Food->setChecked(true);
+		ui->action_CannelleEtFromage->setChecked(true);
 
 		ui->action_CUDA_GPUs->setEnabled(true);
 		ui->action_OpenCL_GPUs->setEnabled(true);

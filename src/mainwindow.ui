@@ -177,7 +177,7 @@
     </property>
     <addaction name="action_WallPaper"/>
     <addaction name="action_HallBench"/>
-    <addaction name="action_Food"/>
+    <addaction name="action_CannelleEtFromage"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Mode"/>
@@ -206,15 +206,15 @@
     <string>Benchmark (CUDA GPUs)</string>
    </property>
   </action>
-  <action name="action_Food">
+  <action name="action_CannelleEtFromage">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Food (Brute force path tracing)</string>
+    <string>&amp;CannelleEtFromage (Brute force path tracing)</string>
    </property>
    <property name="toolTip">
-    <string>Food (Brute force path tracing)</string>
+    <string>CannelleEtFromage (Brute force path tracing)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+L</string>
@@ -358,10 +358,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Food</sender>
+   <sender>action_CannelleEtFromage</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>setFoodScene()</slot>
+   <slot>setCannelleEtFromageScene()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -569,7 +569,7 @@
  <slots>
   <slot>exitApp()</slot>
   <slot>showAbout()</slot>
-  <slot>setFoodScene()</slot>
+  <slot>setCannelleEtFromageScene()</slot>
   <slot>setHallBenchScene()</slot>
   <slot>setMode_PAUSE()</slot>
   <slot>setWallPaperScene()</slot>

@@ -175,7 +175,7 @@ void LuxMarkApp::InitRendering(LuxMarkAppMode m, const char *scnName) {
 		}
 	} else if (!strcmp(scnName, SCENE_HALLBENCH))
 		mainWin->SetSceneCheck(1);
-	else if (!strcmp(scnName, SCENE_FOOD))
+	else if (!strcmp(scnName, SCENE_CANNELLE_ET_FROMAGE))
 		mainWin->SetSceneCheck(2);
 
 	// Initialize the new mode

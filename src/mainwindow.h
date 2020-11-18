@@ -89,7 +89,7 @@ private slots:
 	void exitApp();
 	void showAbout();
 
-	void setFoodScene();
+	void setCannelleEtFromageScene();
 	void setHallBenchScene();
 	void setWallPaperScene();
 

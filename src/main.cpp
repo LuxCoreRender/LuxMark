@@ -29,7 +29,7 @@
 static void PrintCmdLineHelp(const QString &cmd) {
 	cerr << "Usage: " << cmd.toLatin1().data() << " [options]" << endl <<
 			" --help (display this help and exit)" << endl <<
-			" --scene=FOOD|HALLBENCH|WALLPAPER (select the scene to use)" << endl <<
+			" --scene=CANNELLE_ET_FROMAGE|HALLBENCH|WALLPAPER (select the scene to use)" << endl <<
 			" --mode="
                 "BENCHMARK_CUDA_GPU|BENCHMARK_OCL_GPU|BENCHMARK_NATIVE|BENCHMARK_CUSTOM|"
 				"STRESSTEST_CUDA_GPU|STRESSTEST_OCL_GPU|STRESSTEST_CUSTOM|STRESSTEST_NATIVE|"
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 	// Get the arguments into a list
 	QStringList argsList = app.arguments();
 	QRegExp argHelp("--help");
-	QRegExp argScene("--scene=(FOOD|HALLBENCH|WALLPAPER)");
+	QRegExp argScene("--scene=(CANNELLE_ET_FROMAGE|HALLBENCH|WALLPAPER)");
 	QRegExp argMode("--mode=("
 		"BENCHMARK_CUDA_GPU|BENCHMARK_OCL_GPU|BENCHMARK_NATIVE|BENCHMARK_CUSTOM|"
 		"STRESSTEST_CUDA_GPU|STRESSTEST_OCL_GPU|STRESSTEST_CUSTOM|STRESSTEST_NATIVE|"
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 	bool singleRunExtInfo = false;
 
 	// Remember to change the default label in mainwindow.cpp too
-	const char *scnName = SCENE_FOOD;
+	const char *scnName = SCENE_CANNELLE_ET_FROMAGE;
     for (int i = 1; i < argsList.size(); ++i) {
         if (argHelp.indexIn(argsList.at(i)) != -1 ) {   
 			PrintCmdLineHelp(argsList.at(0));
@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
 			break;
 		} else if (argScene.indexIn(argsList.at(i)) != -1) {   
             QString scene = argScene.cap(1);
-			if (scene.compare("FOOD", Qt::CaseInsensitive) == 0)
-				scnName = SCENE_FOOD;
+			if (scene.compare("CANNELLE_ET_FROMAGE", Qt::CaseInsensitive) == 0)
+				scnName = SCENE_CANNELLE_ET_FROMAGE;
 			else if (scene.compare("HALLBENCH", Qt::CaseInsensitive) == 0)
 				scnName = SCENE_HALLBENCH;
 			else if (scene.compare("WALLPAPER", Qt::CaseInsensitive) == 0)

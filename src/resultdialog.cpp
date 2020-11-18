@@ -85,7 +85,7 @@ ResultDialog::ResultDialog(const LuxMarkAppMode m,
 			this, SLOT(setImageValidationLabel(const QString &, const bool, const bool)));
 
 	// Check if it is one of the official benchmarks
-	if ((strcmp(sceneName, SCENE_FOOD) == 0) ||
+	if ((strcmp(sceneName, SCENE_CANNELLE_ET_FROMAGE) == 0) ||
 			(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
 			(strcmp(sceneName, SCENE_WALLPAPER) == 0)) {
 		// Start the md5 validation thread
@@ -141,7 +141,7 @@ void ResultDialog::setSceneValidationLabel(const QString &text,
 		// Check if I can enable submit button
 		if (imageValidationOk && ((strcmp(sceneName, SCENE_WALLPAPER) == 0) ||
 				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
-				(strcmp(sceneName, SCENE_FOOD) == 0)))
+				(strcmp(sceneName, SCENE_CANNELLE_ET_FROMAGE) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
 		ui->sceneValidation->setStyleSheet("QLabel { color : red; }");
@@ -164,7 +164,7 @@ void ResultDialog::setImageValidationLabel(const QString &text,
         if (sceneValidationOk &&
                 ((strcmp(sceneName, SCENE_WALLPAPER) == 0) ||
 				(strcmp(sceneName, SCENE_HALLBENCH) == 0) ||
-				(strcmp(sceneName, SCENE_FOOD) == 0)))
+				(strcmp(sceneName, SCENE_CANNELLE_ET_FROMAGE) == 0)))
 			ui->submitButton->setEnabled(true);
 	} else
 		ui->imageValidation->setStyleSheet("QLabel { color : red; }");
@@ -238,8 +238,8 @@ void ResultDialog::MD5ThreadImpl(ResultDialog *resultDialog) {
 		const string md5 = QString(hash.result().toHex()).toStdString();
 		LM_LOG("Scene files MD5: [" << md5 << "]");
 
-		if (!strcmp(resultDialog->sceneName, SCENE_FOOD)) {
-			if (md5 == "2d70f0078c15709f99d28e05b2617735")
+		if (!strcmp(resultDialog->sceneName, SCENE_CANNELLE_ET_FROMAGE)) {
+			if (md5 == "8a1702d7bcdddac9a963e6eaa64d7070")
 				emit resultDialog->sceneValidationLabelChanged("OK", true, true);
 			else
 				emit resultDialog->sceneValidationLabelChanged("Failed", true, false);
@@ -279,7 +279,7 @@ void ResultDialog::ImageThreadImpl(ResultDialog *resultDialog) {
 		const u_int dataCount = resultDialog->frameBufferWidth * resultDialog->frameBufferHeight * 3;
 
 		// Read the reference file
-		if (!strcmp(resultDialog->sceneName, SCENE_FOOD) ||
+		if (!strcmp(resultDialog->sceneName, SCENE_CANNELLE_ET_FROMAGE) ||
 				!strcmp(resultDialog->sceneName, SCENE_HALLBENCH) ||
 				!strcmp(resultDialog->sceneName, SCENE_WALLPAPER)) {
 			boost::filesystem::path fileName;
