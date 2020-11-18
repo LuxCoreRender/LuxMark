@@ -268,9 +268,12 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const bool useCPU,
 		ss << "Compute Units: " << deviceDesc.units;
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		ss.str("");
-		ss << "Clock: " << deviceDesc.clock << " MHz";
-		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+		// I don't really have this information for CUDA devices
+		if (!deviceDesc.isCUDA) {
+			ss.str("");
+			ss << "Clock: " << deviceDesc.clock << " MHz";
+			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+		}
 
 		ss.str("");
 		ss << "Preferred vector width: " << deviceDesc.nativeVectorWidthFloat;
@@ -280,13 +283,16 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const bool useCPU,
 		ss << "Max. Global Memory: " << (deviceDesc.globalMem / 1024) << " Kbytes";
 		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		ss.str("");
-		ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
-		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+		// I don't really have this information for CUDA devices
+		if (!deviceDesc.isCUDA) {
+			ss.str("");
+			ss << "Local Memory: " << (deviceDesc.localMem / 1024) << " Kbytes";
+			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
 
-		ss.str("");
-		ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
-		newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+			ss.str("");
+			ss << "Max. Constant Memory: " << (deviceDesc.constantMem / 1024) << " Kbytes";
+			newNode->appendChild(new HardwareTreeItem(ss.str().c_str()));
+		}
 
 		if (deviceDesc.isCUDA) {
 			HardwareTreeItem *useOptixNode = new HardwareTreeItem("Use Optix/RTX");

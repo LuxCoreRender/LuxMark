@@ -175,9 +175,9 @@
     <property name="title">
      <string>&amp;Scene</string>
     </property>
-    <addaction name="action_WallPaper"/>
-    <addaction name="action_HallBench"/>
     <addaction name="action_CannelleEtFromage"/>
+    <addaction name="action_HallBench"/>
+    <addaction name="action_WallPaper"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Mode"/>

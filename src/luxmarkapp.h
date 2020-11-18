@@ -42,7 +42,7 @@
 // List of supported scenes
 #define SCENE_WALLPAPER "scenes/wallpaper/render.cfg"
 #define SCENE_HALLBENCH "scenes/hallbench/render.cfg"
-#define SCENE_CANNELLE_ET_FROMAGE "scenes/CannelleEtFromage/render.cfg"
+#define SCENE_CANNELLE_ET_FROMAGE "scenes/cannelleetfromage/render.cfg"
 
 class LuxMarkApp : public QApplication {
 	Q_OBJECT
