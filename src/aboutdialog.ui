@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>700</height>
+    <height>750</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -60,7 +60,7 @@
       <enum>Qt::RichText</enum>
      </property>
      <property name="pixmap">
-      <pixmap resource="resources.qrc">:/images/resources/SLG_Splash.png</pixmap>
+      <pixmap resource="resources.qrc">:/images/resources/LC_Splash.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignHCenter|Qt::AlignTop</set>

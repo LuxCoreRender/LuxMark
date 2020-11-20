@@ -15,6 +15,7 @@
 * New command line options to configure devices used and enable/disable RTX
 * Replaced LuxVR with LuxCoreUI
 * Added an information dialog during GPU kernel compilations
+* The LuxCore wall paper is now shown in About dialog
 
 ### Fixed Bugs
 
