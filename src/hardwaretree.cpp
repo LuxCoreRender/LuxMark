@@ -178,49 +178,54 @@ HardwareTreeModel::HardwareTreeModel(MainWindow *w, const bool useCPU,
 	nativeCPUNode->setChecked(useCPU);
 	nativeDev->appendChild(nativeCPUNode);
 	
-	// Retrieve the hardware information with LuxCore
-	const Properties hwDevDescs = GetOpenCLDeviceDescs();
-	const vector<string> hwDevDescPrefixs = hwDevDescs.GetAllUniqueSubNames("opencl.device");
-
 	// Build the list of devices
 	bool hasCUDAdevs = false;
 	const bool isOptixAvailable = luxcore::GetPlatformDesc().Get("compile.LUXRAYS_ENABLE_CUDA").Get<bool>() &&
 		luxcore::GetPlatformDesc().Get("compile.LUXRAYS_ENABLE_OPTIX").Get<bool>();
-	for (size_t i = 0; i < hwDevDescPrefixs.size(); ++i) {
-		const string &prefix = hwDevDescPrefixs[i];
 
-		BenchmarkDeviceDescription deviceDesc;
+	// Retrieve the hardware information with LuxCore
+	try {
+		const Properties hwDevDescs = GetOpenCLDeviceDescs();
+		const vector<string> hwDevDescPrefixs = hwDevDescs.GetAllUniqueSubNames("opencl.device");
 
-		deviceDesc.deviceName = hwDevDescs.Get(prefix + ".name").Get<string>();
-		deviceDesc.platformName = hwDevDescs.Get(prefix + ".platform.name").Get<string>();
-		deviceDesc.platformVersion = hwDevDescs.Get(prefix + ".platform.version").Get<string>();
-		deviceDesc.deviceType = hwDevDescs.Get(prefix + ".type").Get<string>();
-		deviceDesc.units = hwDevDescs.Get(prefix + ".units").Get<int>();
-		deviceDesc.clock = hwDevDescs.Get(prefix + ".clock").Get<int>();
-		deviceDesc.nativeVectorWidthFloat = hwDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
-		deviceDesc.globalMem = hwDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
-		deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
-		deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
+		for (size_t i = 0; i < hwDevDescPrefixs.size(); ++i) {
+			const string &prefix = hwDevDescPrefixs[i];
 
-		deviceDesc.cudaMajorVersion = 0;
-		deviceDesc.cudaMinorVersion = 0;
+			BenchmarkDeviceDescription deviceDesc;
 
-		deviceDesc.isCUDA = (deviceDesc.deviceType == "CUDA_GPU");
-		deviceDesc.isOpenCL = !deviceDesc.isCUDA;
-		deviceDesc.isOpenCLCPU = deviceDesc.isOpenCL && (deviceDesc.deviceType == "OPENCL_CPU");
+			deviceDesc.deviceName = hwDevDescs.Get(prefix + ".name").Get<string>();
+			deviceDesc.platformName = hwDevDescs.Get(prefix + ".platform.name").Get<string>();
+			deviceDesc.platformVersion = hwDevDescs.Get(prefix + ".platform.version").Get<string>();
+			deviceDesc.deviceType = hwDevDescs.Get(prefix + ".type").Get<string>();
+			deviceDesc.units = hwDevDescs.Get(prefix + ".units").Get<int>();
+			deviceDesc.clock = hwDevDescs.Get(prefix + ".clock").Get<int>();
+			deviceDesc.nativeVectorWidthFloat = hwDevDescs.Get(prefix + ".nativevectorwidthfloat").Get<int>();
+			deviceDesc.globalMem = hwDevDescs.Get(prefix + ".maxmemory").Get<unsigned long long>();
+			deviceDesc.localMem = hwDevDescs.Get(prefix + ".localmemory").Get<unsigned long long>();
+			deviceDesc.constantMem = hwDevDescs.Get(prefix + ".constmemory").Get<unsigned long long>();
 
-		if (deviceDesc.isCUDA) {
-			deviceDesc.cudaMajorVersion = hwDevDescs.Get(prefix + ".cuda.compute.major").Get<int>();
-			deviceDesc.cudaMinorVersion = hwDevDescs.Get(prefix + ".cuda.compute.minor").Get<int>();
+			deviceDesc.cudaMajorVersion = 0;
+			deviceDesc.cudaMinorVersion = 0;
 
-			stringstream ss;
-			ss << "CUDA " << deviceDesc.cudaMajorVersion << "." << deviceDesc.cudaMinorVersion;
-			deviceDesc.platformVersion = ss.str();
+			deviceDesc.isCUDA = (deviceDesc.deviceType == "CUDA_GPU");
+			deviceDesc.isOpenCL = !deviceDesc.isCUDA;
+			deviceDesc.isOpenCLCPU = deviceDesc.isOpenCL && (deviceDesc.deviceType == "OPENCL_CPU");
+
+			if (deviceDesc.isCUDA) {
+				deviceDesc.cudaMajorVersion = hwDevDescs.Get(prefix + ".cuda.compute.major").Get<int>();
+				deviceDesc.cudaMinorVersion = hwDevDescs.Get(prefix + ".cuda.compute.minor").Get<int>();
+
+				stringstream ss;
+				ss << "CUDA " << deviceDesc.cudaMajorVersion << "." << deviceDesc.cudaMinorVersion;
+				deviceDesc.platformVersion = ss.str();
+			}
+
+			deviceDescs.push_back(deviceDesc);
+
+			hasCUDAdevs = hasCUDAdevs || deviceDesc.isCUDA;
 		}
-
-		deviceDescs.push_back(deviceDesc);
-
-		hasCUDAdevs = hasCUDAdevs || deviceDesc.isCUDA;
+		} catch (runtime_error &err) {
+		LM_ERROR("RUNTIME ERROR: " << err.what());
 	}
 	
 	size_t cudaDeviceIndex = 0;
