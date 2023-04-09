@@ -249,8 +249,10 @@ void LuxMarkApp::EngineInitThreadImpl(LuxMarkApp *app) {
 		app->engineInitDone = true;
 	} catch (runtime_error &err) {
 		LM_ERROR("RUNTIME ERROR: " << err.what());
+		LM_HIDE_KERNEL_COMPILATION_DIALOG;
 	} catch (exception &err) {
 		LM_ERROR("ERROR: " << err.what());
+		LM_HIDE_KERNEL_COMPILATION_DIALOG;
 	}
 }
 
