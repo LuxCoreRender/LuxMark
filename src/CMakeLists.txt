@@ -116,6 +116,12 @@ ADD_EXECUTABLE(luxmark WIN32 ${LUXMARK_SRCS})
 
 TARGET_LINK_LIBRARIES(luxmark ${ALL_LUXCORE_LIBRARIES} ${Boost_LIBRARIES} ${Qt5_LIBRARIES} ${OPENGL_gl_LIBRARY} ${CMAKE_DL_LIBS})
 
+if (NOT WIN32)
+	TARGET_LINK_LIBRARIES(luxmark libopencolorio.a)
+else()
+	TARGET_LINK_LIBRARIES(luxmark libopencolorio.lib)
+endif()
+
 if (WIN32)
 	# This is needed by Boost 1.67 but is not found automatically
     TARGET_LINK_LIBRARIES(luxmark bcrypt.lib)
